@@ -32,3 +32,30 @@ model ServiceRequest {
   workingAt       DateTime?
   completedAt     DateTime?
 }
+
+model ServiceContent {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  description String
+  content     String?
+  icon        String?
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Sparepart {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  description String?
+  price       Int
+  stock       Int      @default(0)
+  imageUrl    String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

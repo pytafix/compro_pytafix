@@ -1,0 +1,47 @@
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: paramId } = await params;
+    const id = parseInt(paramId, 10);
+    const body = await request.json();
+    const { status, technicianName, technicianNotes } = body;
+
+    const existingRequest = await prisma.serviceRequest.findUnique({
+      where: { id },
+    });
+
+    if (!existingRequest) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+    }
+
+    const updateData: Record<string, unknown> = {
+      status,
+      technicianName,
+      technicianNotes,
+    };
+
+    // Update timestamp fields based on status transitions
+    if (status === "DIAGNOSA" && !existingRequest.diagnosedAt) {
+      updateData.diagnosedAt = new Date();
+    } else if (status === "DIKERJAKAN" && !existingRequest.workingAt) {
+      updateData.workingAt = new Date();
+    } else if (status === "SELESAI" && !existingRequest.completedAt) {
+      updateData.completedAt = new Date();
+    }
+
+    const updatedRequest = await prisma.serviceRequest.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return NextResponse.json(updatedRequest, { status: 200 });
+  } catch (error) {
+    console.error("Error updating request:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}

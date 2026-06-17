@@ -26,11 +26,11 @@ export function Footer() {
           </h4>
           <ul className="flex flex-col gap-3">
             <li className="font-body-md text-body-md text-on-surface-variant flex items-start gap-2">
-              <span className="material-symbols-outlined text-[20px] text-primary">location_on</span>
+              <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">location_on</span>
               <span>Jl. Elektronik No. 123, Malang Raya</span>
             </li>
             <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
-              <span className="material-symbols-outlined text-[20px] text-primary">schedule</span>
+              <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">schedule</span>
               <span>Mon-Sat 09:00 - 18:00</span>
             </li>
           </ul>
@@ -44,6 +44,7 @@ export function Footer() {
               <a
                 className="font-body-md text-body-md text-on-surface-variant hover:underline hover:text-primary transition-all flex items-center gap-2"
                 href="#"
+                aria-label="Kunjungi Facebook Pytafix"
               >
                 Facebook
               </a>
@@ -52,6 +53,7 @@ export function Footer() {
               <a
                 className="font-body-md text-body-md text-on-surface-variant hover:underline hover:text-primary transition-all flex items-center gap-2"
                 href="#"
+                aria-label="Kunjungi Instagram Pytafix"
               >
                 Instagram
               </a>
@@ -60,6 +62,7 @@ export function Footer() {
               <a
                 className="font-body-md text-body-md text-on-surface-variant hover:underline hover:text-primary transition-all flex items-center gap-2"
                 href="#"
+                aria-label="Kunjungi LinkedIn Pytafix"
               >
                 LinkedIn
               </a>
