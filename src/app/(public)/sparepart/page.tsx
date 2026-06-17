@@ -14,23 +14,17 @@ export default async function SparepartPage() {
 
   return (
     <main className="min-h-screen bg-surface-container-lowest">
-      {/* Premium Hero Section */}
-      <section className="relative pt-24 pb-32 px-6 overflow-hidden">
-        {/* Background Gradient Blob */}
-        <div className="absolute top-0 left-0 w-full h-[800px] overflow-hidden -z-10">
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
-          <div className="absolute top-40 -left-40 w-[500px] h-[500px] bg-secondary-container/20 blur-[100px] rounded-full pointer-events-none"></div>
-        </div>
-        
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+      {/* Hero Section */}
+      <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop text-center border-b border-outline-variant mb-16">
+        <div className="max-w-container-max mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container/50 backdrop-blur-md border border-outline-variant mb-6 shadow-sm">
              <span className="material-symbols-outlined text-primary text-[20px]">verified</span>
              <span className="font-label-bold text-sm text-on-surface">100% Original Parts</span>
           </div>
-          <h1 className="font-display-lg text-display-lg text-on-surface mb-6 leading-tight">
-            Katalog Sparepart & <br/> <span className="text-primary">Aksesoris Premium</span>
+          <h1 className="font-headline-xl text-headline-xl text-primary mb-4 md:font-headline-xl md:text-headline-xl font-headline-lg-mobile text-headline-lg-mobile">
+            Katalog Sparepart & Aksesoris
           </h1>
-          <p className="font-body-xl text-body-xl text-on-surface-variant max-w-2xl mx-auto">
+          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
             Tingkatkan performa perangkat Anda dengan suku cadang original. Dilengkapi garansi pemasangan untuk setiap pembelian.
           </p>
         </div>
