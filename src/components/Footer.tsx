@@ -71,7 +71,7 @@ export function Footer() {
         </div>
         <div className="col-span-1 flex flex-col justify-end mt-8 lg:mt-0">
           <p className="font-label-sm text-label-sm text-on-surface-variant pt-6 border-t border-outline-variant lg:border-t-0 lg:pt-0">
-            © 2024 Pytafix. Part of Pyta Group.
+            © 2024 Pytafix. Part of CV. Pyta Cipta Karya.
           </p>
         </div>
       </div>

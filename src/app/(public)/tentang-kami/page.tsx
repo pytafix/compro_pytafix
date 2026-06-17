@@ -29,10 +29,10 @@ export default function TentangKami() {
               <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                 corporate_fare
               </span>
-              <h2 className="font-headline-md text-headline-md text-primary">Keluarga Pyta Group</h2>
+              <h2 className="font-headline-md text-headline-md text-primary">Bagian dari CV. Pyta Cipta Karya</h2>
             </div>
             <p className="mb-4 text-on-surface-variant">
-              Pytafix merupakan divisi layanan perangkat keras dari <strong className="text-on-surface">Pyta Group</strong>, sebuah ekosistem inovasi teknologi yang juga menaungi <strong className="text-on-surface">Pytagotech</strong>.
+              Pytafix merupakan divisi layanan perangkat keras dari <strong className="text-on-surface">CV. Pyta Cipta Karya</strong>, sebuah ekosistem inovasi teknologi yang juga menaungi <strong className="text-on-surface">Pytabelajar</strong> dan <strong className="text-on-surface">Pytagotech</strong>.
             </p>
             <p className="text-on-surface-variant">
               Dengan dukungan standar operasional korporat dari grup kami, Pytafix tidak beroperasi seperti tempat servis biasa. Setiap proses diagnostik, SOP perbaikan, dan jaminan keamanan data pelanggan diawasi secara ketat. Kami memastikan Anda mendapatkan kualitas layanan kelas enterprise dengan harga yang bersahabat.
