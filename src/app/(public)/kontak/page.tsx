@@ -11,11 +11,17 @@ export default function KontakPage() {
   return (
     <main className="min-h-screen bg-surface-container-lowest">
       {/* Hero Section */}
-      <section className="bg-primary-container text-on-primary-container py-16 px-6 text-center">
-        <h1 className="font-display-md text-display-md mb-4 max-w-4xl mx-auto">
-          Hubungi Pytafix
+      <section className="relative py-16 px-6 text-center overflow-hidden">
+        {/* Background Gradient Blob */}
+        <div className="absolute top-0 left-0 w-full h-[400px] overflow-hidden -z-10">
+          <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+          <div className="absolute top-20 -right-40 w-[400px] h-[400px] bg-secondary-container/20 blur-[100px] rounded-full pointer-events-none"></div>
+        </div>
+
+        <h1 className="font-display-md text-display-md mb-4 max-w-4xl mx-auto text-on-surface">
+          Hubungi <span className="text-primary">Pytafix</span>
         </h1>
-        <p className="font-body-lg text-body-lg max-w-2xl mx-auto opacity-90">
+        <p className="font-body-lg text-body-lg max-w-2xl mx-auto text-on-surface-variant">
           Tim teknisi profesional kami siap mendengarkan dan mengatasi masalah perangkat elektronik Anda dengan cepat dan transparan.
         </p>
       </section>
