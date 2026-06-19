@@ -18,6 +18,10 @@ export function AdminNavbar() {
     { label: "Tiket Servis", href: "/admin/dashboard", icon: "inbox" },
     { label: "Layanan", href: "/admin/services", icon: "build" },
     { label: "Sparepart", href: "/admin/spareparts", icon: "inventory_2" },
+    { label: "Promo", href: "/admin/promos", icon: "sell" },
+    { label: "Portofolio", href: "/admin/portfolios", icon: "collections" },
+    { label: "Artikel", href: "/admin/articles", icon: "article" },
+    { label: "Pengaturan", href: "/admin/settings", icon: "settings" },
   ];
 
   return (
