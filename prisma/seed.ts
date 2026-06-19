@@ -104,7 +104,37 @@ async function main() {
     });
   }
 
-  console.log('Database seeded successfully with targeted keywords!');
+  // --- Seed Promos ---
+  await prisma.promo.deleteMany({});
+  await prisma.promo.create({
+    data: {
+      slug: "promo-gila-testing",
+      title: "PROMO GILA TESTING DATABASE",
+      badge: "Diskon 99%",
+      description: "Ini adalah promo yang disuntikkan langsung melalui mekanisme SEED database untuk membuktikan integrasinya berhasil.",
+      validUntil: "Hari Kiamat",
+      terms: "[\"Syarat 1: Buktikan ini berjalan\", \"Syarat 2: Berhasil!\"]",
+      howToClaim: "Cukup lihat saja di layar Anda.",
+      isActive: true,
+    }
+  });
+
+  // --- Seed Settings ---
+  await prisma.setting.deleteMany({});
+  await prisma.setting.create({
+    data: {
+      id: "terms",
+      content: "Ini adalah Teks Syarat & Ketentuan dari hasil pengujian Seed! Sistem dinamis berjalan 100% lancar."
+    }
+  });
+  await prisma.setting.create({
+    data: {
+      id: "privacy",
+      content: "Kebijakan Privasi dinamis berhasil di-load dari Database."
+    }
+  });
+
+  console.log('Database seeded successfully with Promos, Settings, and targeted keywords!');
 }
 
 main()

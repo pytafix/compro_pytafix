@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 export default function BookingClient() {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +20,7 @@ export default function BookingClient() {
         body: JSON.stringify(data),
       });
       if (res.ok) {
+        setFormData(data);
         setIsSuccess(true);
         toast.success("Permintaan berhasil dikirim!");
       } else {
@@ -37,20 +39,52 @@ export default function BookingClient() {
   // Get today's date in YYYY-MM-DD format for min attribute
   const today = new Date().toISOString().split("T")[0];
 
-  return (
-    <main className="min-h-screen px-4 md:px-8 lg:px-margin-desktop py-12 md:py-16 lg:py-24 max-w-container-max mx-auto flex-grow">
-      {/* Header Section */}
-      <header className="mb-12 text-center md:text-left">
-        <h1 className="font-headline-xl text-headline-xl text-on-background mb-4">Jadwalkan Perbaikan Anda</h1>
-        <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
-          Isi formulir di bawah ini untuk memulai proses servis. Tim teknisi ahli kami akan segera menghubungi Anda untuk konfirmasi dan estimasi awal.
-        </p>
-      </header>
+  let waUrl = "https://wa.me/1234567890?text=";
+  if (formData) {
+    const deviceName = formData.device_type === "smartphone" ? "Smartphone" : formData.device_type === "laptop" ? "Laptop / MacBook" : formData.device_type === "tablet" ? "Tablet / iPad" : formData.device_type === "console" ? "Konsol Game" : "Lainnya";
+    const serviceName = formData.service_type === "screen" ? "Ganti Layar / LCD" : formData.service_type === "battery" ? "Ganti Baterai" : formData.service_type === "water" ? "Kerusakan Air" : formData.service_type === "software" ? "Instalasi Software / OS" : formData.service_type === "diagnostic" ? "Cek Total / Diagnostik" : "Lainnya";
+    
+    const text = `Halo Pytafix, saya ingin booking servis dengan detail berikut:
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter">
-        {/* Form Area (Bento Grid Style) */}
-        <div className="lg:col-span-8">
-          <div className="bg-surface rounded-xl border border-outline-variant p-6 md:p-8 relative overflow-hidden h-full">
+*Info Pemesan:*
+- Nama: ${formData.name}
+- WhatsApp: ${formData.whatsapp}
+- Alamat: ${formData.address}
+
+*Detail Servis:*
+- Jenis Perangkat: ${deviceName}
+- Merk/Tipe: ${formData.device_brand}
+- Jenis Layanan: ${serviceName}
+- Tanggal Booking: ${formData.date}
+
+*Deskripsi Kendala:*
+${formData.problem_desc}
+
+Terima kasih.`;
+    waUrl += encodeURIComponent(text);
+  } else {
+    waUrl += encodeURIComponent("Halo Pytafix, saya telah mengisi form booking.");
+  }
+
+  return (
+    <main className="flex-grow pb-24 text-center md:text-left">
+      {/* Header Section */}
+      <section className="mb-24 text-center px-4 md:px-8 lg:px-margin-desktop bg-surface-container-low py-20 border-b border-outline-variant">
+        <div className="max-w-container-max mx-auto">
+          <h1 className="font-headline-lg-mobile md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-primary mb-6">
+            Jadwalkan Perbaikan Anda
+          </h1>
+          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto">
+            Isi formulir di bawah ini untuk memulai proses servis. Tim teknisi ahli kami akan segera menghubungi Anda untuk konfirmasi dan estimasi awal.
+          </p>
+        </div>
+      </section>
+
+      <div className="px-4 md:px-8 lg:px-margin-desktop max-w-container-max mx-auto w-full text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter">
+          {/* Form Area (Bento Grid Style) */}
+          <div className="lg:col-span-8">
+            <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-10 shadow-sm relative overflow-hidden h-full">
             {!isSuccess ? (
               <form className="space-y-6" id="service-form" onSubmit={handleSubmit}>
                 {/* Personal Info Group */}
@@ -60,7 +94,7 @@ export default function BookingClient() {
                       Nama Lengkap
                     </label>
                     <input
-                      className="w-full bg-surface border border-outline-variant rounded px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary/50 outline-none transition-all"
                       id="name"
                       name="name"
                       required
@@ -72,7 +106,7 @@ export default function BookingClient() {
                       Nomor WhatsApp
                     </label>
                     <input
-                      className="w-full bg-surface border border-outline-variant rounded px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary/50 outline-none transition-all"
                       id="whatsapp"
                       name="whatsapp"
                       placeholder="0812..."
@@ -102,7 +136,7 @@ export default function BookingClient() {
                       Jenis Perangkat
                     </label>
                     <select
-                      className="w-full bg-surface border border-outline-variant rounded px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary/50 outline-none transition-all"
                       id="device_type"
                       name="device_type"
                       required
@@ -119,11 +153,24 @@ export default function BookingClient() {
                     </select>
                   </div>
                   <div className="space-y-2">
+                    <label className="font-label-bold text-label-bold text-on-background block" htmlFor="device_brand">
+                      Merk / Tipe Perangkat
+                    </label>
+                    <input
+                      className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary/50 outline-none transition-all"
+                      id="device_brand"
+                      name="device_brand"
+                      placeholder="Misal: iPhone 13, Asus ROG..."
+                      required
+                      type="text"
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
                     <label className="font-label-bold text-label-bold text-on-background block" htmlFor="service_type">
                       Jenis Layanan
                     </label>
                     <select
-                      className="w-full bg-surface border border-outline-variant rounded px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary/50 outline-none transition-all"
                       id="service_type"
                       name="service_type"
                       required
@@ -137,6 +184,7 @@ export default function BookingClient() {
                       <option value="water">Kerusakan Air</option>
                       <option value="software">Instalasi Software / OS</option>
                       <option value="diagnostic">Cek Total / Diagnostik</option>
+                      <option value="other">Lainnya</option>
                     </select>
                   </div>
                 </div>
@@ -162,7 +210,7 @@ export default function BookingClient() {
                       Tanggal Penjadwalan
                     </label>
                     <input
-                      className="w-full bg-surface border border-outline-variant rounded px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-background focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary/50 outline-none transition-all"
                       id="date"
                       name="date"
                       required
@@ -175,7 +223,7 @@ export default function BookingClient() {
                 {/* Submit Action */}
                 <div className="pt-8">
                   <button
-                    className="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded hover:bg-primary-container transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl shadow-sm hover:shadow-md hover:bg-primary/90 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
                     type="submit"
                   >
                     <span className="material-symbols-outlined" data-icon="send" aria-hidden="true">
@@ -206,7 +254,7 @@ export default function BookingClient() {
                 </p>
                 <a
                   className="bg-[#25D366] text-white font-label-bold text-label-bold px-8 py-4 rounded hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-                  href="https://wa.me/1234567890?text=Halo%20Pytafix,%20saya%20telah%20mengisi%20form%20booking."
+                  href={waUrl}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Lanjutkan obrolan ke WhatsApp di tab baru"
@@ -230,9 +278,9 @@ export default function BookingClient() {
         {/* Info Sidebar */}
         <div className="lg:col-span-4 space-y-6">
           {/* Trust Card 1 */}
-          <div className="bg-surface rounded-xl border border-outline-variant p-6 flex flex-col gap-4">
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 flex flex-col gap-4 hover:border-primary transition-colors group shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded bg-surface-container-high flex items-center justify-center text-primary">
+              <div className="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined" data-icon="verified" aria-hidden="true">
                   verified
                 </span>
@@ -245,9 +293,9 @@ export default function BookingClient() {
           </div>
 
           {/* Trust Card 2 */}
-          <div className="bg-surface rounded-xl border border-outline-variant p-6 flex flex-col gap-4">
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 flex flex-col gap-4 hover:border-primary transition-colors group shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded bg-surface-container-high flex items-center justify-center text-primary">
+              <div className="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined" data-icon="security" aria-hidden="true">
                   security
                 </span>
@@ -260,7 +308,7 @@ export default function BookingClient() {
           </div>
 
           {/* Operational Hours */}
-          <div className="bg-surface rounded-xl border border-outline-variant p-6">
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 shadow-sm">
             <h3 className="font-headline-md text-headline-md text-on-background mb-4">Jam Operasional</h3>
             <ul className="space-y-2 font-body-md text-body-md text-on-surface-variant">
               <li className="flex justify-between border-b border-outline-variant pb-2">
@@ -276,6 +324,7 @@ export default function BookingClient() {
                 <span className="font-label-bold text-error">Tutup</span>
               </li>
             </ul>
+          </div>
           </div>
         </div>
       </div>

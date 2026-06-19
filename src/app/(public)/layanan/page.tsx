@@ -114,16 +114,16 @@ export default async function Layanan() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop bg-primary-container text-on-primary-container text-center">
+      <section className="py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop bg-primary text-on-primary text-center">
         <div className="max-w-container-max mx-auto">
-          <h2 className="font-headline-lg text-headline-lg mb-4 md:font-headline-lg md:text-headline-lg font-headline-lg-mobile text-headline-lg-mobile">
+          <h2 className="font-headline-lg text-headline-lg mb-4 md:font-headline-lg md:text-headline-lg font-headline-lg-mobile text-headline-lg-mobile text-white">
             Butuh Bantuan Teknisi Kami?
           </h2>
-          <p className="font-body-lg text-body-lg mb-8 max-w-2xl mx-auto">
+          <p className="font-body-lg text-body-lg mb-8 max-w-2xl mx-auto text-white/90">
             Jangan biarkan masalah perangkat mengganggu produktivitas Anda. Jadwalkan perbaikan sekarang.
           </p>
           <Link href="/booking-servis">
-            <button className="bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded hover:opacity-90 transition-opacity cursor-pointer">
+            <button className="bg-surface text-primary font-label-bold text-label-bold px-8 py-4 rounded hover:bg-surface-container transition-colors cursor-pointer shadow-sm">
               Booking Sekarang
             </button>
           </Link>

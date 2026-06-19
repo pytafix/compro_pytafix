@@ -75,34 +75,34 @@ export default async function ServiceDetailPage({ params }: Props) {
   const waLink = `https://wa.me/6281234567890?text=${waText}`;
 
   return (
-    <main className="min-h-screen bg-surface-container-lowest">
+    <main className="flex-grow">
       {/* Hero Section */}
-      <section className="bg-primary-container text-on-primary-container py-16 px-6 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8">
+      <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop border-b border-outline-variant">
+        <div className="max-w-container-max mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
           <div className="flex-1 text-center md:text-left">
-            <h1 className="font-display-md text-display-md mb-4 leading-tight">
+            <h1 className="font-headline-xl text-headline-xl text-primary mb-4 font-headline-lg-mobile text-headline-lg-mobile">
               {title}
             </h1>
-            <p className="font-body-lg text-body-lg opacity-90 max-w-2xl mb-8">
+            <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-8 mx-auto md:mx-0">
               {introParagraph}
             </p>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
               <Link href="/booking-servis">
-                <button className="bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 rounded-full hover:opacity-90 shadow-sm transition-opacity cursor-pointer">
+                <button className="bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 md:px-8 md:py-4 rounded hover:opacity-90 transition-opacity cursor-pointer">
                   Booking Servis
                 </button>
               </Link>
-              <a href={waLink} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-[#25D366] text-white font-label-bold text-label-bold px-6 py-3 rounded-full hover:bg-[#1DA851] shadow-sm transition-colors cursor-pointer">
+              <a href={waLink} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-[#25D366] text-white font-label-bold text-label-bold px-6 py-3 md:px-8 md:py-4 rounded hover:bg-[#1DA851] transition-colors cursor-pointer">
                 <span className="material-symbols-outlined text-[20px]">chat</span>
                 Konsultasi WA
               </a>
             </div>
           </div>
-          <div className="hidden md:flex w-32 h-32 bg-surface text-primary rounded-full items-center justify-center shadow-md overflow-hidden relative">
+          <div className="hidden md:flex w-40 h-40 lg:w-48 lg:h-48 bg-surface border border-outline-variant text-primary rounded-xl items-center justify-center overflow-hidden relative shadow-sm">
              {service.imageUrl ? (
                 <Image src={service.imageUrl} alt={service.title} fill className="object-cover" />
               ) : (
-                <span className="material-symbols-outlined text-[64px]">
+                <span className="material-symbols-outlined text-[64px] lg:text-[80px]">
                   {service.icon || "build"}
                 </span>
               )}
@@ -111,42 +111,58 @@ export default async function ServiceDetailPage({ params }: Props) {
       </section>
 
       {/* Content Section */}
-      <section className="py-16 px-6">
-        <div className="max-w-3xl mx-auto bg-surface border border-outline-variant p-8 md:p-12 rounded-2xl shadow-sm">
-          <div className="prose prose-lg prose-headings:text-primary prose-a:text-primary max-w-none">
-            <div className="font-body-lg text-on-surface whitespace-pre-wrap leading-relaxed">
+      <section className="py-16 md:py-24 px-4 md:px-8 lg:px-margin-desktop bg-background">
+        <div className="max-w-3xl mx-auto">
+          {/* Prose Markdown Slicing */}
+          <div className="prose prose-lg max-w-none 
+            prose-headings:font-headline-md prose-headings:text-primary prose-headings:mb-4
+            prose-p:font-body-lg prose-p:text-on-surface-variant prose-p:leading-relaxed prose-p:mb-6
+            prose-a:text-primary hover:prose-a:underline
+            prose-strong:text-on-surface prose-strong:font-bold
+            prose-ul:text-on-surface-variant prose-ul:font-body-lg prose-li:my-1
+            prose-li:marker:text-primary">
+            <div className="whitespace-pre-wrap">
               {contentText}
             </div>
-            
-            {location && (
-               <div className="mt-8 p-4 bg-surface-container-lowest border border-outline-variant rounded-lg">
-                 <h3 className="font-headline-sm text-primary mb-2">Area Layanan {location}</h3>
-                 <p className="font-body-md text-on-surface-variant">
+          </div>
+          
+          {location && (
+             <div className="mt-12 p-6 md:p-8 bg-surface-container-lowest border border-outline-variant rounded-xl flex gap-4 items-start">
+               <span className="material-symbols-outlined text-primary text-3xl shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>
+                 location_on
+               </span>
+               <div>
+                 <h3 className="font-headline-sm text-headline-sm text-primary mb-2">Area Layanan {location}</h3>
+                 <p className="font-body-md text-body-md text-on-surface-variant">
                    Untuk warga {location}, kami menyediakan opsi antar-jemput perangkat (pickup & delivery) atau pengerjaan langsung jika memungkinkan. Hubungi kami untuk mengatur jadwal pengecekan langsung di {location}.
                  </p>
                </div>
-            )}
-          </div>
+             </div>
+          )}
           
-          <hr className="my-10 border-outline-variant" />
+          <hr className="my-12 border-outline-variant" />
           
-          <div className="bg-secondary-container text-on-secondary-container p-6 rounded-xl flex items-start gap-4">
-            <span className="material-symbols-outlined text-[32px] text-secondary">verified_user</span>
+          <div className="bg-surface-container border border-outline-variant p-6 md:p-8 rounded-xl flex flex-col md:flex-row items-start gap-4">
+            <span className="material-symbols-outlined text-[32px] text-secondary shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>
+              verified_user
+            </span>
             <div>
-              <h3 className="font-headline-sm text-headline-sm mb-2">Garansi Pengerjaan</h3>
-              <p className="font-body-md">Setiap layanan perbaikan di Pytafix dilengkapi dengan garansi resmi mulai dari 14 hari hingga 6 bulan tergantung jenis perbaikan. Kepuasan Anda adalah prioritas kami.</p>
+              <h3 className="font-headline-sm text-headline-sm text-primary mb-2">Garansi Pengerjaan</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Setiap layanan perbaikan di Pytafix dilengkapi dengan garansi resmi mulai dari 14 hari hingga 6 bulan tergantung jenis perbaikan. Kepuasan Anda adalah prioritas kami.
+              </p>
             </div>
           </div>
         </div>
       </section>
       
       {/* Back Link */}
-      <div className="pb-16 text-center">
-        <Link href="/layanan" className="text-primary font-label-bold hover:underline inline-flex items-center gap-1 cursor-pointer">
+      <section className="pb-16 md:pb-24 px-4 bg-background text-center">
+        <Link href="/layanan" className="text-primary font-label-bold text-label-bold hover:underline inline-flex items-center gap-2 cursor-pointer">
           <span className="material-symbols-outlined text-[20px]">arrow_back</span>
           Kembali ke Daftar Layanan
         </Link>
-      </div>
+      </section>
     </main>
   );
 }

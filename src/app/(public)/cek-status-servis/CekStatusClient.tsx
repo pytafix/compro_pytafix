@@ -34,36 +34,39 @@ export default function CekStatusClient() {
   };
 
   return (
-    <main className="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop py-12 md:py-16 lg:py-24">
+    <main className="flex-grow w-full pb-24">
       {/* Header Section */}
-      <div className="text-center mb-12">
-        <h1 className="font-headline-lg text-headline-lg md:font-headline-xl md:text-headline-xl text-primary mb-4">
-          Cek Status Servis
+      <section className="relative w-full bg-gradient-to-b from-primary-container/30 to-background pt-20 pb-24 px-4 md:px-8 text-center mb-12">
+        <h1 className="font-headline-lg text-headline-lg md:font-headline-xl md:text-headline-xl text-on-background mb-6 tracking-tight">
+          Cek Status <span className="text-primary">Servis</span>
         </h1>
-        <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+        <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
           Masukkan Nomor Servis atau Resi Anda untuk melacak perkembangan perbaikan perangkat Anda secara real-time.
         </p>
-      </div>
+      </section>
 
       {/* Input Section */}
-      <div className="max-w-xl mx-auto mb-16 bg-surface border border-outline-variant rounded-lg p-8 shadow-sm">
-        <label className="block font-label-bold text-label-bold text-on-background mb-2" htmlFor="resi-input">
+      <div className="max-w-2xl mx-auto mb-16 bg-surface border border-outline-variant/50 rounded-2xl p-4 md:p-6 shadow-xl shadow-primary/5 transition-all hover:shadow-primary/10">
+        <label className="block font-label-bold text-label-bold text-on-background mb-4" htmlFor="resi-input">
           Masukkan Nomor Servis/Resi
         </label>
         <div className="flex flex-col sm:flex-row gap-4">
-          <input
-            className="flex-grow bg-white border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md px-4 py-3 outline-none transition-colors"
-            id="resi-input"
-            placeholder="Contoh: PYT-2024-10X"
-            type="text"
-            value={resi}
-            onChange={(e) => setResi(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSearch();
-            }}
-          />
+          <div className="relative flex-grow">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">receipt_long</span>
+            <input
+              className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 pl-12 pr-4 py-4 outline-none transition-all font-body-lg text-body-lg"
+              id="resi-input"
+              placeholder="Contoh: PYT-2024-10X"
+              type="text"
+              value={resi}
+              onChange={(e) => setResi(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
+            />
+          </div>
           <button
-            className="bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 rounded flex items-center justify-center gap-2 hover:opacity-90 transition-opacity cursor-pointer"
+            className="bg-primary text-on-primary font-label-lg text-label-lg px-8 py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all cursor-pointer"
             onClick={handleSearch}
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -76,16 +79,21 @@ export default function CekStatusClient() {
 
       {/* Results Section (Visible after search) */}
       {hasSearched && statusData && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter">
+        <div className="max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter">
           {/* Tracker Column */}
           <div className="lg:col-span-8 space-y-8">
-            <div className="bg-surface border border-outline-variant rounded-lg p-8">
+            <div className="bg-surface border border-outline-variant/50 rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
               <h2 className="font-headline-md text-headline-md text-primary mb-8 border-b border-outline-variant pb-4">
                 Status Perbaikan
               </h2>
               <div className="relative">
-                {/* Progress Line */}
-                <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-surface-variant"></div>
+                {/* Background Track */}
+                <div className="absolute left-[23px] top-8 bottom-8 w-[2px] bg-outline-variant/40"></div>
+                {/* Active Progress Fill */}
+                <div 
+                  className="absolute left-[23px] top-8 w-[2px] bg-primary transition-all duration-700 ease-in-out" 
+                  style={{ height: `${(Math.max(0, ["DITERIMA", "DIAGNOSA", "DIKERJAKAN", "SELESAI"].indexOf(statusData.status)) / 3) * 100}%` }}
+                ></div>
 
                 {[
                   {
@@ -127,7 +135,13 @@ export default function CekStatusClient() {
                   
                   return (
                     <div key={step.id} className="relative flex items-start gap-6 mb-8 last:mb-0">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center z-10 shrink-0 border-2 border-surface ${isDone ? 'bg-secondary text-on-secondary shadow-sm' : isActive ? 'bg-primary text-on-primary shadow-sm ring-4 ring-primary-fixed' : 'bg-surface-container-high text-outline'}`}>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center z-10 shrink-0 border-[3px] transition-all duration-500 ${
+                        isDone 
+                          ? 'bg-primary border-primary text-on-primary shadow-md' 
+                          : isActive 
+                            ? 'bg-surface border-primary text-primary shadow-lg ring-4 ring-primary/20 scale-110' 
+                            : 'bg-surface border-outline-variant/50 text-outline'
+                      }`}>
                         <span className="material-symbols-outlined" style={isDone || isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>
                           {step.icon}
                         </span>
@@ -163,7 +177,7 @@ export default function CekStatusClient() {
           {/* Details Column */}
           <div className="lg:col-span-4 space-y-6">
             {/* Device Details */}
-            <div className="bg-surface border border-outline-variant rounded-lg p-6">
+            <div className="bg-surface border border-outline-variant/50 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <h3 className="font-headline-md text-headline-md text-primary mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined">devices</span>
                 Detail Perangkat
@@ -188,7 +202,7 @@ export default function CekStatusClient() {
 
             {/* Technician Notes */}
             {statusData.technicianNotes && (
-            <div className="bg-surface-container-low border border-outline-variant rounded-lg p-6">
+            <div className="bg-surface-container-low border border-primary/20 rounded-xl p-6 shadow-sm">
               <h3 className="font-label-bold text-label-bold text-on-background mb-3 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
                   assignment

@@ -1,5 +1,6 @@
 import { TopNavBar } from "@/components/TopNavBar";
 import { Footer } from "@/components/Footer";
+import { GlobalCTA } from "@/components/GlobalCTA";
 
 export default function PublicLayout({
   children,
@@ -12,6 +13,7 @@ export default function PublicLayout({
       <div className="flex-1">
         {children}
       </div>
+      <GlobalCTA />
       <Footer />
     </>
   );
