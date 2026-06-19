@@ -3,8 +3,11 @@ import prisma from "@/lib/prisma";
 import PromoList from "./PromoList";
 
 export const metadata = {
-  title: "Promo & Penawaran Spesial - Pytafix",
-  description: "Nikmati berbagai promo menarik dan penawaran spesial dari Pytafix.",
+  title: "Promo & Penawaran Spesial | Pytafix",
+  description: "Nikmati berbagai promo menarik dan penawaran spesial servis laptop, HP, dan komputer dari Pytafix Malang.",
+  alternates: {
+    canonical: "/promo",
+  },
 };
 
 export default async function PromoPage() {

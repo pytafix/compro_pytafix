@@ -1,5 +1,14 @@
 import React from 'react';
 import prisma from '@/lib/prisma';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Kebijakan Privasi | Pytafix",
+  description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
+  alternates: {
+    canonical: "/kebijakan-privasi",
+  },
+};
 
 export default async function PrivacyPolicyPage() {
   const setting = await prisma.setting.findUnique({ where: { id: "privacy" } });

@@ -74,8 +74,30 @@ export default async function ServiceDetailPage({ params }: Props) {
   const waText = encodeURIComponent(`Halo Pytafix, saya tertarik dengan layanan:\n*${service.title}*${location ? ` di area ${location}` : ''}\n\nBisa dibantu untuk konsultasi/booking?`);
   const waLink = `https://wa.me/6281234567890?text=${waText}`;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": service.title,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Pytafix"
+    },
+    "areaServed": location ? {
+      "@type": "City",
+      "name": location
+    } : {
+      "@type": "City",
+      "name": "Malang"
+    },
+    "description": service.description,
+  };
+
   return (
     <main className="flex-grow">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop border-b border-outline-variant">
         <div className="max-w-container-max mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">

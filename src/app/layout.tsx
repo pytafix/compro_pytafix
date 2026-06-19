@@ -15,14 +15,31 @@ export const metadata: Metadata = {
     template: "%s | Pytafix",
   },
   description: "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Menyediakan servis laptop, smartphone, dan komputer dengan teknisi bersertifikat, jujur, dan bergaransi resmi.",
-  keywords: ["Service Laptop Malang", "Service HP Malang", "Reparasi Komputer", "Ganti LCD", "Service Apple Malang"],
+  keywords: ["Service Laptop Malang", "Service HP Malang", "Reparasi Komputer", "Ganti LCD", "Service Apple Malang", "Service MacBook Malang", "Pytafix Malang"],
   openGraph: {
-    title: "Pytafix - Pusat Servis Laptop & HP Malang",
-    description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat Anda sekarang!",
+    title: "Pytafix - Pusat Servis Laptop, HP & Komputer Malang",
+    description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat elektronik Anda sekarang dengan teknisi handal di Malang!",
     url: "https://pytafix.com",
     siteName: "Pytafix",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 600,
+        alt: "Pytafix Logo",
+      },
+    ],
     locale: "id_ID",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pytafix - Pusat Servis Laptop, HP & Komputer Malang",
+    description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat elektronik Anda sekarang!",
+    images: ["/logo.png"],
+  },
+  alternates: {
+    canonical: "https://pytafix.com",
   },
 };
 
@@ -62,7 +79,19 @@ export default function RootLayout({
                 "longitude": 112.621391
               },
               "priceRange": "$$",
-              "description": "Pusat perbaikan elektronik terpercaya di Malang. Melayani servis laptop, smartphone, dan komputer bergaransi."
+              "description": "Pusat perbaikan elektronik terpercaya di Malang. Melayani servis laptop, smartphone, dan komputer bergaransi.",
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                  "opens": "09:00",
+                  "closes": "21:00"
+                }
+              ],
+              "sameAs": [
+                "https://www.instagram.com/pytafix",
+                "https://www.facebook.com/pytafix"
+              ]
             })
           }}
         />

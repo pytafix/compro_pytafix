@@ -11,11 +11,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/tentang-kami`, lastModified: new Date() },
     { url: `${baseUrl}/booking-servis`, lastModified: new Date() },
     { url: `${baseUrl}/cek-status-servis`, lastModified: new Date() },
+    { url: `${baseUrl}/promo`, lastModified: new Date() },
+    { url: `${baseUrl}/portofolio`, lastModified: new Date() },
+    { url: `${baseUrl}/artikel`, lastModified: new Date() },
+    { url: `${baseUrl}/syarat-ketentuan`, lastModified: new Date() },
+    { url: `${baseUrl}/kebijakan-privasi`, lastModified: new Date() },
+    { url: `${baseUrl}/kontak`, lastModified: new Date() },
   ];
 
   // Fetch all active services
   const services = await prisma.serviceContent.findMany({
     where: { isActive: true },
+    select: { slug: true, updatedAt: true }
+  });
+
+  // Fetch active promos
+  const promos = await prisma.promo.findMany({
+    where: { isActive: true },
+    select: { slug: true, updatedAt: true }
+  });
+
+  // Fetch articles
+  const articles = await prisma.article.findMany({
     select: { slug: true, updatedAt: true }
   });
 
@@ -36,6 +53,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: service.updatedAt, // Inherit last modified from base service
       });
     }
+  }
+
+  for (const promo of promos) {
+    dynamicPages.push({
+      url: `${baseUrl}/promo/${promo.slug}`,
+      lastModified: promo.updatedAt,
+    });
+  }
+
+  for (const article of articles) {
+    dynamicPages.push({
+      url: `${baseUrl}/artikel/${article.slug}`,
+      lastModified: article.updatedAt,
+    });
   }
 
   return [...staticPages, ...dynamicPages];

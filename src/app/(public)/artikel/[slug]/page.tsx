@@ -2,7 +2,27 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
+import { Metadata } from "next";
+
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await prisma.article.findUnique({ where: { slug } });
+
+  if (!article) return { title: "Artikel Tidak Ditemukan | Pytafix" };
+
+  return {
+    title: `${article.title} | Pytafix Edukasi`,
+    description: article.excerpt,
+    alternates: { canonical: `/artikel/${slug}` },
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      images: [article.imageUrl || "/images/placeholder.jpg"],
+    }
+  };
+}
 
 export default async function ArticleDetailPage({ 
   params 
@@ -26,8 +46,26 @@ export default async function ArticleDetailPage({
     year: 'numeric'
   }).format(new Date(publishedDate));
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": article.title,
+    "image": [
+      `https://pytafix.com${article.imageUrl || "/logo.png"}`
+    ],
+    "datePublished": publishedDate.toISOString(),
+    "author": [{
+        "@type": "Person",
+        "name": article.author,
+    }]
+  };
+
   return (
     <article className="container mx-auto px-4 py-16 max-w-4xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mb-8 text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">{article.title}</h1>
         <div className="flex items-center justify-center text-muted-foreground gap-4">

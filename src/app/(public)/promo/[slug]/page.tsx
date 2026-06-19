@@ -4,26 +4,31 @@ import prisma from "@/lib/prisma";
 import PromoDetailClient from "./PromoDetailClient";
 import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const promo = await prisma.promo.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
 
   if (!promo) {
     return {
-      title: "Promo Tidak Ditemukan - Pytafix",
+      title: "Promo Tidak Ditemukan | Pytafix",
     };
   }
 
   return {
-    title: `${promo.title} - Promo Pytafix`,
+    title: `${promo.title} | Promo Pytafix`,
     description: promo.description,
+    alternates: {
+      canonical: `/promo/${slug}`,
+    },
   };
 }
 
-export default async function PromoDetailPage({ params }: { params: { slug: string } }) {
+export default async function PromoDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const promoRecord = await prisma.promo.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
 
   if (!promoRecord || !promoRecord.isActive) {

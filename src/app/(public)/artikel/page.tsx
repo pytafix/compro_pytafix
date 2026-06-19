@@ -1,6 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Artikel & Edukasi Servis | Pytafix",
+  description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
+  alternates: {
+    canonical: "/artikel",
+  },
+};
 
 export const dynamic = "force-dynamic";
 

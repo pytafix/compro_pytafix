@@ -2,7 +2,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Kontak Kami | Pytafix",
-  description: "Hubungi Pytafix untuk layanan perbaikan HP, Tablet, Laptop, dan PC. Kami siap membantu menyelesaikan masalah perangkat elektronik Anda.",
+  description: "Hubungi Pytafix untuk layanan perbaikan HP, Tablet, Laptop, dan PC. Kami siap membantu menyelesaikan masalah perangkat elektronik Anda di Malang.",
+  alternates: {
+    canonical: "/kontak",
+  },
 };
 
 export default function KontakPage() {

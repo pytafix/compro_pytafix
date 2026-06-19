@@ -1,5 +1,14 @@
 import React from 'react';
 import prisma from '@/lib/prisma';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Syarat & Ketentuan | Pytafix",
+  description: "Syarat dan ketentuan layanan perbaikan perangkat elektronik di Pytafix Malang.",
+  alternates: {
+    canonical: "/syarat-ketentuan",
+  },
+};
 
 export default async function TermsAndConditionsPage() {
   const setting = await prisma.setting.findUnique({ where: { id: "terms" } });

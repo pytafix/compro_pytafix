@@ -4,8 +4,11 @@ import PortofolioClient from "./portofolio-client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Portofolio | Pytafix",
-  description: "Portofolio servis HP dan laptop dari Pytafix",
+  title: "Portofolio Servis | Pytafix",
+  description: "Lihat hasil servis HP, laptop, dan komputer (before-after) yang telah dikerjakan oleh teknisi ahli Pytafix Malang.",
+  alternates: {
+    canonical: "/portofolio",
+  },
 };
 
 export const dynamic = "force-dynamic";
