@@ -6,6 +6,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { name, whatsapp, address, deviceType, serviceType, problemDesc, date } = body;
 
+    // Basic Validation
+    if (!name || !whatsapp || !problemDesc || !deviceType || !serviceType) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
     // Generate tracking ID: PYT-2024-XXXX
     const randomChars = Math.random().toString(36).substring(2, 6).toUpperCase();
     const trackingId = `PYT-2024-${randomChars}`;
