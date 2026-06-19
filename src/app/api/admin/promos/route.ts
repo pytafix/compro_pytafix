@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { slug, badge, title, description, validUntil, terms, howToClaim, isActive } = body;
+    const { slug, badge, title, description, validUntil, terms, howToClaim, isActive, isFeatured } = body;
     
     const promo = await prisma.promo.create({
       data: {
@@ -26,7 +26,8 @@ export async function POST(request: Request) {
         validUntil,
         terms,
         howToClaim,
-        isActive: isActive ?? true
+        isActive: isActive ?? true,
+        isFeatured: isFeatured ?? false
       }
     });
     

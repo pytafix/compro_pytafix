@@ -489,7 +489,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {spareparts.length > 0 ? (
               spareparts.map((sparepart, idx) => (
                 <motion.div 
@@ -522,7 +522,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
                 </motion.div>
               ))
             ) : (
-              <p className="col-span-2 lg:col-span-4 text-center text-on-surface-variant font-body-md py-8">Belum ada sparepart yang ditampilkan.</p>
+              <p className="col-span-2 lg:col-span-3 text-center text-on-surface-variant font-body-md py-8">Belum ada sparepart yang ditampilkan.</p>
             )}
           </div>
 

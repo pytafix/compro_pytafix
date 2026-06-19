@@ -11,6 +11,7 @@ interface Sparepart {
   price: number;
   stock: number;
   imageUrl: string | null;
+  isFeatured: boolean;
 }
 
 export default function AdminSpareparts() {
@@ -28,7 +29,8 @@ export default function AdminSpareparts() {
     description: "",
     price: 0,
     stock: 0,
-    imageUrl: ""
+    imageUrl: "",
+    isFeatured: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -60,11 +62,12 @@ export default function AdminSpareparts() {
         description: item.description || "",
         price: item.price,
         stock: item.stock,
-        imageUrl: item.imageUrl || ""
+        imageUrl: item.imageUrl || "",
+        isFeatured: item.isFeatured
       });
     } else {
       setEditingId(null);
-      setFormData({ name: "", category: "RAM", description: "", price: 0, stock: 0, imageUrl: "" });
+      setFormData({ name: "", category: "RAM", description: "", price: 0, stock: 0, imageUrl: "", isFeatured: false });
     }
     setIsModalOpen(true);
   };
@@ -179,6 +182,7 @@ export default function AdminSpareparts() {
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Kategori</th>
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Harga</th>
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant text-center">Stok</th>
+                  <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant text-center">Homepage (Featured)</th>
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant text-right">Aksi</th>
                 </tr>
               </thead>
@@ -213,6 +217,11 @@ export default function AdminSpareparts() {
                     <td className="px-6 py-4 text-center">
                       <span className={`font-label-bold ${item.stock > 0 ? "text-primary" : "text-error"}`}>
                         {item.stock} unit
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`inline-flex px-3 py-1 rounded-full font-label-bold text-label-sm ${item.isFeatured ? "bg-primary-container text-on-primary-container" : "bg-surface-container-high text-on-surface-variant"}`}>
+                        {item.isFeatured ? "Tampil" : "Sembunyi"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
@@ -286,6 +295,14 @@ export default function AdminSpareparts() {
                       <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   )}
+                </div>
+
+                <div>
+                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
+                  <select value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <option value="true">Ya, Tampilkan (Max 3 yang akan muncul)</option>
+                    <option value="false">Tidak</option>
+                  </select>
                 </div>
               </form>
             </div>

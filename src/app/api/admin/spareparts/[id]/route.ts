@@ -9,7 +9,7 @@ export async function PUT(
     const { id: paramId } = await params;
     const id = parseInt(paramId, 10);
     const body = await request.json();
-    const { name, category, description, price, stock, imageUrl } = body;
+    const { name, category, description, price, stock, imageUrl, isFeatured } = body;
 
     const sparepart = await prisma.sparepart.update({
       where: { id },
@@ -19,7 +19,8 @@ export async function PUT(
         description,
         price: price !== undefined ? Number(price) : undefined,
         stock: stock !== undefined ? Number(stock) : undefined,
-        imageUrl
+        imageUrl,
+        isFeatured: isFeatured !== undefined ? Boolean(isFeatured) : undefined,
       }
     });
 

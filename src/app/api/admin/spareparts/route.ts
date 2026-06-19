@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, category, description, price, stock, imageUrl } = body;
+    const { name, category, description, price, stock, imageUrl, isFeatured } = body;
     
     const sparepart = await prisma.sparepart.create({
       data: {
@@ -24,7 +24,8 @@ export async function POST(request: Request) {
         description,
         price: price !== undefined ? Number(price) : 0,
         stock: stock !== undefined ? Number(stock) : 0,
-        imageUrl
+        imageUrl,
+        isFeatured: isFeatured ?? false
       }
     });
     

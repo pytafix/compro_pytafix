@@ -13,6 +13,7 @@ interface Promo {
   terms: string;
   howToClaim: string;
   isActive: boolean;
+  isFeatured: boolean;
 }
 
 export default function AdminPromos() {
@@ -32,7 +33,8 @@ export default function AdminPromos() {
     validUntil: "",
     terms: "",
     howToClaim: "",
-    isActive: true
+    isActive: true,
+    isFeatured: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -66,7 +68,8 @@ export default function AdminPromos() {
         validUntil: promo.validUntil || "",
         terms: promo.terms || "",
         howToClaim: promo.howToClaim || "",
-        isActive: promo.isActive
+        isActive: promo.isActive,
+        isFeatured: promo.isFeatured
       });
     } else {
       setEditingId(null);
@@ -78,7 +81,8 @@ export default function AdminPromos() {
         validUntil: "", 
         terms: "", 
         howToClaim: "", 
-        isActive: true 
+        isActive: true,
+        isFeatured: false 
       });
     }
     setIsModalOpen(true);
@@ -162,6 +166,7 @@ export default function AdminPromos() {
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Info Promo</th>
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Periode & Syarat</th>
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant text-center">Status</th>
+                  <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant text-center">Homepage (Featured)</th>
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant text-right">Aksi</th>
                 </tr>
               </thead>
@@ -190,6 +195,11 @@ export default function AdminPromos() {
                     <td className="px-6 py-4 text-center">
                       <span className={`inline-flex px-3 py-1 rounded-full font-label-bold text-label-sm ${promo.isActive ? "bg-[#dcfce7] text-[#166534]" : "bg-error-container text-on-error-container"}`}>
                         {promo.isActive ? "Aktif" : "Nonaktif"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`inline-flex px-3 py-1 rounded-full font-label-bold text-label-sm ${promo.isFeatured ? "bg-primary-container text-on-primary-container" : "bg-surface-container-high text-on-surface-variant"}`}>
+                        {promo.isFeatured ? "Tampil" : "Sembunyi"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
@@ -260,12 +270,21 @@ export default function AdminPromos() {
                   <textarea required rows={3} placeholder="Langkah klaim promo..." value={formData.howToClaim} onChange={e => setFormData({...formData, howToClaim: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
-                  <select value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
-                    <option value="true">Aktif (Ditampilkan)</option>
-                    <option value="false">Nonaktif (Disembunyikan)</option>
-                  </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
+                    <select value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                      <option value="true">Aktif (Ditampilkan)</option>
+                      <option value="false">Nonaktif (Disembunyikan)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
+                    <select value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                      <option value="true">Ya, Tampilkan</option>
+                      <option value="false">Tidak</option>
+                    </select>
+                  </div>
                 </div>
               </form>
             </div>

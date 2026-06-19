@@ -9,7 +9,7 @@ export async function PUT(
     const { id: paramId } = await params;
     const id = parseInt(paramId, 10);
     const body = await request.json();
-    const { slug, badge, title, description, validUntil, terms, howToClaim, isActive } = body;
+    const { slug, badge, title, description, validUntil, terms, howToClaim, isActive, isFeatured } = body;
 
     const promo = await prisma.promo.update({
       where: { id },
@@ -22,6 +22,7 @@ export async function PUT(
         terms,
         howToClaim,
         isActive: isActive !== undefined ? Boolean(isActive) : undefined,
+        isFeatured: isFeatured !== undefined ? Boolean(isFeatured) : undefined,
       }
     });
 

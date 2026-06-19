@@ -5,13 +5,14 @@ export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function Home() {
   const promos = await prisma.promo.findMany({
-    where: { isActive: true },
+    where: { isActive: true, isFeatured: true },
     take: 3,
     orderBy: { createdAt: 'desc' },
   });
 
   const spareparts = await prisma.sparepart.findMany({
-    take: 4,
+    where: { isFeatured: true },
+    take: 3,
     orderBy: { createdAt: 'desc' },
   });
 
