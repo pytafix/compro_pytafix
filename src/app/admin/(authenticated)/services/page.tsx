@@ -12,6 +12,8 @@ interface Service {
   isActive: boolean;
 }
 
+import { TableSkeleton } from "@/components/admin/TableSkeleton";
+
 export default function AdminServices() {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -158,9 +160,8 @@ export default function AdminServices() {
 
         <div className="bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden overflow-x-auto">
           {isLoading ? (
-            <div className="p-12 text-center text-on-surface-variant flex flex-col items-center">
-              <span className="material-symbols-outlined animate-spin text-[32px] mb-4">progress_activity</span>
-              <p>Memuat data...</p>
+            <div className="p-6">
+              <TableSkeleton />
             </div>
           ) : services.length === 0 ? (
             <div className="p-12 text-center text-on-surface-variant">

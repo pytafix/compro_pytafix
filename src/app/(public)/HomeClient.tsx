@@ -41,7 +41,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter items-center">
           <div className="lg:col-span-7 flex flex-col gap-6">
-            <h1 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-xl md:text-headline-xl text-on-surface leading-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-on-primary-fixed-variant">
+            <h1 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-xl md:text-headline-xl text-on-surface leading-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-on-primary-fixed-variant dark:from-primary dark:to-primary-fixed">
               Laptop Mati Total? Layar HP Retak? Kami Solusinya.
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">

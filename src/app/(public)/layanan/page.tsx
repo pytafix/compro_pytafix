@@ -60,8 +60,8 @@ export default async function Layanan() {
                       </span>
                       <span className="font-label-bold text-label-bold">Bergaransi</span>
                     </div>
-                    <span className="text-primary font-label-bold text-label-bold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Detail <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    <span className="text-primary font-label-bold text-label-bold flex items-center gap-1 bg-primary/10 px-3 py-1 rounded group-hover:bg-primary group-hover:text-white transition-colors">
+                      Lihat Detail <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </span>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 "use client";
+import { TableSkeleton } from "@/components/admin/TableSkeleton";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";

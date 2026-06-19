@@ -1,6 +1,7 @@
 import { TopNavBar } from "@/components/TopNavBar";
 import { Footer } from "@/components/Footer";
 import { GlobalCTA } from "@/components/GlobalCTA";
+import { FloatingWA } from "@/components/FloatingWA";
 
 export default function PublicLayout({
   children,
@@ -15,6 +16,7 @@ export default function PublicLayout({
       </div>
       <GlobalCTA />
       <Footer />
+      <FloatingWA />
     </>
   );
 }

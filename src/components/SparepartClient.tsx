@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import Image from "next/image";
 
 interface Sparepart {
@@ -83,7 +84,7 @@ export function SparepartClient({ initialSpareparts }: Props) {
 
               return (
                 <div key={item.id} className="bg-surface rounded-2xl shadow-sm border border-outline-variant overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group">
-                  <div className="aspect-[4/3] bg-surface-container-low w-full relative overflow-hidden">
+                  <Link href={`/sparepart/${item.id}`} className="aspect-[4/3] bg-surface-container-low w-full relative overflow-hidden block">
                     {item.imageUrl ? (
                       <Image src={item.imageUrl} alt={item.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" />
                     ) : (
@@ -98,10 +99,12 @@ export function SparepartClient({ initialSpareparts }: Props) {
                         {item.category}
                       </span>
                     </div>
-                  </div>
+                  </Link>
                   
                   <div className="p-6 flex-1 flex flex-col relative z-20 bg-surface">
-                    <h3 className="font-title-lg text-on-surface mb-2 line-clamp-2 leading-tight group-hover:text-primary transition-colors">{item.name}</h3>
+                    <Link href={`/sparepart/${item.id}`}>
+                      <h3 className="font-title-lg text-on-surface mb-2 line-clamp-2 leading-tight group-hover:text-primary transition-colors cursor-pointer">{item.name}</h3>
+                    </Link>
                     
                     <div className="mb-4">
                       <span className={`inline-flex items-center gap-1 font-label-bold text-xs px-2 py-1 rounded-md ${item.stock > 0 ? "bg-secondary-container text-on-secondary-container" : "bg-error-container text-on-error-container"}`}>
