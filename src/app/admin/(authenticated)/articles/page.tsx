@@ -161,8 +161,8 @@ export default function AdminArticles() {
 
   return (
     <div className="min-h-screen bg-surface-container-lowest">
-      <main className="p-6 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+      <main className="p-4 md:p-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h2 className="font-headline-md text-headline-md text-on-surface">Manajemen Artikel</h2>
           <button 
             onClick={() => openModal()}
@@ -185,7 +185,7 @@ export default function AdminArticles() {
               <p className="font-body-lg">Belum ada data artikel.</p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-surface-container-lowest border-b border-outline-variant">
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Artikel</th>
@@ -264,7 +264,7 @@ export default function AdminArticles() {
 
             <div className="p-6 overflow-y-auto">
               <form id="article-form" onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Artikel</label>
                     <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
@@ -275,7 +275,7 @@ export default function AdminArticles() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block font-label-bold text-label-bold text-on-surface mb-1">Penulis</label>
                     <input type="text" required value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />

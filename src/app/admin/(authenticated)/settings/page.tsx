@@ -57,7 +57,7 @@ export default function AdminSettings() {
 
   return (
     <div className="min-h-screen bg-surface-container-lowest">
-      <main className="p-6 max-w-7xl mx-auto">
+      <main className="p-4 md:p-6 max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="font-headline-md text-headline-md text-on-surface">Manajemen Legal & Kebijakan</h2>
         </div>
@@ -68,7 +68,7 @@ export default function AdminSettings() {
             <p>Memuat data...</p>
           </div>
         ) : (
-          <div className="bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden p-6">
+          <div className="bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden p-4 md:p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div>

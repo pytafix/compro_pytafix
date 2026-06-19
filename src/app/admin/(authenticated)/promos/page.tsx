@@ -136,8 +136,8 @@ export default function AdminPromos() {
 
   return (
     <div className="min-h-screen bg-surface-container-lowest">
-      <main className="p-6 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+      <main className="p-4 md:p-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h2 className="font-headline-md text-headline-md text-on-surface">Manajemen Promo</h2>
           <button 
             onClick={() => openModal()}
@@ -160,7 +160,7 @@ export default function AdminPromos() {
               <p className="font-body-lg">Belum ada data promo.</p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-surface-container-lowest border-b border-outline-variant">
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Info Promo</th>

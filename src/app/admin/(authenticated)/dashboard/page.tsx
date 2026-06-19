@@ -51,8 +51,8 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-surface-container-lowest">
       {/* Main Content */}
-      <main className="p-6 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+      <main className="p-4 md:p-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h2 className="font-headline-md text-headline-md text-on-surface">Daftar Tiket Servis</h2>
           <button 
             onClick={() => fetchRequests(true)}
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
               <p className="font-body-lg">Belum ada permintaan servis yang masuk.</p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
                 <tr className="bg-surface-container-lowest border-b border-outline-variant">
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">Waktu</th>

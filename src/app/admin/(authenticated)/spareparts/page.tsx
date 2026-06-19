@@ -151,8 +151,8 @@ export default function AdminSpareparts() {
 
   return (
     <div className="min-h-screen bg-surface-container-lowest">
-      <main className="p-6 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+      <main className="p-4 md:p-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h2 className="font-headline-md text-headline-md text-on-surface">Manajemen Sparepart</h2>
           <button 
             onClick={() => openModal()}
@@ -175,7 +175,7 @@ export default function AdminSpareparts() {
               <p className="font-body-lg">Belum ada stok sparepart di inventaris.</p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-surface-container-lowest border-b border-outline-variant">
                   <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant">Item</th>
@@ -260,7 +260,7 @@ export default function AdminSpareparts() {
                   <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block font-label-bold text-label-bold text-on-surface mb-1">Kategori</label>
                     <input type="text" required placeholder="e.g. RAM, SSD, Baterai" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
