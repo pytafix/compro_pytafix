@@ -92,9 +92,17 @@ export function Footer() {
       {/* Copyright */}
       <div className="border-t border-outline-variant">
         <div className="max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-label-sm text-label-sm text-on-surface-variant">
-            © 2024 Pytafix. Part of CV. Pyta Cipta Karya. All rights reserved.
-          </p>
+          <div className="font-label-sm text-label-sm text-on-surface-variant flex flex-col gap-2 text-center md:text-left">
+            <p>
+              © {new Date().getFullYear()} Pytafix. All rights reserved.
+            </p>
+            <p>
+              Pytafix adalah bagian dari <strong>CV. Pyta Cipta Karya</strong> beserta anak usaha lainnya:{" "}
+              <a href="https://www.pytafix.web.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Pytafix</a>,{" "}
+              <a href="https://www.pytabelajar.web.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Pytabelajar</a>, dan{" "}
+              <a href="https://www.pytagotech.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Pytagotech</a>.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
