@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -24,6 +25,8 @@ export async function PUT(
       }
     });
     
+        revalidatePath('/', 'layout');
+    revalidatePath('/artikel', 'layout');
     return NextResponse.json(article);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update article' }, { status: 500 });
@@ -42,6 +45,8 @@ export async function DELETE(
       where: { id }
     });
     
+        revalidatePath('/', 'layout');
+    revalidatePath('/artikel', 'layout');
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 });

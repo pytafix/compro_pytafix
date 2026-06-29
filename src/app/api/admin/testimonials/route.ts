@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -6,6 +7,7 @@ export async function GET() {
     const testimonials = await prisma.testimonial.findMany({
       orderBy: { createdAt: "desc" },
     });
+        revalidatePath('/', 'layout');
     return NextResponse.json(testimonials);
   } catch (error) {
     console.error("Error fetching testimonials:", error);
@@ -24,6 +26,7 @@ export async function POST(request: Request) {
         isFeatured: data.isFeatured || false,
       },
     });
+        revalidatePath('/', 'layout');
     return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {
     console.error("Error creating testimonial:", error);

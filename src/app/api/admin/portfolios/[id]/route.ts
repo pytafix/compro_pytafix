@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -24,6 +25,7 @@ export async function PUT(
       }
     });
 
+        revalidatePath('/portofolio', 'layout');
     return NextResponse.json(portfolio);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update portfolio' }, { status: 500 });
@@ -42,6 +44,7 @@ export async function DELETE(
       where: { id }
     });
 
+        revalidatePath('/portofolio', 'layout');
     return NextResponse.json({ message: 'Portfolio deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete portfolio' }, { status: 500 });

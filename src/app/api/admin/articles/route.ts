@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -6,6 +7,8 @@ export async function GET() {
     const articles = await prisma.article.findMany({
       orderBy: { id: 'desc' }
     });
+        revalidatePath('/', 'layout');
+    revalidatePath('/artikel', 'layout');
     return NextResponse.json(articles);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 });
@@ -29,6 +32,8 @@ export async function POST(request: Request) {
       }
     });
     
+        revalidatePath('/', 'layout');
+    revalidatePath('/artikel', 'layout');
     return NextResponse.json(article, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create article' }, { status: 500 });

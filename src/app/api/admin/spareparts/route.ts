@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -6,6 +7,8 @@ export async function GET() {
     const spareparts = await prisma.sparepart.findMany({
       orderBy: { id: 'desc' }
     });
+        revalidatePath('/', 'layout');
+    revalidatePath('/sparepart', 'layout');
     return NextResponse.json(spareparts);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch spareparts' }, { status: 500 });
@@ -29,6 +32,8 @@ export async function POST(request: Request) {
       }
     });
     
+        revalidatePath('/', 'layout');
+    revalidatePath('/sparepart', 'layout');
     return NextResponse.json(sparepart, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create sparepart' }, { status: 500 });

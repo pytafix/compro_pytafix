@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -17,6 +18,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       },
     });
 
+        revalidatePath('/', 'layout');
     return NextResponse.json(testimonial);
   } catch (error) {
     console.error("Error updating testimonial:", error);
@@ -33,6 +35,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       where: { id },
     });
 
+        revalidatePath('/', 'layout');
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting testimonial:", error);

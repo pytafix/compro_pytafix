@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(
   request: Request,
@@ -39,9 +40,34 @@ export async function PATCH(
       data: updateData,
     });
 
+    revalidatePath("/admin/requests", "layout");
+    revalidatePath("/cek-status-servis", "layout");
+
     return NextResponse.json(updatedRequest, { status: 200 });
   } catch (error) {
     console.error("Error updating request:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: paramId } = await params;
+    const id = parseInt(paramId, 10);
+
+    await prisma.serviceRequest.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin/requests", "layout");
+    revalidatePath("/cek-status-servis", "layout");
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting request:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

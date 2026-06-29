@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -8,6 +9,8 @@ export async function GET() {
     settings.forEach(s => {
       settingsMap[s.id] = s.content;
     });
+        revalidatePath('/syarat-ketentuan', 'layout');
+    revalidatePath('/kebijakan-privasi', 'layout');
     return NextResponse.json(settingsMap);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
@@ -28,6 +31,8 @@ export async function POST(request: Request) {
       }
     }
     
+        revalidatePath('/syarat-ketentuan', 'layout');
+    revalidatePath('/kebijakan-privasi', 'layout');
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });

@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -24,6 +25,8 @@ export async function PUT(
       }
     });
 
+        revalidatePath('/', 'layout');
+    revalidatePath('/sparepart', 'layout');
     return NextResponse.json(sparepart);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update sparepart' }, { status: 500 });
@@ -42,6 +45,8 @@ export async function DELETE(
       where: { id }
     });
 
+        revalidatePath('/', 'layout');
+    revalidatePath('/sparepart', 'layout');
     return NextResponse.json({ message: 'Sparepart deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete sparepart' }, { status: 500 });

@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -6,6 +7,8 @@ export async function GET() {
     const promos = await prisma.promo.findMany({
       orderBy: { id: 'desc' }
     });
+        revalidatePath('/', 'layout');
+    revalidatePath('/promo', 'layout');
     return NextResponse.json(promos);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch promos' }, { status: 500 });
@@ -31,6 +34,8 @@ export async function POST(request: Request) {
       }
     });
     
+        revalidatePath('/', 'layout');
+    revalidatePath('/promo', 'layout');
     return NextResponse.json(promo, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create promo' }, { status: 500 });
