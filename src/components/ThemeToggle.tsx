@@ -27,8 +27,8 @@ export function ThemeToggle() {
       className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary"
       aria-label="Toggle Dark Mode"
     >
-      <span className="material-symbols-outlined transition-all" style={{ fontVariationSettings: isDark ? "'FILL' 1" : "'FILL' 0" }}>
-        {isDark ? "dark_mode" : "light_mode"}
+      <span className="material-symbols-outlined transition-all" style={{ fontVariationSettings: isDark ? "'FILL' 0" : "'FILL' 1" }}>
+        {isDark ? "light_mode" : "dark_mode"}
       </span>
     </button>
   );

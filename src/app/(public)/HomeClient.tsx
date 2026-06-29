@@ -91,7 +91,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
               "apple", "samsung", "asus", "lenovo", "hp", "dell", "acer", "xiaomi", "oppo", "vivo",
               "apple", "samsung", "asus", "lenovo", "hp", "dell", "acer", "xiaomi", "oppo", "vivo"
             ].map((brand, i) => (
-              <div key={i} className="flex items-center justify-center opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 w-24 h-12 cursor-pointer group" title={brand.charAt(0).toUpperCase() + brand.slice(1)}>
+              <div key={i} className="flex items-center justify-center opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 w-24 h-12 cursor-pointer group dark:brightness-0 dark:invert" title={brand.charAt(0).toUpperCase() + brand.slice(1)}>
                 <img src={`https://cdn.simpleicons.org/${brand}/a1a1aa`} alt={brand} className="max-h-10 max-w-full object-contain group-hover:hidden" />
                 <img src={`https://cdn.simpleicons.org/${brand}`} alt={brand} className="max-h-10 max-w-full object-contain hidden group-hover:block" />
               </div>
@@ -111,7 +111,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-gutter bg-surface-container-lowest/80 backdrop-blur-sm border border-outline-variant rounded-2xl p-6 md:p-8 shadow-sm">
           <motion.div variants={fadeUpVariant} className="flex items-center gap-4 group">
             <div className="h-14 w-14 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-primary text-[28px]" aria-hidden="true">verified</span>
+              <span className="material-symbols-outlined text-on-primary-fixed text-[28px]" aria-hidden="true">verified</span>
             </div>
             <div>
               <h3 className="font-label-bold text-label-bold text-on-surface">Garansi Resmi</h3>
@@ -120,7 +120,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
           </motion.div>
           <motion.div variants={fadeUpVariant} className="flex items-center gap-4 group">
             <div className="h-14 w-14 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-primary text-[28px]" aria-hidden="true">memory</span>
+              <span className="material-symbols-outlined text-on-primary-fixed text-[28px]" aria-hidden="true">memory</span>
             </div>
             <div>
               <h3 className="font-label-bold text-label-bold text-on-surface">Sparepart Original</h3>
@@ -129,7 +129,7 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
           </motion.div>
           <motion.div variants={fadeUpVariant} className="flex items-center gap-4 group">
             <div className="h-14 w-14 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-primary text-[28px]" aria-hidden="true">home_repair_service</span>
+              <span className="material-symbols-outlined text-on-primary-fixed text-[28px]" aria-hidden="true">home_repair_service</span>
             </div>
             <div>
               <h3 className="font-label-bold text-label-bold text-on-surface">Home Service</h3>
