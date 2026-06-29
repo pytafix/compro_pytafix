@@ -47,3 +47,6 @@ next-env.d.ts
 scratch/
 prisma/*.db
 prisma/*.db-journal
+
+# credentials
+google-service-account.json
