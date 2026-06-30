@@ -4,9 +4,9 @@ import Image from "next/image";
 export function Footer() {
   return (
     <footer className="bg-surface-container-highest border-t border-outline-variant w-full mt-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-gutter px-4 md:px-8 lg:px-margin-desktop pt-12 md:pt-16 pb-12 max-w-container-max mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-gutter px-4 md:px-8 lg:px-margin-desktop pt-12 md:pt-16 pb-12 max-w-container-max mx-auto">
         {/* Col 1: Brand */}
-        <div className="col-span-1 md:col-span-2 lg:col-span-1">
+        <div className="col-span-1 md:col-span-2 lg:col-span-2">
           <Link href="/" className="flex items-center gap-2 mb-4">
             <Image
               alt="Pytafix Logo"
@@ -19,44 +19,51 @@ export function Footer() {
               Pytafix
             </span>
           </Link>
-          <p className="font-label-sm text-label-sm text-on-surface-variant mb-6 pr-4">
-            Solusi perbaikan hardware terpercaya untuk keberlangsungan digital
-            Anda.
+          <p className="font-label-sm text-label-sm text-on-surface-variant mb-6 pr-4 lg:pr-12">
+            Solusi perbaikan hardware terpercaya untuk keberlangsungan digital Anda.
           </p>
         </div>
 
-        {/* Col 2: Navigasi */}
+        {/* Col 2: Layanan & Produk */}
         <div className="col-span-1">
           <h4 className="font-label-bold text-label-bold text-on-surface mb-4">
-            Navigasi Utama
+            Layanan & Produk
           </h4>
           <ul className="flex flex-col gap-3">
-            <li><Link href="/layanan" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Layanan Servis</Link></li>
+            <li><Link href="/layanan" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Semua Layanan</Link></li>
+            <li><Link href="/booking-servis" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Booking Servis</Link></li>
+            <li><Link href="/klaim-garansi" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Klaim Garansi</Link></li>
             <li><Link href="/sparepart" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Sparepart</Link></li>
-            <li><Link href="/portofolio" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Portofolio</Link></li>
             <li><Link href="/promo" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Promo Spesial</Link></li>
-            <li><Link href="/artikel" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Artikel & Tips</Link></li>
           </ul>
         </div>
 
-        {/* Col 3: Bantuan & Legal */}
+        {/* Col 3: Informasi */}
         <div className="col-span-1">
           <h4 className="font-label-bold text-label-bold text-on-surface mb-4">
-            Bantuan & Legal
+            Informasi
           </h4>
           <ul className="flex flex-col gap-3">
+            <li><Link href="/tentang-kami" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Tentang Kami</Link></li>
+            <li><Link href="/portofolio" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Portofolio</Link></li>
+            <li><Link href="/testimoni" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Testimoni</Link></li>
+            <li><Link href="/artikel" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Artikel & Tips</Link></li>
+            <li><Link href="/faq" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">FAQ</Link></li>
+          </ul>
+        </div>
+
+        {/* Col 4: Bantuan & Kontak */}
+        <div className="col-span-1">
+          <h4 className="font-label-bold text-label-bold text-on-surface mb-4">
+            Bantuan
+          </h4>
+          <ul className="flex flex-col gap-3 mb-6">
             <li><Link href="/cek-status-servis" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Cek Status Servis</Link></li>
             <li><Link href="/kontak" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Hubungi Kami</Link></li>
             <li><Link href="/syarat-ketentuan" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Syarat & Ketentuan</Link></li>
             <li><Link href="/kebijakan-privasi" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Kebijakan Privasi</Link></li>
           </ul>
-        </div>
-
-        {/* Col 4: Kontak & Social */}
-        <div className="col-span-1">
-          <h4 className="font-label-bold text-label-bold text-on-surface mb-4">
-            Kontak & Lokasi
-          </h4>
+          
           <ul className="flex flex-col gap-3 mb-6">
             <li className="font-body-md text-body-md text-on-surface-variant flex items-start gap-2">
               <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">location_on</span>
