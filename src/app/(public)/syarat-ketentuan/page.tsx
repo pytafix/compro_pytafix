@@ -5,8 +5,14 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Syarat & Ketentuan | Pytafix",
   description: "Syarat dan ketentuan layanan perbaikan perangkat elektronik di Pytafix Malang.",
-  alternates: {
-    canonical: "/syarat-ketentuan",
+  alternates: { canonical: "/syarat-ketentuan" },
+  openGraph: {
+    title: "Syarat & Ketentuan | Pytafix",
+    description: "Syarat dan ketentuan layanan perbaikan perangkat elektronik di Pytafix Malang.",
+    url: "https://www.pytafix.web.id/syarat-ketentuan",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Syarat Ketentuan" }],
+    locale: "id_ID",
+    type: "website",
   },
 };
 

@@ -5,8 +5,14 @@ import FaqAccordion from "./FaqAccordion";
 export const metadata = {
   title: "Pertanyaan yang Sering Diajukan (FAQ) | Pytafix",
   description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan perbaikan, garansi, dan proses servis di Pytafix.",
-  alternates: {
-    canonical: "/faq",
+  alternates: { canonical: "/faq" },
+  openGraph: {
+    title: "FAQ | Pytafix - Pertanyaan Seputar Servis Elektronik",
+    description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan perbaikan, garansi, dan proses servis di Pytafix Malang.",
+    url: "https://www.pytafix.web.id/faq",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix FAQ" }],
+    locale: "id_ID",
+    type: "website",
   },
 };
 
@@ -16,8 +22,25 @@ export default async function FaqPage() {
     orderBy: { createdAt: 'asc' }
   });
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
+    })),
+  };
+
   return (
     <main className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 px-4 md:px-8 text-center border-b border-surface-container-highest">
         <div className="max-w-3xl mx-auto">

@@ -39,7 +39,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!service) {
     return {
-      title: "Layanan Tidak Ditemukan | Pytafix"
+      title: "Layanan Tidak Ditemukan | Pytafix",
+      alternates: { canonical: `/layanan/${slug}` },
     };
   }
 
@@ -47,12 +48,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `${service.title} di ${location} | Pytafix`,
       description: `Layanan ${service.title.toLowerCase()} terdekat dan terpercaya di area ${location}. ${service.description}`,
+      alternates: { canonical: `/layanan/${slug}` },
+      openGraph: {
+        title: `${service.title} di ${location} | Pytafix`,
+        description: `Layanan ${service.title.toLowerCase()} terdekat dan terpercaya di area ${location}. ${service.description}`,
+        url: `https://www.pytafix.web.id/layanan/${slug}`,
+        images: [{ url: "/logo.png", width: 800, height: 600, alt: service.title }],
+        locale: "id_ID",
+        type: "website",
+      },
     };
   }
 
   return {
     title: `${service.title} | Pytafix`,
     description: service.description,
+    alternates: { canonical: `/layanan/${slug}` },
+    openGraph: {
+      title: `${service.title} | Pytafix`,
+      description: service.description,
+      url: `https://www.pytafix.web.id/layanan/${slug}`,
+      images: [{ url: "/logo.png", width: 800, height: 600, alt: service.title }],
+      locale: "id_ID",
+      type: "website",
+    },
   };
 }
 

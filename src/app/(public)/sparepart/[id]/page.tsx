@@ -16,13 +16,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!sparepart) {
     return {
-      title: "Sparepart Tidak Ditemukan | Pytafix"
+      title: "Sparepart Tidak Ditemukan | Pytafix",
+      alternates: { canonical: `/sparepart/${id}` },
     };
   }
 
   return {
     title: `${sparepart.name} - ${sparepart.category} | Pytafix`,
     description: sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang.`,
+    alternates: { canonical: `/sparepart/${id}` },
+    openGraph: {
+      title: `${sparepart.name} | Pytafix`,
+      description: sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang.`,
+      url: `https://www.pytafix.web.id/sparepart/${id}`,
+      images: [{ url: "/logo.png", width: 800, height: 600, alt: sparepart.name }],
+      locale: "id_ID",
+      type: "website",
+    },
   };
 }
 

@@ -6,8 +6,14 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Artikel & Edukasi Servis | Pytafix",
   description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
-  alternates: {
-    canonical: "/artikel",
+  alternates: { canonical: "/artikel" },
+  openGraph: {
+    title: "Artikel & Edukasi Servis | Pytafix",
+    description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
+    url: "https://www.pytafix.web.id/artikel",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Artikel" }],
+    locale: "id_ID",
+    type: "website",
   },
 };
 

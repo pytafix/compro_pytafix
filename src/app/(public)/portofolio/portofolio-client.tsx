@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Portfolio } from "@prisma/client";
 
@@ -40,11 +41,11 @@ export default function PortofolioClient({ cases }: { cases: Portfolio[] }) {
               <div className="flex h-48 sm:h-56">
                 <div className="w-1/2 relative bg-surface-variant">
                   <div className="absolute top-2 left-2 z-10 bg-error text-on-error text-xs font-bold px-2 py-1 rounded">Before</div>
-                  <img src={item.beforeImage} alt={`${item.title} Before`} className="w-full h-full object-cover" loading="lazy" />
+                  <Image src={item.beforeImage} alt={`${item.title} Before`} fill sizes="50vw" className="object-cover" loading="lazy" />
                 </div>
                 <div className="w-1/2 relative bg-surface-variant border-l border-surface-container-highest">
                   <div className="absolute top-2 right-2 z-10 bg-primary text-on-primary text-xs font-bold px-2 py-1 rounded">After</div>
-                  <img src={item.afterImage} alt={`${item.title} After`} className="w-full h-full object-cover" loading="lazy" />
+                  <Image src={item.afterImage} alt={`${item.title} After`} fill sizes="50vw" className="object-cover" loading="lazy" />
                 </div>
               </div>
               <div className="p-6">

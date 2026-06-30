@@ -5,6 +5,15 @@ import { SparepartClient } from "@/components/SparepartClient";
 export const metadata: Metadata = {
   title: "Jual Sparepart & Aksesoris Laptop di Malang | Pytafix",
   description: "Beli berbagai macam suku cadang (sparepart) original untuk komputer dan laptop Anda. Tersedia RAM, SSD, baterai, dan lainnya.",
+  alternates: { canonical: "/sparepart" },
+  openGraph: {
+    title: "Sparepart & Aksesoris Laptop Original | Pytafix",
+    description: "Beli sparepart laptop original di Pytafix Malang. Tersedia RAM, SSD, baterai, keyboard dengan garansi pemasangan resmi.",
+    url: "https://www.pytafix.web.id/sparepart",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Sparepart" }],
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export default async function SparepartPage() {

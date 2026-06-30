@@ -13,7 +13,7 @@ export function GlobalCTA() {
 
   return (
     <div className="mx-4 lg:mx-8 mb-16 mt-24 md:mt-32 relative max-w-container-max xl:mx-auto">
-      <div className="bg-primary text-white rounded-[2rem] p-8 md:p-12 relative flex flex-col md:flex-row items-center justify-between overflow-visible shadow-xl">
+      <div className="bg-primary text-on-primary rounded-[2rem] p-8 md:p-12 relative flex flex-col md:flex-row items-center justify-between overflow-visible shadow-xl">
         <div className="w-full md:w-2/3 text-center md:text-left z-10 relative">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-headline-md mb-4 leading-tight">
             Perangkat Bermasalah?<br className="hidden md:block" /> Jangan Tunggu Sampai Parah.

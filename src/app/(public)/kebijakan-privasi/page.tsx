@@ -5,8 +5,14 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Kebijakan Privasi | Pytafix",
   description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
-  alternates: {
-    canonical: "/kebijakan-privasi",
+  alternates: { canonical: "/kebijakan-privasi" },
+  openGraph: {
+    title: "Kebijakan Privasi | Pytafix",
+    description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
+    url: "https://www.pytafix.web.id/kebijakan-privasi",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Kebijakan Privasi" }],
+    locale: "id_ID",
+    type: "website",
   },
 };
 

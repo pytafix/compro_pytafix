@@ -51,7 +51,7 @@ export default async function ArticleDetailPage({
     "@type": "Article",
     "headline": article.title,
     "image": [
-      `https://pytafix.com${article.imageUrl || "/logo.png"}`
+      `https://www.pytafix.web.id${article.imageUrl || "/logo.png"}`
     ],
     "datePublished": publishedDate.toISOString(),
     "author": [{

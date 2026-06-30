@@ -1,9 +1,18 @@
-import Image from "next/link"; // We will use img instead for simplicity
+import Image from "next/image";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Tentang Kami | Pytafix",
-  description: "Solusi profesional untuk perbaikan perangkat keras Anda. Kami berdedikasi untuk memulihkan kinerja optimal elektronik esensial Anda dengan presisi teknis."
+  description: "Solusi profesional untuk perbaikan perangkat keras Anda. Kami berdedikasi untuk memulihkan kinerja optimal elektronik esensial Anda dengan presisi teknis.",
+  alternates: { canonical: "/tentang-kami" },
+  openGraph: {
+    title: "Tentang Pytafix | Servis Elektronik Terpercaya di Malang",
+    description: "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Bagian dari CV. Pyta Cipta Karya dengan teknisi bersertifikat dan standar enterprise.",
+    url: "https://www.pytafix.web.id/tentang-kami",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Tentang Kami" }],
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export default function TentangKami() {
@@ -42,10 +51,12 @@ export default function TentangKami() {
             </p>
           </div>
           <div className="md:col-span-5 rounded-xl overflow-hidden border border-outline-variant relative min-h-[300px]">
-            <img
+            <Image
               className="absolute inset-0 w-full h-full object-cover"
               alt="A macro shot of a sophisticated electronic circuit board undergoing repair in a pristine, brightly lit laboratory setting."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8pAzD-blK_AbEVRSc2NoWmEJtI8VKpuaIQcTyFO0cE6fCuZ_gIJSZ2Rxtqq0k0bQbJnfKeZMJKjsUgTOnc6rFi88PRz4OT8_71EYjCQatQIP-DyLWVPDwvDoZC9QdobdORs1B0kJfS58Vtss9bpW1NcCO6ZSNHmijBSL8xGFW4MppCM0O9oDlEjYGYKOU0Jyeco6_QQEb_tIaEm7WnZnkXNa-wQNCQ3FxsSFa2xxG2IJrQGYLDMd8Qx--zk9Zd1upPT-3_Esah4b0"
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         </section>
@@ -100,10 +111,12 @@ export default function TentangKami() {
         {/* Service Area Section */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center text-left">
           <div className="order-2 lg:order-1 h-96 bg-surface-container border border-outline-variant rounded-xl relative overflow-hidden flex items-center justify-center">
-            <img
+            <Image
               className="absolute inset-0 w-full h-full object-cover opacity-80"
               alt="A stylized, modern, top-down map interface showing an urban grid"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPQSx7SWf0YJ0j-TA4GFvLaQp3riR7cpryZGR7BIiAmbidv6bqO_t4kaA9Z3vn5zZAIC6fNUpixAIbPfRD18HzcSWC79cunA6UGAU8XiAfaBYWWOclIoyIr3mJDwsZoXj0USqZ_tAZ_FQjF7JvzY79mXsnZyopCgYBNf8qCgrEGPgxS_ZVtcOCvOTsfCmmZq6ONlJzfP4xsbI4Rg30q1AZ1fOw2EnY5tsiOTuL0ocWBWZMUYrC-a09jZn1FQjReIXEycjqvACXB6Xk"
+              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
             <div className="absolute inset-0 bg-primary/10"></div>
             <div className="relative bg-surface-container-lowest/90 backdrop-blur-sm border border-primary p-4 rounded shadow-sm text-center">

@@ -10,7 +10,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pytafix.com"),
+  metadataBase: new URL("https://www.pytafix.web.id"),
   title: {
     default: "Pytafix - Pusat Servis Laptop, HP, dan Komputer di Malang",
     template: "%s | Pytafix",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Pytafix - Pusat Servis Laptop, HP & Komputer Malang",
     description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat elektronik Anda sekarang dengan teknisi handal di Malang!",
-    url: "https://pytafix.com",
+    url: "https://www.pytafix.web.id",
     siteName: "Pytafix",
     images: [
       {
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: ["/logo.png"],
   },
   alternates: {
-    canonical: "https://pytafix.com",
+    canonical: "https://www.pytafix.web.id",
   },
 };
 
@@ -63,12 +63,12 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               "name": "Pytafix",
-              "image": "https://pytafix.com/logo.png",
-              "url": "https://pytafix.com",
+              "image": "https://www.pytafix.web.id/logo.png",
+              "url": "https://www.pytafix.web.id",
               "telephone": "+6281234567890",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Jl. Teknologi No. 1",
+                "streetAddress": "Jl. Elektronik No. 123",
                 "addressLocality": "Malang",
                 "addressRegion": "Jawa Timur",
                 "postalCode": "65141",
@@ -86,12 +86,13 @@ export default function RootLayout({
                   "@type": "OpeningHoursSpecification",
                   "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                   "opens": "09:00",
-                  "closes": "21:00"
+                  "closes": "18:00"
                 }
               ],
               "sameAs": [
                 "https://www.instagram.com/pytafix",
-                "https://www.facebook.com/pytafix"
+                "https://www.facebook.com/pytafix",
+                "https://www.tiktok.com/@pytafix"
               ]
             })
           }}

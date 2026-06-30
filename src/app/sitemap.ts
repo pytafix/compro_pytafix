@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma"
 import { LOCATIONS, slugifyLocation } from "@/lib/locations"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://pytafix.com';
+  const baseUrl = 'https://www.pytafix.web.id';
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}`, lastModified: new Date() },
@@ -17,6 +17,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/syarat-ketentuan`, lastModified: new Date() },
     { url: `${baseUrl}/kebijakan-privasi`, lastModified: new Date() },
     { url: `${baseUrl}/kontak`, lastModified: new Date() },
+    { url: `${baseUrl}/faq`, lastModified: new Date() },
+    { url: `${baseUrl}/testimoni`, lastModified: new Date() },
+    { url: `${baseUrl}/sparepart`, lastModified: new Date() },
+    { url: `${baseUrl}/klaim-garansi`, lastModified: new Date() },
   ];
 
   // Fetch all active services
@@ -34,6 +38,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch articles
   const articles = await prisma.article.findMany({
     select: { slug: true, updatedAt: true }
+  });
+
+  // Fetch all spareparts
+  const spareparts = await prisma.sparepart.findMany({
+    select: { id: true, updatedAt: true }
   });
 
   const dynamicPages: MetadataRoute.Sitemap = [];
@@ -66,6 +75,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     dynamicPages.push({
       url: `${baseUrl}/artikel/${article.slug}`,
       lastModified: article.updatedAt,
+    });
+  }
+
+  for (const sparepart of spareparts) {
+    dynamicPages.push({
+      url: `${baseUrl}/sparepart/${sparepart.id}`,
+      lastModified: sparepart.updatedAt,
     });
   }
 

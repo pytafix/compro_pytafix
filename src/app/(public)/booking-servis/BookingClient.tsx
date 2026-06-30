@@ -39,7 +39,7 @@ export default function BookingClient() {
   // Get today's date in YYYY-MM-DD format for min attribute
   const today = new Date().toISOString().split("T")[0];
 
-  let waUrl = "https://wa.me/1234567890?text=";
+  let waUrl = "https://wa.me/6281234567890?text=";
   if (formData) {
     const deviceName = formData.device_type === "smartphone" ? "Smartphone" : formData.device_type === "laptop" ? "Laptop / MacBook" : formData.device_type === "tablet" ? "Tablet / iPad" : formData.device_type === "console" ? "Konsol Game" : "Lainnya";
     const serviceName = formData.service_type === "screen" ? "Ganti Layar / LCD" : formData.service_type === "battery" ? "Ganti Baterai" : formData.service_type === "water" ? "Kerusakan Air" : formData.service_type === "software" ? "Instalasi Software / OS" : formData.service_type === "diagnostic" ? "Cek Total / Diagnostik" : "Lainnya";

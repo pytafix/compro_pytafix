@@ -27,7 +27,16 @@ export default function PromoList({ promos }: { promos: any[] }) {
       {/* Promos Grid */}
       <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {promos.map((promo, index) => (
+          {promos.length === 0 ? (
+            <div className="col-span-full text-center py-20">
+              <span className="material-symbols-outlined text-[64px] text-on-surface-variant opacity-50 mb-4 block">sell</span>
+              <h2 className="font-headline-sm text-on-surface mb-2">Belum Ada Promo</h2>
+              <p className="font-body-md text-on-surface-variant mb-8">Saat ini belum ada promo aktif. Kunjungi kembali nanti atau hubungi kami untuk penawaran spesial.</p>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl hover:opacity-90 transition-opacity">
+                Tanya Promo via WhatsApp
+              </a>
+            </div>
+          ) : promos.map((promo, index) => (
             <motion.div
               key={promo.id}
               initial={{ opacity: 0, y: 20 }}

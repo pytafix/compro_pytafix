@@ -3,7 +3,16 @@ import BookingClient from "./BookingClient";
 
 export const metadata: Metadata = {
   title: "Booking Servis | Pytafix",
-  description: "Jadwalkan perbaikan Anda. Isi formulir untuk memulai proses servis."
+  description: "Jadwalkan perbaikan Anda. Isi formulir untuk memulai proses servis.",
+  alternates: { canonical: "/booking-servis" },
+  openGraph: {
+    title: "Booking Servis Laptop, HP & Komputer | Pytafix",
+    description: "Jadwalkan servis laptop, HP, atau komputer Anda di Pytafix Malang. Teknisi bersertifikat, pengerjaan cepat, dan garansi resmi.",
+    url: "https://www.pytafix.web.id/booking-servis",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Booking Servis" }],
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export default function BookingServis() {

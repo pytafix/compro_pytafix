@@ -1,10 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Jasa Service Laptop & MacBook di Malang | Pytafix",
-  description: "Solusi perbaikan profesional untuk semua perangkat Anda."
+  description: "Solusi perbaikan profesional untuk semua perangkat Anda.",
+  alternates: { canonical: "/layanan" },
+  openGraph: {
+    title: "Layanan Servis Laptop, HP & Komputer | Pytafix Malang",
+    description: "Pytafix menyediakan layanan servis laptop, HP, dan komputer dengan teknisi bersertifikat dan garansi resmi di Malang.",
+    url: "https://www.pytafix.web.id/layanan",
+    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Layanan Servis" }],
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export default async function Layanan() {
@@ -42,7 +52,7 @@ export default async function Layanan() {
                 <div className="bg-surface border border-outline-variant rounded p-6 hover:border-primary transition-colors flex flex-col h-full">
                   <div className="mb-4 text-primary">
                     {service.imageUrl ? (
-                      <img src={service.imageUrl} alt={service.title} className="w-12 h-12 rounded object-cover mb-2" />
+                      <Image src={service.imageUrl} alt={service.title} width={48} height={48} className="w-12 h-12 rounded object-cover mb-2" />
                     ) : (
                       <span className="material-symbols-outlined text-4xl">
                         {service.icon || "build"}
@@ -60,7 +70,7 @@ export default async function Layanan() {
                       </span>
                       <span className="font-label-bold text-label-bold">Bergaransi</span>
                     </div>
-                    <span className="text-primary font-label-bold text-label-bold flex items-center gap-1 bg-primary/10 px-3 py-1 rounded group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span className="text-primary font-label-bold text-label-bold flex items-center gap-1 bg-primary/10 px-3 py-1 rounded group-hover:bg-primary group-hover:text-on-primary transition-colors">
                       Lihat Detail <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </span>
                   </div>
@@ -116,10 +126,10 @@ export default async function Layanan() {
       {/* CTA Section */}
       <section className="py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop bg-primary text-on-primary text-center">
         <div className="max-w-container-max mx-auto">
-          <h2 className="font-headline-lg text-headline-lg mb-4 md:font-headline-lg md:text-headline-lg font-headline-lg-mobile text-headline-lg-mobile text-white">
+          <h2 className="font-headline-lg text-headline-lg mb-4 md:font-headline-lg md:text-headline-lg font-headline-lg-mobile text-headline-lg-mobile">
             Butuh Bantuan Teknisi Kami?
           </h2>
-          <p className="font-body-lg text-body-lg mb-8 max-w-2xl mx-auto text-white/90">
+          <p className="font-body-lg text-body-lg mb-8 max-w-2xl mx-auto opacity-90">
             Jangan biarkan masalah perangkat mengganggu produktivitas Anda. Jadwalkan perbaikan sekarang.
           </p>
           <Link href="/booking-servis">
