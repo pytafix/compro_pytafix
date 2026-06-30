@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "@/components/ThemeToggle";
+
 
 export function TopNavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +48,6 @@ export function TopNavBar() {
           </div>
           
           <div className="hidden md:flex items-center gap-4">
-            <ThemeToggle />
             <Link 
               href="/booking-servis" 
               className="bg-primary text-on-primary font-label-bold text-label-bold px-4 lg:px-6 py-2.5 lg:py-3 rounded hover:opacity-90 hover:shadow-md transition-all items-center justify-center cursor-pointer"
@@ -59,7 +58,6 @@ export function TopNavBar() {
 
           {/* Mobile Toggle */}
           <div className="flex items-center md:hidden gap-2">
-            <ThemeToggle />
             <button 
               className="text-primary p-2 focus:outline-none" 
               onClick={() => setIsOpen(!isOpen)}

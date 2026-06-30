@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/ThemeProvider";
+
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -101,10 +101,8 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} antialiased h-full flex flex-col pt-20`}
       >
-        <ThemeProvider>
           {children}
           <Toaster position="bottom-right" richColors />
-        </ThemeProvider>
       </body>
     </html>
   );

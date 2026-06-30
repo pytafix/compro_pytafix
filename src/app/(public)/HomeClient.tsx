@@ -91,9 +91,8 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
               "apple", "samsung", "asus", "lenovo", "hp", "dell", "acer", "xiaomi", "oppo", "vivo",
               "apple", "samsung", "asus", "lenovo", "hp", "dell", "acer", "xiaomi", "oppo", "vivo"
             ].map((brand, i) => (
-              <div key={i} className="flex items-center justify-center opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 w-24 h-12 cursor-pointer group dark:brightness-0 dark:invert" title={brand.charAt(0).toUpperCase() + brand.slice(1)}>
-                <img src={`https://cdn.simpleicons.org/${brand}/a1a1aa`} alt={brand} className="max-h-10 max-w-full object-contain group-hover:hidden" />
-                <img src={`https://cdn.simpleicons.org/${brand}`} alt={brand} className="max-h-10 max-w-full object-contain hidden group-hover:block" />
+              <div key={i} className="flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-300 w-24 h-12 cursor-pointer group" title={brand.charAt(0).toUpperCase() + brand.slice(1)}>
+                <img src={`https://cdn.simpleicons.org/${brand}`} alt={brand} className="max-h-10 max-w-full object-contain" />
               </div>
             ))}
           </motion.div>
