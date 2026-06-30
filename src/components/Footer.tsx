@@ -10,7 +10,7 @@ export function Footer() {
           <Link href="/" className="flex items-center gap-2 mb-4">
             <Image
               alt="Pytafix Logo"
-              className="h-8 w-8 md:h-10 md:w-10 object-contain"
+              className="h-8 w-8 md:h-10 md:w-10 object-contain bg-white rounded-md p-1"
               src="/logo.png"
               width={40}
               height={40}
