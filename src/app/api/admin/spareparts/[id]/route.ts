@@ -7,8 +7,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { name, category, description, price, stock, imageUrl, isFeatured } = body;
 
@@ -25,7 +24,7 @@ export async function PUT(
       }
     });
 
-        revalidatePath('/', 'layout');
+    revalidatePath('/', 'layout');
     revalidatePath('/sparepart', 'layout');
     return NextResponse.json(sparepart);
   } catch (error) {
@@ -38,14 +37,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
 
     await prisma.sparepart.delete({
       where: { id }
     });
 
-        revalidatePath('/', 'layout');
+    revalidatePath('/', 'layout');
     revalidatePath('/sparepart', 'layout');
     return NextResponse.json({ message: 'Sparepart deleted successfully' });
   } catch (error) {

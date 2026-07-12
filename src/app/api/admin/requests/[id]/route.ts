@@ -1,14 +1,13 @@
-import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import prisma from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { status, technicianName, technicianNotes } = body;
 
@@ -17,7 +16,7 @@ export async function PATCH(
     });
 
     if (!existingRequest) {
-      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Request not found' }, { status: 404 });
     }
 
     const updateData: Record<string, unknown> = {
@@ -26,12 +25,11 @@ export async function PATCH(
       technicianNotes,
     };
 
-    // Update timestamp fields based on status transitions
-    if (status === "DIAGNOSA" && !existingRequest.diagnosedAt) {
+    if (status === 'DIAGNOSA' && !existingRequest.diagnosedAt) {
       updateData.diagnosedAt = new Date();
-    } else if (status === "DIKERJAKAN" && !existingRequest.workingAt) {
+    } else if (status === 'DIKERJAKAN' && !existingRequest.workingAt) {
       updateData.workingAt = new Date();
-    } else if (status === "SELESAI" && !existingRequest.completedAt) {
+    } else if (status === 'SELESAI' && !existingRequest.completedAt) {
       updateData.completedAt = new Date();
     }
 
@@ -40,13 +38,12 @@ export async function PATCH(
       data: updateData,
     });
 
-    revalidatePath("/admin/requests", "layout");
-    revalidatePath("/cek-status-servis", "layout");
+    revalidatePath('/admin/requests', 'layout');
+    revalidatePath('/cek-status-servis', 'layout');
 
     return NextResponse.json(updatedRequest, { status: 200 });
   } catch (error) {
-    console.error("Error updating request:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
@@ -55,19 +52,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
 
     await prisma.serviceRequest.delete({
       where: { id },
     });
 
-    revalidatePath("/admin/requests", "layout");
-    revalidatePath("/cek-status-servis", "layout");
+    revalidatePath('/admin/requests', 'layout');
+    revalidatePath('/cek-status-servis', 'layout');
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error("Error deleting request:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

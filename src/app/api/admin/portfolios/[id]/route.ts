@@ -7,8 +7,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { title, description, deviceType, problemType, beforeImage, afterImage, completionDate } = body;
 
@@ -25,7 +24,8 @@ export async function PUT(
       }
     });
 
-        revalidatePath('/portofolio', 'layout');
+    revalidatePath('/', 'layout');
+    revalidatePath('/portofolio', 'layout');
     return NextResponse.json(portfolio);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update portfolio' }, { status: 500 });
@@ -37,14 +37,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
 
     await prisma.portfolio.delete({
       where: { id }
     });
 
-        revalidatePath('/portofolio', 'layout');
+    revalidatePath('/', 'layout');
+    revalidatePath('/portofolio', 'layout');
     return NextResponse.json({ message: 'Portfolio deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete portfolio' }, { status: 500 });

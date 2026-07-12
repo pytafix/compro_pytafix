@@ -9,8 +9,6 @@ export async function GET() {
     settings.forEach(s => {
       settingsMap[s.id] = s.content;
     });
-        revalidatePath('/syarat-ketentuan', 'layout');
-    revalidatePath('/kebijakan-privasi', 'layout');
     return NextResponse.json(settingsMap);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
@@ -20,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
+
     for (const [id, content] of Object.entries(body)) {
       if (typeof content === 'string') {
         await prisma.setting.upsert({
@@ -30,8 +28,9 @@ export async function POST(request: Request) {
         });
       }
     }
-    
-        revalidatePath('/syarat-ketentuan', 'layout');
+
+    revalidatePath('/', 'layout');
+    revalidatePath('/syarat-ketentuan', 'layout');
     revalidatePath('/kebijakan-privasi', 'layout');
     return NextResponse.json({ success: true });
   } catch (error) {

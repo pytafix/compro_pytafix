@@ -7,11 +7,10 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { slug, title, excerpt, content, imageUrl, author, publishedAt } = body;
-    
+
     const article = await prisma.article.update({
       where: { id },
       data: {
@@ -24,8 +23,8 @@ export async function PUT(
         publishedAt: publishedAt ? new Date(publishedAt) : null
       }
     });
-    
-        revalidatePath('/', 'layout');
+
+    revalidatePath('/', 'layout');
     revalidatePath('/artikel', 'layout');
     return NextResponse.json(article);
   } catch (error) {
@@ -38,14 +37,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
-    
+    const { id } = await params;
+
     await prisma.article.delete({
       where: { id }
     });
-    
-        revalidatePath('/', 'layout');
+
+    revalidatePath('/', 'layout');
     revalidatePath('/artikel', 'layout');
     return NextResponse.json({ success: true });
   } catch (error) {

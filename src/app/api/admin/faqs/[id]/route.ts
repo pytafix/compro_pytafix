@@ -7,8 +7,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { question, answer, isActive } = body;
 
@@ -21,7 +20,8 @@ export async function PUT(
       }
     });
 
-        revalidatePath('/faq', 'layout');
+    revalidatePath('/', 'layout');
+    revalidatePath('/faq', 'layout');
     return NextResponse.json(faq);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update faq' }, { status: 500 });
@@ -33,14 +33,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
 
     await prisma.faq.delete({
       where: { id }
     });
 
-        revalidatePath('/faq', 'layout');
+    revalidatePath('/', 'layout');
+    revalidatePath('/faq', 'layout');
     return NextResponse.json({ message: 'FAQ deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete faq' }, { status: 500 });

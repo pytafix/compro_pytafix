@@ -7,8 +7,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { slug, badge, title, description, validUntil, terms, howToClaim, isActive, isFeatured } = body;
 
@@ -27,7 +26,7 @@ export async function PUT(
       }
     });
 
-        revalidatePath('/', 'layout');
+    revalidatePath('/', 'layout');
     revalidatePath('/promo', 'layout');
     return NextResponse.json(promo);
   } catch (error) {
@@ -40,14 +39,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
 
     await prisma.promo.delete({
       where: { id }
     });
 
-        revalidatePath('/', 'layout');
+    revalidatePath('/', 'layout');
     revalidatePath('/promo', 'layout');
     return NextResponse.json({ message: 'Promo deleted successfully' });
   } catch (error) {

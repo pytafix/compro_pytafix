@@ -5,9 +5,8 @@ import prisma from '@/lib/prisma';
 export async function GET() {
   try {
     const services = await prisma.serviceContent.findMany({
-      orderBy: { id: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
-        revalidatePath('/layanan', 'layout');
     return NextResponse.json(services);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch services' }, { status: 500 });
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { slug, title, description, content, icon, imageUrl, isActive } = body;
-    
+
     const service = await prisma.serviceContent.create({
       data: {
         slug,
@@ -30,8 +29,9 @@ export async function POST(request: Request) {
         isActive: isActive ?? true
       }
     });
-    
-        revalidatePath('/layanan', 'layout');
+
+    revalidatePath('/', 'layout');
+    revalidatePath('/layanan', 'layout');
     return NextResponse.json(service, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create service' }, { status: 500 });

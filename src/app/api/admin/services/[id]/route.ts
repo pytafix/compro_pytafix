@@ -7,8 +7,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
     const body = await request.json();
     const { slug, title, description, content, icon, imageUrl, isActive } = body;
 
@@ -25,7 +24,8 @@ export async function PUT(
       }
     });
 
-        revalidatePath('/layanan', 'layout');
+    revalidatePath('/', 'layout');
+    revalidatePath('/layanan', 'layout');
     return NextResponse.json(service);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update service' }, { status: 500 });
@@ -37,14 +37,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params;
-    const id = paramId;
+    const { id } = await params;
 
     await prisma.serviceContent.delete({
       where: { id }
     });
 
-        revalidatePath('/layanan', 'layout');
+    revalidatePath('/', 'layout');
+    revalidatePath('/layanan', 'layout');
     return NextResponse.json({ message: 'Service deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete service' }, { status: 500 });
