@@ -20,6 +20,7 @@ export function AdminSidebar() {
     { label: "Tiket Servis", href: "/admin/requests", icon: "inbox" },
     { label: "Layanan", href: "/admin/services", icon: "build" },
     { label: "Sparepart", href: "/admin/spareparts", icon: "inventory_2" },
+    { label: "Jual Beli", href: "/admin/products", icon: "sell" },
     { label: "Klaim Garansi", href: "/admin/warranty", icon: "shield" },
     { label: "Promo", href: "/admin/promos", icon: "sell" },
     { label: "Portofolio", href: "/admin/portfolios", icon: "collections" },

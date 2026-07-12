@@ -22,12 +22,13 @@ const navItems: NavItem[] = [
       { name: "Klaim Garansi", href: "/klaim-garansi" },
     ] 
   },
-  { 
-    name: "Produk & Promo", 
+  {
+    name: "Produk & Promo",
     children: [
       { name: "Sparepart", href: "/sparepart" },
+      { name: "Jual Beli", href: "/jual-beli" },
       { name: "Promo", href: "/promo" },
-    ] 
+    ]
   },
   { 
     name: "Informasi", 

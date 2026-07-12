@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 
 export default async function SparepartPage() {
   const spareparts = await prisma.sparepart.findMany({
+    include: { marketplaceLinks: true },
     orderBy: { createdAt: "desc" },
   });
 

@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 export async function GET() {
   try {
     const spareparts = await prisma.sparepart.findMany({
+      include: { marketplaceLinks: true },
       orderBy: { createdAt: 'desc' }
     });
     return NextResponse.json(spareparts);
@@ -16,7 +17,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, category, description, price, stock, imageUrl, isFeatured } = body;
+    const { name, category, description, price, stock, imageUrl, isFeatured, condition } = body;
 
     const sparepart = await prisma.sparepart.create({
       data: {
@@ -26,7 +27,8 @@ export async function POST(request: Request) {
         price: price !== undefined ? Number(price) : 0,
         stock: stock !== undefined ? Number(stock) : 0,
         imageUrl,
-        isFeatured: isFeatured ?? false
+        isFeatured: isFeatured ?? false,
+        condition,
       }
     });
 

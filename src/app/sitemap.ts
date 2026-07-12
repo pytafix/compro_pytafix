@@ -22,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/faq`, lastModified: fallbackDate },
     { url: `${baseUrl}/testimoni`, lastModified: fallbackDate },
     { url: `${baseUrl}/sparepart`, lastModified: fallbackDate },
+    { url: `${baseUrl}/jual-beli`, lastModified: fallbackDate },
     { url: `${baseUrl}/klaim-garansi`, lastModified: fallbackDate },
   ];
 
@@ -44,6 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch all spareparts
   const spareparts = await prisma.sparepart.findMany({
+    select: { id: true, updatedAt: true }
+  });
+
+  // Fetch active products
+  const products = await prisma.product.findMany({
+    where: { isActive: true },
     select: { id: true, updatedAt: true }
   });
 
@@ -74,6 +81,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     dynamicPages.push({
       url: `${baseUrl}/sparepart/${sparepart.id}`,
       lastModified: sparepart.updatedAt,
+    });
+  }
+
+  for (const product of products) {
+    dynamicPages.push({
+      url: `${baseUrl}/jual-beli/${product.id}`,
+      lastModified: product.updatedAt,
     });
   }
 
