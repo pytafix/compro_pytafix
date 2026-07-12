@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import KontakFormClient from "./KontakFormClient";
 
 export const metadata: Metadata = {
   title: "Kontak Kami | Pytafix",
@@ -100,34 +101,38 @@ export default function KontakPage() {
             </div>
           </div>
 
-          {/* Right: Map / Action */}
-          <div className="flex flex-col">
-            <h2 className="font-headline-md text-primary mb-6">Lokasi Kami</h2>
-            <div className="flex-grow bg-surface-container border border-outline-variant rounded-xl overflow-hidden min-h-[300px] relative">
-              {/* Embed Google Maps */}
-              <iframe 
-                src="https://maps.google.com/maps?q=-7.983908,112.621391&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+          {/* Right: Form, Map, Action */}
+          <div className="flex flex-col gap-8">
+            <div className="bg-surface border border-outline-variant rounded-xl p-6">
+              <h2 className="font-headline-md text-primary mb-4">Kirim Pesan</h2>
+              <KontakFormClient />
+            </div>
+
+            <div className="bg-surface-container border border-outline-variant rounded-xl overflow-hidden min-h-[250px] relative">
+              <iframe
+                src="https://maps.google.com/maps?q=-7.983908,112.621391&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0"
+                title="Lokasi Pytafix di Mapa"
               ></iframe>
             </div>
-            
-            <div className="mt-8 text-center bg-surface p-8 rounded-xl border border-outline-variant shadow-sm">
-               <h3 className="font-headline-sm text-on-surface mb-3">Butuh Respon Cepat?</h3>
-               <p className="font-body-md text-on-surface-variant mb-6">Konsultasikan keluhan kerusakan perangkat Anda langsung dengan teknisi kami via WhatsApp.</p>
-               <a 
+
+            <div className="text-center bg-surface p-6 rounded-xl border border-outline-variant shadow-sm">
+               <h3 className="font-headline-sm text-on-surface mb-2">Butuh Respon Cepat?</h3>
+               <p className="font-body-sm text-on-surface-variant mb-4">Chat langsung via WhatsApp untuk jawaban instan.</p>
+               <a
                   href={waLink}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-label-bold text-lg transition-all bg-[#25D366] hover:bg-[#1DA851] text-white shadow-md hover:shadow-lg w-full sm:w-auto cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-label-bold text-label-bold transition-all bg-[#25D366] hover:bg-[#1DA851] text-white shadow-md hover:shadow-lg cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-[24px]">chat</span>
-                  Chat WhatsApp Sekarang
+                  <span className="material-symbols-outlined text-[20px]">chat</span>
+                  Chat WhatsApp
                </a>
             </div>
           </div>

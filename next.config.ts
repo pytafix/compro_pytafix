@@ -19,7 +19,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.simpleicons.org",
       },
+      {
+        protocol: "https",
+        hostname: "pytafix.web.id",
+        pathname: "/**",
+      },
     ],
+    unoptimized: true,
   },
   async headers() {
     return [
