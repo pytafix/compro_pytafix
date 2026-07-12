@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./globals.css";
 import { Toaster } from "sonner";
 
@@ -24,10 +26,10 @@ export const metadata: Metadata = {
     siteName: "Pytafix",
     images: [
       {
-        url: "/logo.png",
-        width: 800,
-        height: 600,
-        alt: "Pytafix Logo",
+        url: "/images/og-banner.png",
+        width: 1200,
+        height: 630,
+        alt: "Pytafix - Servis Laptop, HP & Komputer di Malang",
       },
     ],
     locale: "id_ID",
@@ -37,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pytafix - Pusat Servis Laptop, HP & Komputer Malang",
     description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat elektronik Anda sekarang!",
-    images: ["/logo.png"],
+    images: ["/images/og-banner.png"],
   },
   alternates: {
     canonical: "https://www.pytafix.web.id",
@@ -56,52 +58,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": "Pytafix",
-              "image": "https://www.pytafix.web.id/logo.png",
-              "url": "https://www.pytafix.web.id",
-              "telephone": "+6281234567890",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Jl. Elektronik No. 123",
-                "addressLocality": "Malang",
-                "addressRegion": "Jawa Timur",
-                "postalCode": "65141",
-                "addressCountry": "ID"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": -7.983908,
-                "longitude": 112.621391
-              },
-              "priceRange": "$$",
-              "description": "Pusat perbaikan elektronik terpercaya di Malang. Melayani servis laptop, smartphone, dan komputer bergaransi.",
-              "openingHoursSpecification": [
-                {
-                  "@type": "OpeningHoursSpecification",
-                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                  "opens": "09:00",
-                  "closes": "18:00"
-                }
-              ],
-              "sameAs": [
-                "https://www.instagram.com/pytafix",
-                "https://www.facebook.com/pytafix",
-                "https://www.tiktok.com/@pytafix"
-              ]
-            })
-          }}
-        />
       </head>
       <body
         className={`${manrope.variable} antialiased h-full flex flex-col pt-20`}
       >
           {children}
+          <Analytics />
+          <SpeedInsights />
           <Toaster position="bottom-right" richColors />
       </body>
     </html>

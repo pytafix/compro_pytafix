@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface Sparepart {
-  id: number;
+  id: string;
   name: string;
   category: string;
   description: string | null;

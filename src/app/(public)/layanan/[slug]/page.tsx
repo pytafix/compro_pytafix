@@ -9,7 +9,9 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-async function resolveServiceData(slug: string) {
+import { cache } from 'react';
+
+const resolveServiceData = cache(async (slug: string) => {
   // 1. Direct match (e.g. /layanan/jual-beli-sparepart)
   let service = await prisma.serviceContent.findUnique({
     where: { slug }
@@ -31,7 +33,7 @@ async function resolveServiceData(slug: string) {
   }
 
   return { service: null, location: null };
-}
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -53,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${service.title} di ${location} | Pytafix`,
         description: `Layanan ${service.title.toLowerCase()} terdekat dan terpercaya di area ${location}. ${service.description}`,
         url: `https://www.pytafix.web.id/layanan/${slug}`,
-        images: [{ url: "/logo.png", width: 800, height: 600, alt: service.title }],
+        images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: service.title }],
         locale: "id_ID",
         type: "website",
       },
@@ -68,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${service.title} | Pytafix`,
       description: service.description,
       url: `https://www.pytafix.web.id/layanan/${slug}`,
-      images: [{ url: "/logo.png", width: 800, height: 600, alt: service.title }],
+      images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: service.title }],
       locale: "id_ID",
       type: "website",
     },
@@ -95,20 +97,23 @@ export default async function ServiceDetailPage({ params }: Props) {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": service.title,
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "Pytafix"
-    },
-    "areaServed": location ? {
-      "@type": "City",
-      "name": location
-    } : {
-      "@type": "City",
-      "name": "Malang"
-    },
-    "description": service.description,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://www.pytafix.web.id" },
+          { "@type": "ListItem", "position": 2, "name": "Layanan", "item": "https://www.pytafix.web.id/layanan" },
+          { "@type": "ListItem", "position": 3, "name": service.title }
+        ]
+      },
+      {
+        "@type": "Service",
+        "serviceType": service.title,
+        "provider": { "@type": "LocalBusiness", "name": "Pytafix" },
+        "areaServed": location ? { "@type": "City", "name": location } : { "@type": "City", "name": "Malang" },
+        "description": service.description,
+      }
+    ]
   };
 
   return (

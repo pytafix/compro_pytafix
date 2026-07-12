@@ -102,6 +102,8 @@ export function TopNavBar() {
                   </Link>
                 ) : (
                   <button 
+                    aria-haspopup="true"
+                    aria-expanded={false}
                     className={`flex items-center gap-1 font-label-bold text-label-bold transition-colors duration-200 h-full border-b-2 ${
                       isActive(item)
                         ? "text-primary border-primary" 
@@ -115,7 +117,7 @@ export function TopNavBar() {
                 
                 {/* Desktop Dropdown */}
                 {item.children && (
-                  <div className="absolute top-full left-0 hidden group-hover:block pt-1">
+                  <div className="absolute top-full left-0 hidden group-hover:block group-focus-within:block pt-1 z-50">
                     <div className="bg-surface border border-outline-variant rounded-xl shadow-lg w-56 py-2 flex flex-col overflow-hidden animate-in fade-in slide-in-from-top-2">
                       {item.children.map((child) => (
                         <Link
@@ -193,6 +195,8 @@ export function TopNavBar() {
                   <>
                     <button 
                       onClick={() => toggleAccordion(item.name)}
+                      aria-expanded={openAccordion === item.name}
+                      aria-controls={`accordion-${item.name}`}
                       className={`flex justify-between items-center w-full font-headline-sm text-lg py-4 font-bold ${
                         isActive(item) || openAccordion === item.name ? "text-primary" : "text-on-surface-variant"
                       }`}
@@ -203,7 +207,7 @@ export function TopNavBar() {
                     
                     {/* Mobile Accordion Content */}
                     {openAccordion === item.name && (
-                      <div className="flex flex-col gap-2 pb-4 px-4 animate-in fade-in slide-in-from-top-1">
+                      <div id={`accordion-${item.name}`} className="flex flex-col gap-2 pb-4 px-4 animate-in fade-in slide-in-from-top-1">
                         {item.children?.map((child) => (
                           <Link
                             key={child.name}

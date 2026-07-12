@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Cek Status Servis | Pytafix",
     description: "Lacak status perbaikan perangkat Anda di Pytafix Malang secara real-time dengan nomor servis.",
     url: "https://www.pytafix.web.id/cek-status-servis",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Status Servis" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Status Servis" }],
     locale: "id_ID",
     type: "website",
   },

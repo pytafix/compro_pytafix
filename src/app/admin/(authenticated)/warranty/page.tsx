@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface WarrantyClaim {
-  id: number;
+  id: string;
   name: string;
   whatsapp: string;
   trackingId: string;
@@ -34,7 +34,7 @@ export default function AdminWarrantyPage() {
     }
   };
 
-  const updateStatus = async (id: number, newStatus: string) => {
+  const updateStatus = async (id: string, newStatus: string) => {
     try {
       const res = await fetch(`/api/admin/warranty/${id}`, {
         method: "PATCH",
@@ -49,7 +49,7 @@ export default function AdminWarrantyPage() {
     }
   };
 
-  const deleteClaim = async (id: number) => {
+  const deleteClaim = async (id: string) => {
     if (!confirm("Yakin ingin menghapus klaim ini?")) return;
     try {
       const res = await fetch(`/api/admin/warranty/${id}`, { method: "DELETE" });

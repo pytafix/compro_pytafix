@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: paramId } = await params;
-    const id = parseInt(paramId, 10);
+    const id = paramId;
     const data = await request.json();
 
     const testimonial = await prisma.testimonial.update({
@@ -29,7 +29,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: paramId } = await params;
-    const id = parseInt(paramId, 10);
+    const id = paramId;
 
     await prisma.testimonial.delete({
       where: { id },

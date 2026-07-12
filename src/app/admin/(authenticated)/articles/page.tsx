@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Article {
-  id: number;
+  id: string;
   slug: string;
   title: string;
   excerpt: string;
@@ -23,7 +23,7 @@ export default function AdminArticles() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -144,7 +144,7 @@ export default function AdminArticles() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus artikel ini?")) return;
 
     try {

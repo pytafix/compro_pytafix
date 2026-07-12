@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Tentang Pytafix | Servis Elektronik Terpercaya di Malang",
     description: "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Bagian dari CV. Pyta Cipta Karya dengan teknisi bersertifikat dan standar enterprise.",
     url: "https://www.pytafix.web.id/tentang-kami",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Tentang Kami" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Tentang Kami" }],
     locale: "id_ID",
     type: "website",
   },

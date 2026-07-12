@@ -10,7 +10,7 @@ export const metadata = {
     title: "FAQ | Pytafix - Pertanyaan Seputar Servis Elektronik",
     description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan perbaikan, garansi, dan proses servis di Pytafix Malang.",
     url: "https://www.pytafix.web.id/faq",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix FAQ" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix FAQ" }],
     locale: "id_ID",
     type: "website",
   },

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface Testimonial {
-  id: number;
+  id: string;
   name: string;
   rating: number;
   comment: string;
@@ -91,7 +91,7 @@ export default function AdminTestimonialsPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Yakin ingin menghapus testimoni ini?")) return;
     try {
       const res = await fetch(`/api/admin/testimonials/${id}`, { method: "DELETE" });

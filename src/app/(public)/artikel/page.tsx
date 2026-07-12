@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     title: "Artikel & Edukasi Servis | Pytafix",
     description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
     url: "https://www.pytafix.web.id/artikel",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Artikel" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Artikel" }],
     locale: "id_ID",
     type: "website",
   },
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function ArtikelPage() {
   const articles = await prisma.article.findMany({

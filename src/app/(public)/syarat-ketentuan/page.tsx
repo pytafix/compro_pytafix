@@ -1,6 +1,7 @@
 import React from 'react';
 import prisma from '@/lib/prisma';
 import { Metadata } from 'next';
+import sanitizeHtml from 'sanitize-html';
 
 export const metadata: Metadata = {
   title: "Syarat & Ketentuan | Pytafix",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
     title: "Syarat & Ketentuan | Pytafix",
     description: "Syarat dan ketentuan layanan perbaikan perangkat elektronik di Pytafix Malang.",
     url: "https://www.pytafix.web.id/syarat-ketentuan",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Syarat Ketentuan" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Syarat Ketentuan" }],
     locale: "id_ID",
     type: "website",
   },
@@ -35,7 +36,7 @@ export default async function TermsAndConditionsPage() {
       <section className="max-w-3xl mx-auto px-4 py-12">
         <div className="prose">
           {setting?.content ? (
-            <div dangerouslySetInnerHTML={{ __html: setting.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(setting.content) }} />
           ) : (
             <>
               <h2 className="font-headline-md text-on-surface mb-6 mt-8">1. Tanggung Jawab Kehilangan Data</h2>

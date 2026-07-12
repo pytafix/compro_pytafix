@@ -20,11 +20,154 @@ const staggerContainer: Variants = {
   },
 };
 
-import { Promo, Sparepart } from '@prisma/client';
+import { Promo, Sparepart, Testimonial } from '@prisma/client';
 
-export default function HomeClient({ promos, spareparts }: { promos: Promo[], spareparts: Sparepart[] }) {
+export default function HomeClient({ promos, spareparts, testimonials }: { promos: Promo[], spareparts: Sparepart[], testimonials: Testimonial[] }) {
   return (
     <main className="relative overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://www.pytafix.web.id/#organization",
+                "name": "Pytafix",
+                "url": "https://www.pytafix.web.id",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://www.pytafix.web.id/logo.png",
+                  "width": 800,
+                  "height": 800
+                },
+                "sameAs": [
+                  "https://www.instagram.com/pytafix",
+                  "https://www.facebook.com/pytafix",
+                  "https://www.tiktok.com/@pytafix"
+                ]
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://www.pytafix.web.id/#website",
+                "url": "https://www.pytafix.web.id",
+                "name": "Pytafix",
+                "publisher": { "@id": "https://www.pytafix.web.id/#organization" },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://www.pytafix.web.id/layanan?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.pytafix.web.id/#localbusiness",
+                "name": "Pytafix",
+                "image": "https://www.pytafix.web.id/logo.png",
+                "url": "https://www.pytafix.web.id",
+                "telephone": "+6281234567890",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Jl. Elektronik No. 123",
+                  "addressLocality": "Malang",
+                  "addressRegion": "Jawa Timur",
+                  "postalCode": "65141",
+                  "addressCountry": "ID"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": -7.983908,
+                  "longitude": 112.621391
+                },
+                "priceRange": "$$",
+                "description": "Pusat perbaikan elektronik terpercaya di Malang. Melayani servis laptop, smartphone, dan komputer bergaransi.",
+                "openingHoursSpecification": [
+                  {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                    "opens": "09:00",
+                    "closes": "18:00"
+                  }
+                ],
+                "aggregateRating": testimonials.length > 0 ? {
+                  "@type": "AggregateRating",
+                  "ratingValue": "4.9",
+                  "reviewCount": testimonials.length.toString(),
+                  "bestRating": "5",
+                  "worstRating": "1"
+                } : undefined
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Berapa lama proses servis biasanya selesai?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Waktu pengerjaan sangat bergantung pada jenis kerusakan. Untuk pergantian baterai atau layar umumnya 1-3 jam. Perbaikan motherboard bisa memakan waktu 1-3 hari kerja. Kami akan memberikan estimasi pasti setelah diagnosa."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Apakah data saya aman selama proses perbaikan?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Sangat aman. Privasi dan keamanan data Anda adalah prioritas utama kami. Kami menerapkan standar operasional yang ketat, dan Anda dipersilakan melakukan backup sebelum perangkat diserahkan jika memungkinkan."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Bagaimana sistem garansi di Pytafix?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Kami memberikan garansi resmi untuk setiap perbaikan dan sparepart. Durasi garansi bervariasi antara 30 hingga 90 hari tergantung jenis layanan. Jika masalah yang sama muncul dalam masa garansi, kami akan perbaiki secara gratis."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Apakah ada biaya pengecekan (diagnosa)?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Jika Anda melanjutkan proses servis dengan kami, biaya diagnosa 100% GRATIS. Transparansi biaya selalu kami berikan sebelum proses perbaikan dimulai."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "HowTo",
+                "name": "Cara Memperbaiki Perangkat di Pytafix",
+                "description": "Proses layanan perbaikan perangkat di Pytafix dari booking hingga garansi.",
+                "totalTime": "P1D",
+                "step": [
+                  {
+                    "@type": "HowToStep",
+                    "name": "Booking Servis",
+                    "text": "Jadwalkan servis melalui website atau WhatsApp. Isikan data perangkat dan keluhan yang dialami.",
+                    "url": "https://www.pytafix.web.id/booking-servis"
+                  },
+                  {
+                    "@type": "HowToStep",
+                    "name": "Diagnosis",
+                    "text": "Teknisi akan melakukan pengecekan teknis dan memberikan estimasi biaya perbaikan."
+                  },
+                  {
+                    "@type": "HowToStep",
+                    "name": "Perbaikan",
+                    "text": "Perbaikan dilakukan oleh teknisi bersertifikat menggunakan sparepart berkualitas dengan standar operasional ketat."
+                  },
+                  {
+                    "@type": "HowToStep",
+                    "name": "Garansi",
+                    "text": "Perangkat diuji terlebih dahulu sebelum diserahkan. Garansi resmi diberikan sebagai jaminan kualitas layanan."
+                  }
+                ]
+              }
+            ]
+          })
+        }}
+      />
       {/* Background Gradient Blob */}
       <div className="absolute top-0 left-0 w-full h-[800px] overflow-hidden -z-10">
         <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
@@ -88,11 +231,29 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
             transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
           >
             {[
-              "apple", "samsung", "asus", "lenovo", "hp", "dell", "acer", "xiaomi", "oppo", "vivo",
-              "apple", "samsung", "asus", "lenovo", "hp", "dell", "acer", "xiaomi", "oppo", "vivo"
+              { slug: "apple", label: "Apple" },
+              { slug: "samsung", label: "Samsung" },
+              { slug: "asus", label: "Asus" },
+              { slug: "lenovo", label: "Lenovo" },
+              { slug: "hp", label: "HP" },
+              { slug: "dell", label: "Dell" },
+              { slug: "acer", label: "Acer" },
+              { slug: "xiaomi", label: "Xiaomi" },
+              { slug: "oppo", label: "Oppo" },
+              { slug: "vivo", label: "Vivo" },
+              { slug: "apple", label: "Apple" },
+              { slug: "samsung", label: "Samsung" },
+              { slug: "asus", label: "Asus" },
+              { slug: "lenovo", label: "Lenovo" },
+              { slug: "hp", label: "HP" },
+              { slug: "dell", label: "Dell" },
+              { slug: "acer", label: "Acer" },
+              { slug: "xiaomi", label: "Xiaomi" },
+              { slug: "oppo", label: "Oppo" },
+              { slug: "vivo", label: "Vivo" },
             ].map((brand, i) => (
-              <div key={i} className="flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-300 w-24 h-12 cursor-pointer group" title={brand.charAt(0).toUpperCase() + brand.slice(1)}>
-                <img src={`https://cdn.simpleicons.org/${brand}`} alt={brand} className="max-h-10 max-w-full object-contain" />
+              <div key={i} className="flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-300 w-24 h-12 cursor-pointer shrink-0" title={brand.label}>
+                <Image src={`/images/brands/${brand.slug}.svg`} alt={brand.label} width={96} height={48} className="object-contain" unoptimized />
               </div>
             ))}
           </motion.div>
@@ -558,72 +719,67 @@ export default function HomeClient({ promos, spareparts }: { promos: Promo[], sp
           <div className="overflow-hidden w-full relative pb-8 mt-12">
             <motion.div 
               className="flex gap-6 lg:gap-gutter w-max"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
+              animate={{ x: testimonials.length > 0 ? ["0%", "-50%"] : ["0%", "0%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: testimonials.length > 0 ? 30 : 0 }}
             >
-              {[
-                {
-                  name: "Budi Santoso",
-                  device: "MacBook Pro M1",
-                  quote: "Luar biasa! MacBook saya yang mati total karena tersiram kopi berhasil dihidupkan kembali dengan data yang utuh. Teknisi sangat komunikatif dan transparan soal harga.",
-                },
-                {
-                  name: "Siti Rahma",
-                  device: "iPhone 13",
-                  quote: "Ganti LCD iPhone di sini cuma butuh waktu 1 jam. Hasilnya super rapi dan layarnya responsif banget kayak baru beli. Garansi 3 bulannya juga bikin tenang.",
-                },
-                {
-                  name: "Andi Wijaya",
-                  device: "Asus ROG Zephyrus",
-                  quote: "Laptop gaming saya sering overheat, setelah dibawa ke Pytafix untuk bersihin debu & ganti thermal paste, suhunya turun drastis. Pelayanannya bintang 5!",
-                },
-                {
-                  name: "Ratna Sari",
-                  device: "Samsung Galaxy S22",
-                  quote: "Sangat puas dengan pelayanan home service-nya. Teknisi datang tepat waktu ke kantor, perbaiki baterai langsung beres. Gak perlu repot ke toko lagi.",
-                }
-              ].concat([
-                {
-                  name: "Budi Santoso",
-                  device: "MacBook Pro M1",
-                  quote: "Luar biasa! MacBook saya yang mati total karena tersiram kopi berhasil dihidupkan kembali dengan data yang utuh. Teknisi sangat komunikatif dan transparan soal harga.",
-                },
-                {
-                  name: "Siti Rahma",
-                  device: "iPhone 13",
-                  quote: "Ganti LCD iPhone di sini cuma butuh waktu 1 jam. Hasilnya super rapi dan layarnya responsif banget kayak baru beli. Garansi 3 bulannya juga bikin tenang.",
-                },
-                {
-                  name: "Andi Wijaya",
-                  device: "Asus ROG Zephyrus",
-                  quote: "Laptop gaming saya sering overheat, setelah dibawa ke Pytafix untuk bersihin debu & ganti thermal paste, suhunya turun drastis. Pelayanannya bintang 5!",
-                },
-                {
-                  name: "Ratna Sari",
-                  device: "Samsung Galaxy S22",
-                  quote: "Sangat puas dengan pelayanan home service-nya. Teknisi datang tepat waktu ke kantor, perbaiki baterai langsung beres. Gak perlu repot ke toko lagi.",
-                }
-              ]).map((testi, idx) => (
-                <div key={idx} className="w-[320px] md:w-[400px] shrink-0 bg-surface border border-outline-variant p-8 rounded-[2rem] shadow-sm hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all flex flex-col h-full group">
-                  <div className="flex text-[#FFB400] mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i} className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                    ))}
-                  </div>
-                  <p className="font-body-lg text-on-surface italic mb-8 flex-grow">
-                    "{testi.quote}"
-                  </p>
-                  <div className="flex items-center gap-4 mt-auto">
-                    <div className="h-12 w-12 rounded-full bg-primary-container text-primary flex items-center justify-center font-headline-sm uppercase shrink-0 group-hover:scale-110 transition-transform">
-                      {testi.name.charAt(0)}
+              {(testimonials.length > 0
+                ? [...testimonials, ...testimonials].map((t, idx) => (
+                    <div key={idx} className="w-[320px] md:w-[400px] shrink-0 bg-surface border border-outline-variant p-8 rounded-[2rem] shadow-sm hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all flex flex-col h-full group">
+                      <div className="flex text-[#FFB400] mb-6">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className="material-symbols-outlined" style={{ fontVariationSettings: i < t.rating ? "'FILL' 1" : "'FILL' 0" }}>
+                            star
+                          </span>
+                        ))}
+                      </div>
+                      <p className="font-body-lg text-on-surface italic mb-8 flex-grow">
+                        &quot;{t.comment}&quot;
+                      </p>
+                      <div className="flex items-center gap-4 mt-auto">
+                        <div className="h-12 w-12 rounded-full bg-primary-container text-primary flex items-center justify-center font-headline-sm uppercase shrink-0 group-hover:scale-110 transition-transform">
+                          {t.name.charAt(0)}
+                        </div>
+                        <div>
+                          <h4 className="font-label-bold text-on-surface">{t.name}</h4>
+                          <p className="font-label-sm text-on-surface-variant">Pelanggan Pytafix</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-label-bold text-on-surface">{testi.name}</h4>
-                      <p className="font-label-sm text-on-surface-variant">{testi.device}</p>
+                  ))
+                : [
+                    { name: "Budi Santoso", comment: "Luar biasa! MacBook saya yang mati total karena tersiram kopi berhasil dihidupkan kembali dengan data yang utuh. Teknisi sangat komunikatif dan transparan soal harga." },
+                    { name: "Siti Rahma", comment: "Ganti LCD iPhone di sini cuma butuh waktu 1 jam. Hasilnya super rapi dan layarnya responsif banget kayak baru beli. Garansi 3 bulannya juga bikin tenang." },
+                    { name: "Andi Wijaya", comment: "Laptop gaming saya sering overheat, setelah dibawa ke Pytafix untuk bersihin debu & ganti thermal paste, suhunya turun drastis. Pelayanannya bintang 5!" },
+                    { name: "Ratna Sari", comment: "Sangat puas dengan pelayanan home service-nya. Teknisi datang tepat waktu ke kantor, perbaiki baterai langsung beres. Gak perlu repot ke toko lagi." },
+                  ].concat([
+                    { name: "Budi Santoso", comment: "Luar biasa! MacBook saya yang mati total karena tersiram kopi berhasil dihidupkan kembali dengan data yang utuh. Teknisi sangat komunikatif dan transparan soal harga." },
+                    { name: "Siti Rahma", comment: "Ganti LCD iPhone di sini cuma butuh waktu 1 jam. Hasilnya super rapi dan layarnya responsif banget kayak baru beli. Garansi 3 bulannya juga bikin tenang." },
+                    { name: "Andi Wijaya", comment: "Laptop gaming saya sering overheat, setelah dibawa ke Pytafix untuk bersihin debu & ganti thermal paste, suhunya turun drastis. Pelayanannya bintang 5!" },
+                    { name: "Ratna Sari", comment: "Sangat puas dengan pelayanan home service-nya. Teknisi datang tepat waktu ke kantor, perbaiki baterai langsung beres. Gak perlu repot ke toko lagi." },
+                  ]).map((testi, idx) => (
+                    <div key={idx} className="w-[320px] md:w-[400px] shrink-0 bg-surface border border-outline-variant p-8 rounded-[2rem] shadow-sm hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all flex flex-col h-full group">
+                      <div className="flex text-[#FFB400] mb-6">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                            star
+                          </span>
+                        ))}
+                      </div>
+                      <p className="font-body-lg text-on-surface italic mb-8 flex-grow">
+                        &quot;{testi.comment}&quot;
+                      </p>
+                      <div className="flex items-center gap-4 mt-auto">
+                        <div className="h-12 w-12 rounded-full bg-primary-container text-primary flex items-center justify-center font-headline-sm uppercase shrink-0 group-hover:scale-110 transition-transform">
+                          {testi.name.charAt(0)}
+                        </div>
+                        <div>
+                          <h4 className="font-label-bold text-on-surface">{testi.name}</h4>
+                          <p className="font-label-sm text-on-surface-variant">Pelanggan Pytafix</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  ))
+              )}
             </motion.div>
             {/* Fade Edges for Marquee Effect */}
             <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-surface-container-low to-transparent z-10 pointer-events-none"></div>

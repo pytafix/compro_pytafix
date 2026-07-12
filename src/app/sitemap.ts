@@ -1,26 +1,26 @@
 import { MetadataRoute } from 'next'
 import prisma from "@/lib/prisma"
-import { LOCATIONS, slugifyLocation } from "@/lib/locations"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.pytafix.web.id';
+  const fallbackDate = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}`, lastModified: new Date() },
-    { url: `${baseUrl}/layanan`, lastModified: new Date() },
-    { url: `${baseUrl}/tentang-kami`, lastModified: new Date() },
-    { url: `${baseUrl}/booking-servis`, lastModified: new Date() },
-    { url: `${baseUrl}/cek-status-servis`, lastModified: new Date() },
-    { url: `${baseUrl}/promo`, lastModified: new Date() },
-    { url: `${baseUrl}/portofolio`, lastModified: new Date() },
-    { url: `${baseUrl}/artikel`, lastModified: new Date() },
-    { url: `${baseUrl}/syarat-ketentuan`, lastModified: new Date() },
-    { url: `${baseUrl}/kebijakan-privasi`, lastModified: new Date() },
-    { url: `${baseUrl}/kontak`, lastModified: new Date() },
-    { url: `${baseUrl}/faq`, lastModified: new Date() },
-    { url: `${baseUrl}/testimoni`, lastModified: new Date() },
-    { url: `${baseUrl}/sparepart`, lastModified: new Date() },
-    { url: `${baseUrl}/klaim-garansi`, lastModified: new Date() },
+    { url: `${baseUrl}`, lastModified: fallbackDate },
+    { url: `${baseUrl}/layanan`, lastModified: fallbackDate },
+    { url: `${baseUrl}/tentang-kami`, lastModified: fallbackDate },
+    { url: `${baseUrl}/booking-servis`, lastModified: fallbackDate },
+    { url: `${baseUrl}/cek-status-servis`, lastModified: fallbackDate },
+    { url: `${baseUrl}/promo`, lastModified: fallbackDate },
+    { url: `${baseUrl}/portofolio`, lastModified: fallbackDate },
+    { url: `${baseUrl}/artikel`, lastModified: fallbackDate },
+    { url: `${baseUrl}/syarat-ketentuan`, lastModified: fallbackDate },
+    { url: `${baseUrl}/kebijakan-privasi`, lastModified: fallbackDate },
+    { url: `${baseUrl}/kontak`, lastModified: fallbackDate },
+    { url: `${baseUrl}/faq`, lastModified: fallbackDate },
+    { url: `${baseUrl}/testimoni`, lastModified: fallbackDate },
+    { url: `${baseUrl}/sparepart`, lastModified: fallbackDate },
+    { url: `${baseUrl}/klaim-garansi`, lastModified: fallbackDate },
   ];
 
   // Fetch all active services
@@ -48,20 +48,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const dynamicPages: MetadataRoute.Sitemap = [];
 
   for (const service of services) {
-    // Base service page
     dynamicPages.push({
       url: `${baseUrl}/layanan/${service.slug}`,
       lastModified: service.updatedAt,
     });
-
-    // Generate location permutations
-    for (const loc of LOCATIONS) {
-      const locSlug = slugifyLocation(loc);
-      dynamicPages.push({
-        url: `${baseUrl}/layanan/${service.slug}-${locSlug}`,
-        lastModified: service.updatedAt, // Inherit last modified from base service
-      });
-    }
   }
 
   for (const promo of promos) {

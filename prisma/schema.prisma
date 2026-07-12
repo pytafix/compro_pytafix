@@ -13,9 +13,25 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+enum ServiceStatus {
+  DITERIMA
+  DIAGNOSA
+  DIKERJAKAN
+  MENUNGGU_SPAREPART
+  SELESAI
+  DIBATALKAN
+}
+
+enum WarrantyStatus {
+  MENUNGGU
+  DIPROSES
+  SELESAI
+  DITOLAK
+}
+
 model ServiceRequest {
-  id              Int       @id @default(autoincrement())
-  trackingId      String    @unique
+  id              String        @id @default(cuid())
+  trackingId      String        @unique
   name            String
   whatsapp        String
   address         String
@@ -23,19 +39,24 @@ model ServiceRequest {
   serviceType     String
   problemDesc     String
   scheduleDate    DateTime
-  status          String    @default("DITERIMA")
+  status          ServiceStatus @default(DITERIMA)
   technicianName  String?
   technicianNotes String?
+
+  sparepartUsages SparepartUsage[]
 
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   diagnosedAt     DateTime?
   workingAt       DateTime?
   completedAt     DateTime?
+
+  @@index([status])
+  @@index([createdAt])
 }
 
 model ServiceContent {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   slug        String   @unique
   title       String
   description String
@@ -49,7 +70,7 @@ model ServiceContent {
 }
 
 model Sparepart {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   name        String
   category    String
   description String?
@@ -58,12 +79,30 @@ model Sparepart {
   imageUrl    String?
   isFeatured  Boolean  @default(false)
   
+  usages      SparepartUsage[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model SparepartUsage {
+  id               String         @id @default(cuid())
+  serviceRequestId String
+  sparepartId      String
+  quantity         Int            @default(1)
+  
+  serviceRequest   ServiceRequest @relation(fields: [serviceRequestId], references: [id], onDelete: Cascade)
+  sparepart        Sparepart      @relation(fields: [sparepartId], references: [id], onDelete: Restrict)
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([serviceRequestId])
+  @@index([sparepartId])
+}
+
 model Promo {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   slug        String   @unique
   badge       String
   title       String
@@ -78,7 +117,7 @@ model Promo {
 }
 
 model Portfolio {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   title       String
   description String
   deviceType  String
@@ -91,7 +130,7 @@ model Portfolio {
 }
 
 model Article {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   slug        String   @unique
   title       String
   excerpt     String
@@ -110,7 +149,7 @@ model Setting {
 }
 
 model Faq {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   question  String
   answer    String
   isActive  Boolean  @default(true)
@@ -119,18 +158,20 @@ model Faq {
 }
 
 model WarrantyClaim {
-  id          Int      @id @default(autoincrement())
+  id          String         @id @default(cuid())
   name        String
   whatsapp    String
   trackingId  String
   description String
-  status      String   @default("MENUNGGU") // MENUNGGU, DIPROSES, SELESAI, DITOLAK
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      WarrantyStatus @default(MENUNGGU)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([trackingId])
 }
 
 model Testimonial {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   name       String
   rating     Int
   comment    String

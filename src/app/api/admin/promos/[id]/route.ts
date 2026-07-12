@@ -8,7 +8,7 @@ export async function PUT(
 ) {
   try {
     const { id: paramId } = await params;
-    const id = parseInt(paramId, 10);
+    const id = paramId;
     const body = await request.json();
     const { slug, badge, title, description, validUntil, terms, howToClaim, isActive, isFeatured } = body;
 
@@ -41,7 +41,7 @@ export async function DELETE(
 ) {
   try {
     const { id: paramId } = await params;
-    const id = parseInt(paramId, 10);
+    const id = paramId;
 
     await prisma.promo.delete({
       where: { id }

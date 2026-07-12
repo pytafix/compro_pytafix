@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { TableSkeleton } from "@/components/admin/TableSkeleton";
 
 interface ServiceRequest {
-  id: number;
+  id: string;
   trackingId: string;
   name: string;
   whatsapp: string;
@@ -23,7 +23,7 @@ export default function AdminRequests() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -118,7 +118,7 @@ export default function AdminRequests() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus resi ini?")) return;
     try {
       const res = await fetch(`/api/admin/requests/${id}`, { method: "DELETE" });

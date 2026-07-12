@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     title: "Portofolio Servis | Pytafix",
     description: "Lihat hasil servis HP, laptop, dan komputer (before-after) yang telah dikerjakan oleh teknisi ahli Pytafix Malang.",
     url: "https://www.pytafix.web.id/portofolio",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Portofolio" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Portofolio" }],
     locale: "id_ID",
     type: "website",
   },
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function PortofolioPage() {
   const cases = await prisma.portfolio.findMany({

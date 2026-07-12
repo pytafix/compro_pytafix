@@ -20,7 +20,20 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    return NextResponse.json(serviceRequest, { status: 200 });
+    // Return only public-safe fields — never expose personal data without auth
+    return NextResponse.json({
+      trackingId: serviceRequest.trackingId,
+      status: serviceRequest.status,
+      deviceType: serviceRequest.deviceType,
+      serviceType: serviceRequest.serviceType,
+      createdAt: serviceRequest.createdAt,
+      diagnosedAt: serviceRequest.diagnosedAt,
+      workingAt: serviceRequest.workingAt,
+      completedAt: serviceRequest.completedAt,
+      scheduleDate: serviceRequest.scheduleDate,
+      technicianName: serviceRequest.technicianName ?? null,
+      technicianNotes: serviceRequest.technicianNotes ?? null,
+    }, { status: 200 });
   } catch (error) {
     console.error('Status error:', error);
     return NextResponse.json({ error: 'Failed to get status' }, { status: 500 });

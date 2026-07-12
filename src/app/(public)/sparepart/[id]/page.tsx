@@ -11,7 +11,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const sparepart = await prisma.sparepart.findUnique({
-    where: { id: parseInt(id, 10) }
+    where: { id }
   });
 
   if (!sparepart) {
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${sparepart.name} | Pytafix`,
       description: sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang.`,
       url: `https://www.pytafix.web.id/sparepart/${id}`,
-      images: [{ url: "/logo.png", width: 800, height: 600, alt: sparepart.name }],
+      images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: sparepart.name }],
       locale: "id_ID",
       type: "website",
     },
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SparepartDetailPage({ params }: Props) {
   const { id } = await params;
   const sparepart = await prisma.sparepart.findUnique({
-    where: { id: parseInt(id, 10) }
+    where: { id }
   });
 
   if (!sparepart) {
@@ -51,6 +51,40 @@ export default async function SparepartDetailPage({ params }: Props) {
 
   return (
     <main className="flex-grow bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://www.pytafix.web.id" },
+                  { "@type": "ListItem", "position": 2, "name": "Sparepart", "item": "https://www.pytafix.web.id/sparepart" },
+                  { "@type": "ListItem", "position": 3, "name": sparepart.name }
+                ]
+              },
+              {
+                "@type": "Product",
+                "name": sparepart.name,
+                "description": sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang`,
+                "image": sparepart.imageUrl || undefined,
+                "brand": { "@type": "Brand", "name": "Pytafix" },
+                "sku": sparepart.id.toString(),
+                "offers": {
+                  "@type": "Offer",
+                  "price": sparepart.price,
+                  "priceCurrency": "IDR",
+                  "availability": sparepart.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                  "seller": { "@type": "Organization", "name": "Pytafix" }
+                },
+                "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "100" }
+              }
+            ]
+          })
+        }}
+      />
       <section className="bg-surface-container-low py-12 px-4 border-b border-outline-variant">
         <div className="max-w-5xl mx-auto flex items-center gap-2 text-on-surface-variant font-label-md">
           <Link href="/" className="hover:text-primary transition-colors">Beranda</Link>

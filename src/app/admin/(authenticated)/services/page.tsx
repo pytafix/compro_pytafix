@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Service {
-  id: number;
+  id: string;
   title: string;
   description: string;
   icon: string | null;
@@ -20,7 +20,7 @@ export default function AdminServices() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -128,7 +128,7 @@ export default function AdminServices() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus layanan ini?")) return;
 
     try {

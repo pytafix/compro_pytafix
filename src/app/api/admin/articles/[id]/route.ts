@@ -8,7 +8,7 @@ export async function PUT(
 ) {
   try {
     const { id: paramId } = await params;
-    const id = parseInt(paramId, 10);
+    const id = paramId;
     const body = await request.json();
     const { slug, title, excerpt, content, imageUrl, author, publishedAt } = body;
     
@@ -39,7 +39,7 @@ export async function DELETE(
 ) {
   try {
     const { id: paramId } = await params;
-    const id = parseInt(paramId, 10);
+    const id = paramId;
     
     await prisma.article.delete({
       where: { id }

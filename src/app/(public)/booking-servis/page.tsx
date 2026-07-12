@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Booking Servis Laptop, HP & Komputer | Pytafix",
     description: "Jadwalkan servis laptop, HP, atau komputer Anda di Pytafix Malang. Teknisi bersertifikat, pengerjaan cepat, dan garansi resmi.",
     url: "https://www.pytafix.web.id/booking-servis",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Booking Servis" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Booking Servis" }],
     locale: "id_ID",
     type: "website",
   },

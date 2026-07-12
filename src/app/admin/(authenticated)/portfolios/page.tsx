@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Portfolio {
-  id: number;
+  id: string;
   title: string;
   description: string;
   deviceType: string;
@@ -21,7 +21,7 @@ export default function AdminPortfolios() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -148,7 +148,7 @@ export default function AdminPortfolios() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus portfolio ini?")) return;
 
     try {

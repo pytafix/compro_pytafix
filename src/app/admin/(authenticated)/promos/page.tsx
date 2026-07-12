@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Promo {
-  id: number;
+  id: string;
   slug: string;
   badge: string;
   title: string;
@@ -23,7 +23,7 @@ export default function AdminPromos() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -119,7 +119,7 @@ export default function AdminPromos() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus promo ini?")) return;
 
     try {

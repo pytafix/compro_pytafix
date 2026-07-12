@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Sparepart & Aksesoris Laptop Original | Pytafix",
     description: "Beli sparepart laptop original di Pytafix Malang. Tersedia RAM, SSD, baterai, keyboard dengan garansi pemasangan resmi.",
     url: "https://www.pytafix.web.id/sparepart",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Sparepart" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Sparepart" }],
     locale: "id_ID",
     type: "website",
   },

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "Hubungi Pytafix | Servis Laptop, HP & Komputer Malang",
     description: "Hubungi tim teknisi profesional Pytafix untuk konsultasi dan booking servis perbaikan perangkat elektronik di Malang.",
     url: "https://www.pytafix.web.id/kontak",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Kontak" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Kontak" }],
     locale: "id_ID",
     type: "website",
   },
@@ -106,7 +106,7 @@ export default function KontakPage() {
             <div className="flex-grow bg-surface-container border border-outline-variant rounded-xl overflow-hidden min-h-[300px] relative">
               {/* Embed Google Maps */}
               <iframe 
-                src="https://maps.google.com/maps?q=Malang&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                src="https://maps.google.com/maps?q=-7.983908,112.621391&t=&z=15&ie=UTF8&iwloc=&output=embed" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 

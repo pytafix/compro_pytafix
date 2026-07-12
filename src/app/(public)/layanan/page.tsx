@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Layanan Servis Laptop, HP & Komputer | Pytafix Malang",
     description: "Pytafix menyediakan layanan servis laptop, HP, dan komputer dengan teknisi bersertifikat dan garansi resmi di Malang.",
     url: "https://www.pytafix.web.id/layanan",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Layanan Servis" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Layanan Servis" }],
     locale: "id_ID",
     type: "website",
   },

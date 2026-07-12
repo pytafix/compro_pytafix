@@ -10,7 +10,7 @@ export const metadata = {
     title: "Promo & Penawaran Spesial | Pytafix",
     description: "Nikmati berbagai promo menarik dan penawaran spesial servis laptop, HP, dan komputer dari Pytafix Malang.",
     url: "https://www.pytafix.web.id/promo",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Promo" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Promo" }],
     locale: "id_ID",
     type: "website",
   },

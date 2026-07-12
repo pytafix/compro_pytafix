@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Sparepart {
-  id: number;
+  id: string;
   name: string;
   category: string;
   description: string | null;
@@ -21,7 +21,7 @@ export default function AdminSpareparts() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -134,7 +134,7 @@ export default function AdminSpareparts() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus item ini?")) return;
 
     try {

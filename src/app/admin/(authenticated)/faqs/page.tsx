@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Faq {
-  id: number;
+  id: string;
   question: string;
   answer: string;
   isActive: boolean;
@@ -17,7 +17,7 @@ export default function AdminFaqs() {
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form State
   const [formData, setFormData] = useState({
@@ -95,7 +95,7 @@ export default function AdminFaqs() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus FAQ ini?")) return;
 
     try {

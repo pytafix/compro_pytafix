@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Testimoni & Ulasan Pelanggan | Pytafix",
     description: "Lihat apa kata pelanggan kami tentang layanan perbaikan dan service dari Pytafix Malang.",
     url: "https://www.pytafix.web.id/testimoni",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Testimoni" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Testimoni" }],
     locale: "id_ID",
     type: "website",
   },
