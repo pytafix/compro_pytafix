@@ -42,8 +42,24 @@ export default function AdminFaqs() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    fetchFaqs(false);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/faqs", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setFaqs(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (faq?: Faq) => {
@@ -160,10 +176,10 @@ export default function AdminFaqs() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(faq)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(faq)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(faq.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(faq.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -183,7 +199,7 @@ export default function AdminFaqs() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit FAQ" : "Tambah FAQ Baru"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -191,18 +207,18 @@ export default function AdminFaqs() {
             <div className="p-6 overflow-y-auto">
               <form id="faq-form" onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Pertanyaan</label>
-                  <input type="text" required value={formData.question} onChange={e => setFormData({...formData, question: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                  <label htmlFor="faq-question" className="block font-label-bold text-label-bold text-on-surface mb-1">Pertanyaan</label>
+                  <input id="faq-question" type="text" required value={formData.question} onChange={e => setFormData({...formData, question: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Jawaban</label>
-                  <textarea required rows={5} value={formData.answer} onChange={e => setFormData({...formData, answer: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="faq-answer" className="block font-label-bold text-label-bold text-on-surface mb-1">Jawaban</label>
+                  <textarea id="faq-answer" required rows={5} value={formData.answer} onChange={e => setFormData({...formData, answer: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
-                  <select value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                  <label htmlFor="faq-isActive" className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
+                  <select id="faq-isActive" value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                     <option value="true">Aktif (Ditampilkan)</option>
                     <option value="false">Nonaktif (Disembunyikan)</option>
                   </select>

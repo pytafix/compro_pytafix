@@ -50,7 +50,24 @@ export default function AdminPortfolios() {
   };
 
   useEffect(() => {
-    fetchPortfolios(false);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/portfolios", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setPortfolios(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (portfolio?: Portfolio) => {
@@ -229,10 +246,10 @@ export default function AdminPortfolios() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(portfolio)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(portfolio)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(portfolio.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(portfolio.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -252,7 +269,7 @@ export default function AdminPortfolios() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit Portfolio" : "Tambah Portfolio Baru"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -261,38 +278,38 @@ export default function AdminPortfolios() {
               <form id="portfolio-form" onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Portfolio</label>
-                    <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="misal: Perbaikan LCD iPhone 13" />
+                    <label htmlFor="portfolio-title" className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Portfolio</label>
+                    <input id="portfolio-title" type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="misal: Perbaikan LCD iPhone 13" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tanggal Selesai</label>
-                    <input type="date" value={formData.completionDate} onChange={e => setFormData({...formData, completionDate: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="portfolio-completionDate" className="block font-label-bold text-label-bold text-on-surface mb-1">Tanggal Selesai</label>
+                    <input id="portfolio-completionDate" type="date" value={formData.completionDate} onChange={e => setFormData({...formData, completionDate: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Jenis Perangkat</label>
-                    <input type="text" required value={formData.deviceType} onChange={e => setFormData({...formData, deviceType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="misal: iPhone 13 Pro" />
+                    <label htmlFor="portfolio-deviceType" className="block font-label-bold text-label-bold text-on-surface mb-1">Jenis Perangkat</label>
+                    <input id="portfolio-deviceType" type="text" required value={formData.deviceType} onChange={e => setFormData({...formData, deviceType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="misal: iPhone 13 Pro" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Jenis Kerusakan</label>
-                    <input type="text" required value={formData.problemType} onChange={e => setFormData({...formData, problemType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="misal: LCD Pecah" />
+                    <label htmlFor="portfolio-problemType" className="block font-label-bold text-label-bold text-on-surface mb-1">Jenis Kerusakan</label>
+                    <input id="portfolio-problemType" type="text" required value={formData.problemType} onChange={e => setFormData({...formData, problemType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="misal: LCD Pecah" />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Singkat</label>
-                  <textarea required rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Ceritakan singkat tentang perbaikan ini..."></textarea>
+                  <label htmlFor="portfolio-description" className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Singkat</label>
+                  <textarea id="portfolio-description" required rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Ceritakan singkat tentang perbaikan ini..."></textarea>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar Sebelum (Before)</label>
+                    <label htmlFor="portfolio-beforeImage" className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar Sebelum (Before)</label>
                     <div className="flex gap-2">
-                      <input type="text" required placeholder="URL Gambar..." value={formData.beforeImage} onChange={e => setFormData({...formData, beforeImage: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
-                      <label className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'beforeImage')} />
+                      <input id="portfolio-beforeImage" type="text" required placeholder="URL Gambar..." value={formData.beforeImage} onChange={e => setFormData({...formData, beforeImage: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                      <label htmlFor="portfolio-beforeUpload" className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
+                        <input id="portfolio-beforeUpload" type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'beforeImage')} />
                         Upload
                       </label>
                     </div>
@@ -303,11 +320,11 @@ export default function AdminPortfolios() {
                     )}
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar Sesudah (After)</label>
+                    <label htmlFor="portfolio-afterImage" className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar Sesudah (After)</label>
                     <div className="flex gap-2">
-                      <input type="text" required placeholder="URL Gambar..." value={formData.afterImage} onChange={e => setFormData({...formData, afterImage: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
-                      <label className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'afterImage')} />
+                      <input id="portfolio-afterImage" type="text" required placeholder="URL Gambar..." value={formData.afterImage} onChange={e => setFormData({...formData, afterImage: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                      <label htmlFor="portfolio-afterUpload" className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
+                        <input id="portfolio-afterUpload" type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'afterImage')} />
                         Upload
                       </label>
                     </div>

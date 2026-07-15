@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { MARKETPLACES } from "@/lib/config";
 
 interface MarketplaceLink {
   marketplace: string;
@@ -53,25 +54,18 @@ const conditionColors: Record<string, string> = {
   REFURBISHED: "bg-tertiary-container text-on-tertiary-container",
 };
 
-const marketplaceIcons: Record<string, { src: string; label: string; bg: string }> = {
-  SHOPEE: { src: "/images/marketplaces/shopee.svg", label: "Shopee", bg: "bg-[#EE4D2D] hover:bg-[#d43c1f]" },
-  TOKOPEDIA: { src: "/images/marketplaces/tokopedia.svg", label: "Tokopedia", bg: "bg-[#03D30F] hover:bg-[#02b30c]" },
-  BLIBLI: { src: "/images/marketplaces/blibli.svg", label: "BLIBLI", bg: "bg-[#1A7BB9] hover:bg-[#156695]" },
-  LAZADA: { src: "/images/marketplaces/lazada.svg", label: "Lazada", bg: "bg-[#F05A00] hover:bg-[#d14e00]" },
-};
-
 function MarketplaceButton({ marketplace, url }: { marketplace: string; url: string }) {
-  const icon = marketplaceIcons[marketplace];
-  if (!icon) return null;
+  const mp = MARKETPLACES[marketplace];
+  if (!mp) return null;
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      title={`Beli di ${icon.label}`}
+      title={`Beli di ${mp.label}`}
       className={`w-9 h-9 rounded-full flex items-center justify-center overflow-hidden transition-all hover:scale-110 shadow-md flex-shrink-0`}
     >
-      <img src={icon.src} alt={icon.label} className="w-5 h-5 object-contain" />
+      <img src={mp.src} alt={mp.label} className="w-5 h-5 object-contain" />
     </a>
   );
 }
@@ -116,7 +110,7 @@ export default function JualBeliClient({ initialProducts }: Props) {
           {/* Search */}
           <div className="relative">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input
+            <input id="jualbeli-search"
               type="text"
               placeholder="Cari laptop atau HP (Contoh: MacBook Pro, iPhone 13...)"
               value={searchQuery}
@@ -165,7 +159,7 @@ export default function JualBeliClient({ initialProducts }: Props) {
 
             {/* Sort dropdown */}
             <div className="ml-auto">
-              <select
+              <select id="jualbeli-sort"
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
                 className="px-4 py-2 bg-surface-container-high border border-outline rounded-full font-label-bold text-label-sm text-on-surface focus:border-primary outline-none cursor-pointer"

@@ -7,17 +7,20 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "file-type": "^22.0.1",
     "framer-motion": "^12.40.0",
     "jose": "^6.2.3",
     "lucide-react": "^1.20.0",
     "next": "16.2.9",
-    "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "sanitize-html": "^2.17.6",
@@ -26,18 +29,25 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jsdom": "^28.0.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.1",
+    "@vitest/ui": "^4.1.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "googleapis": "^173.0.0",
+    "jsdom": "^29.1.1",
     "playwright": "^1.61.0",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5",
-    "vercel": "^54.14.2"
+    "vercel": "^54.14.2",
+    "vitest": "^4.1.10"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

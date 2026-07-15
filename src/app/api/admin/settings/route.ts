@@ -29,9 +29,9 @@ export async function POST(request: Request) {
       }
     }
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/syarat-ketentuan', 'layout');
-    revalidatePath('/kebijakan-privasi', 'layout');
+    revalidatePath('/');
+    revalidatePath('/syarat-ketentuan');
+    revalidatePath('/kebijakan-privasi');
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });

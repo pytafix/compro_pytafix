@@ -9,7 +9,9 @@ interface ServiceRequest {
   trackingId: string;
   name: string;
   whatsapp: string;
+  address: string;
   deviceType: string;
+  serviceType: string;
   problemDesc: string;
   status: string;
   createdAt: string;
@@ -46,7 +48,7 @@ export default function AdminRequests() {
       if (res.ok) {
         setRequests(await res.json());
       }
-    } catch (error) {
+    } catch {
       toast.error("Gagal mengambil data resi");
     } finally {
       setIsLoading(false);
@@ -54,7 +56,28 @@ export default function AdminRequests() {
   };
 
   useEffect(() => {
-    fetchRequests();
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/requests", { credentials: "include" });
+        if (res.status === 401) {
+          // handled by middleware
+          return;
+        }
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setRequests(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (req?: ServiceRequest) => {
@@ -63,9 +86,9 @@ export default function AdminRequests() {
       setFormData({
         name: req.name,
         whatsapp: req.whatsapp,
-        address: (req as any).address || "",
+        address: req.address || "",
         deviceType: req.deviceType,
-        serviceType: (req as any).serviceType || "Lainnya",
+        serviceType: req.serviceType || "Lainnya",
         problemDesc: req.problemDesc,
         status: req.status,
         technicianName: req.technicianName || "",
@@ -111,7 +134,7 @@ export default function AdminRequests() {
       } else {
         toast.error("Gagal menyimpan data");
       }
-    } catch (error) {
+    } catch {
       toast.error("Terjadi kesalahan");
     } finally {
       setIsSubmitting(false);
@@ -128,7 +151,7 @@ export default function AdminRequests() {
       } else {
         toast.error("Gagal menghapus resi");
       }
-    } catch (error) {
+    } catch {
       toast.error("Terjadi kesalahan");
     }
   };
@@ -195,10 +218,10 @@ export default function AdminRequests() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(req)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit Status">
+                      <button onClick={() => openModal(req)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit Status" aria-label="Edit Status">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(req.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(req.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -218,7 +241,7 @@ export default function AdminRequests() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Update Status Resi" : "Buat Resi Manual"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -231,31 +254,31 @@ export default function AdminRequests() {
                   <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Pelanggan</label>
-                        <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                        <label htmlFor="request-name" className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Pelanggan</label>
+                        <input id="request-name" type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                       </div>
                       <div>
-                        <label className="block font-label-bold text-label-bold text-on-surface mb-1">WhatsApp</label>
-                        <input type="text" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                        <label htmlFor="request-whatsapp" className="block font-label-bold text-label-bold text-on-surface mb-1">WhatsApp</label>
+                        <input id="request-whatsapp" type="text" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                       </div>
                     </div>
                     <div>
-                      <label className="block font-label-bold text-label-bold text-on-surface mb-1">Alamat Lengkap</label>
-                      <input type="text" required value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                      <label htmlFor="request-address" className="block font-label-bold text-label-bold text-on-surface mb-1">Alamat Lengkap</label>
+                      <input id="request-address" type="text" required value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tipe Perangkat</label>
-                        <input type="text" required value={formData.deviceType} onChange={e => setFormData({...formData, deviceType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                        <label htmlFor="request-deviceType" className="block font-label-bold text-label-bold text-on-surface mb-1">Tipe Perangkat</label>
+                        <input id="request-deviceType" type="text" required value={formData.deviceType} onChange={e => setFormData({...formData, deviceType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                       </div>
                       <div>
-                        <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tipe Layanan</label>
-                        <input type="text" required value={formData.serviceType} onChange={e => setFormData({...formData, serviceType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                        <label htmlFor="request-serviceType" className="block font-label-bold text-label-bold text-on-surface mb-1">Tipe Layanan</label>
+                        <input id="request-serviceType" type="text" required value={formData.serviceType} onChange={e => setFormData({...formData, serviceType: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                       </div>
                     </div>
                     <div>
-                      <label className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Kendala</label>
-                      <textarea required rows={2} value={formData.problemDesc} onChange={e => setFormData({...formData, problemDesc: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                      <label htmlFor="request-problemDesc" className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Kendala</label>
+                      <textarea id="request-problemDesc" required rows={2} value={formData.problemDesc} onChange={e => setFormData({...formData, problemDesc: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                     </div>
                   </>
                 )}
@@ -263,8 +286,8 @@ export default function AdminRequests() {
                 {/* Status and Tech info editable always */}
                 <div className="bg-surface-container p-4 rounded-xl space-y-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status Progres</label>
-                    <select 
+                    <label htmlFor="request-status" className="block font-label-bold text-label-bold text-on-surface mb-1">Status Progres</label>
+                    <select id="request-status"
                       value={formData.status} 
                       onChange={e => setFormData({...formData, status: e.target.value})} 
                       className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"
@@ -278,12 +301,12 @@ export default function AdminRequests() {
                     </select>
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Teknisi (Opsional)</label>
-                    <input type="text" value={formData.technicianName} onChange={e => setFormData({...formData, technicianName: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Nama yang mengerjakan" />
+                    <label htmlFor="request-technicianName" className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Teknisi (Opsional)</label>
+                    <input id="request-technicianName" type="text" value={formData.technicianName} onChange={e => setFormData({...formData, technicianName: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Nama yang mengerjakan" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Catatan Teknisi (Internal)</label>
-                    <textarea rows={2} value={formData.technicianNotes} onChange={e => setFormData({...formData, technicianNotes: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Catatan tambahan..."></textarea>
+                    <label htmlFor="request-technicianNotes" className="block font-label-bold text-label-bold text-on-surface mb-1">Catatan Teknisi (Internal)</label>
+                    <textarea id="request-technicianNotes" rows={2} value={formData.technicianNotes} onChange={e => setFormData({...formData, technicianNotes: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Catatan tambahan..."></textarea>
                   </div>
                 </div>
               </form>

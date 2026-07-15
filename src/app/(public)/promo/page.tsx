@@ -1,4 +1,4 @@
-import React from "react";
+
 import prisma from "@/lib/prisma";
 import PromoList from "./PromoList";
 

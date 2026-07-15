@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Metadata } from "next";
 import Image from "next/image";
+import { CONTACT } from '@/lib/config';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -47,7 +48,7 @@ export default async function SparepartDetailPage({ params }: Props) {
   }
 
   const waText = encodeURIComponent(`Halo Pytafix, saya tertarik ingin membeli sparepart:\n\n*Nama Barang:* ${sparepart.name}\n*Harga:* Rp ${sparepart.price.toLocaleString("id-ID")}\n\nApakah stoknya masih tersedia?`);
-  const waLink = `https://wa.me/6281234567890?text=${waText}`;
+  const waLink = `https://wa.me/${CONTACT.whatsapp}?text=${waText}`;
 
   return (
     <main className="flex-grow bg-background">
@@ -77,9 +78,8 @@ export default async function SparepartDetailPage({ params }: Props) {
                   "price": sparepart.price,
                   "priceCurrency": "IDR",
                   "availability": sparepart.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-                  "seller": { "@type": "Organization", "name": "Pytafix" }
-                },
-                "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "100" }
+                  "seller": { "@id": "https://www.pytafix.web.id/#organization" }
+                }
               }
             ]
           })

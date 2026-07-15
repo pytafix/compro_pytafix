@@ -5,8 +5,10 @@ import { toast } from "sonner";
 
 interface Service {
   id: string;
+  slug: string;
   title: string;
   description: string;
+  content: string;
   icon: string | null;
   imageUrl: string | null;
   isActive: boolean;
@@ -49,18 +51,34 @@ export default function AdminServices() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    fetchServices(false);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/services", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setServices(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (service?: Service) => {
     if (service) {
       setEditingId(service.id);
       setFormData({
-        slug: (service as Record<string, any>).slug || "",
+        slug: service.slug || "",
         title: service.title,
         description: service.description,
-        content: (service as Record<string, any>).content || "",
+        content: service.content || "",
         icon: service.icon || "",
         imageUrl: service.imageUrl || "",
         isActive: service.isActive
@@ -204,10 +222,10 @@ export default function AdminServices() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(service)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(service)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(service.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(service.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -227,7 +245,7 @@ export default function AdminServices() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit Layanan" : "Tambah Layanan Baru"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -236,33 +254,33 @@ export default function AdminServices() {
               <form id="service-form" onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Layanan</label>
-                    <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="service-title" className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Layanan</label>
+                    <input id="service-title" type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">URL Slug (SEO)</label>
-                    <input type="text" required placeholder="misal: perbaikan-laptop-malang" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="service-slug" className="block font-label-bold text-label-bold text-on-surface mb-1">URL Slug (SEO)</label>
+                    <input id="service-slug" type="text" required placeholder="misal: perbaikan-laptop-malang" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Singkat (Katalog)</label>
-                  <textarea required rows={2} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="service-description" className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Singkat (Katalog)</label>
+                  <textarea id="service-description" required rows={2} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Konten Detail (SEO Landing Page)</label>
-                  <textarea rows={4} placeholder="Teks panjang untuk keperluan SEO halaman detail layanan..." value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="service-content" className="block font-label-bold text-label-bold text-on-surface mb-1">Konten Detail (SEO Landing Page)</label>
+                  <textarea id="service-content" rows={4} placeholder="Teks panjang untuk keperluan SEO halaman detail layanan..." value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Ikon (Material Symbols)</label>
-                    <input type="text" placeholder="e.g. computer, smartphone" value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="service-icon" className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Ikon (Material Symbols)</label>
+                    <input id="service-icon" type="text" placeholder="e.g. computer, smartphone" value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
-                    <select value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="service-isActive" className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
+                    <select id="service-isActive" value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       <option value="true">Aktif (Ditampilkan)</option>
                       <option value="false">Nonaktif (Disembunyikan)</option>
                     </select>
@@ -270,11 +288,11 @@ export default function AdminServices() {
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar/Foto (Opsional)</label>
+                  <label htmlFor="service-imageUrl" className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar/Foto (Opsional)</label>
                   <div className="flex gap-2">
-                    <input type="text" placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
-                    <label className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
-                      <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                    <input id="service-imageUrl" type="text" placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="service-imageUpload" className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
+                      <input id="service-imageUpload" type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                       Upload
                     </label>
                   </div>

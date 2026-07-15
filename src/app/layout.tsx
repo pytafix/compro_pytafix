@@ -54,6 +54,10 @@ export default function RootLayout({
   return (
     <html lang="id" className="h-full" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/logo.png" sizes="40x40" type="image/png" />
+        <link rel="icon" href="/logo.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo.png" sizes="40x40" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"

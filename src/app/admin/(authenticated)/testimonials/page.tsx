@@ -25,22 +25,39 @@ export default function AdminTestimonialsPage() {
     isFeatured: false,
   });
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
   const fetchTestimonials = async () => {
     try {
       const res = await fetch("/api/admin/testimonials");
       if (!res.ok) throw new Error("Gagal mengambil data testimoni");
       const data = await res.json();
       setTestimonials(data);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/testimonials", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setTestimonials(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
+  }, []);
 
   const handleOpenModal = (item?: Testimonial) => {
     if (item) {
@@ -86,8 +103,8 @@ export default function AdminTestimonialsPage() {
       toast.success(`Testimoni berhasil ${editingItem ? "diupdate" : "ditambahkan"}`);
       handleCloseModal();
       fetchTestimonials();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     }
   };
 
@@ -98,8 +115,8 @@ export default function AdminTestimonialsPage() {
       if (!res.ok) throw new Error("Gagal menghapus testimoni");
       toast.success("Testimoni berhasil dihapus");
       fetchTestimonials();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     }
   };
 
@@ -158,10 +175,10 @@ export default function AdminTestimonialsPage() {
                   )}
                 </td>
                 <td className="p-4 flex items-center gap-2">
-                  <button onClick={() => handleOpenModal(item)} className="text-secondary hover:bg-secondary-container/20 p-2 rounded transition-colors" title="Edit">
+                  <button onClick={() => handleOpenModal(item)} className="text-secondary hover:bg-secondary-container/20 p-2 rounded transition-colors" title="Edit" aria-label="Edit">
                     <span className="material-symbols-outlined text-[20px]">edit</span>
                   </button>
-                  <button onClick={() => handleDelete(item.id)} className="text-error hover:bg-error-container/20 p-2 rounded transition-colors" title="Hapus">
+                  <button onClick={() => handleDelete(item.id)} className="text-error hover:bg-error-container/20 p-2 rounded transition-colors" title="Hapus" aria-label="Hapus">
                     <span className="material-symbols-outlined text-[20px]">delete</span>
                   </button>
                 </td>
@@ -185,15 +202,16 @@ export default function AdminTestimonialsPage() {
               <h2 className="font-headline-sm text-on-surface">
                 {editingItem ? "Edit Testimoni" : "Tambah Testimoni"}
               </h2>
-              <button onClick={handleCloseModal} className="text-on-surface-variant hover:text-on-surface">
+              <button onClick={handleCloseModal} className="text-on-surface-variant hover:text-on-surface" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <label className="font-label-md text-on-surface">Nama Pelanggan</label>
+                <label htmlFor="testimonial-name" className="font-label-md text-on-surface">Nama Pelanggan</label>
                 <input
+                  id="testimonial-name"
                   type="text"
                   required
                   value={formData.name}
@@ -203,8 +221,9 @@ export default function AdminTestimonialsPage() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="font-label-md text-on-surface">Rating (1-5)</label>
+                <label htmlFor="testimonial-rating" className="font-label-md text-on-surface">Rating (1-5)</label>
                 <input
+                  id="testimonial-rating"
                   type="number"
                   min="1"
                   max="5"
@@ -216,8 +235,9 @@ export default function AdminTestimonialsPage() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="font-label-md text-on-surface">Komentar</label>
+                <label htmlFor="testimonial-comment" className="font-label-md text-on-surface">Komentar</label>
                 <textarea
+                  id="testimonial-comment"
                   required
                   rows={4}
                   value={formData.comment}

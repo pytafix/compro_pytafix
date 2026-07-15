@@ -17,22 +17,39 @@ export default function AdminWarrantyPage() {
   const [claims, setClaims] = useState<WarrantyClaim[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchClaims();
-  }, []);
-
   const fetchClaims = async () => {
     try {
       const res = await fetch("/api/admin/warranty");
       if (!res.ok) throw new Error("Gagal mengambil data klaim garansi");
       const data = await res.json();
       setClaims(data);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/warranty", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setClaims(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
+  }, []);
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
@@ -44,8 +61,8 @@ export default function AdminWarrantyPage() {
       if (!res.ok) throw new Error("Gagal mengupdate status");
       toast.success("Status berhasil diupdate");
       fetchClaims();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     }
   };
 
@@ -56,8 +73,8 @@ export default function AdminWarrantyPage() {
       if (!res.ok) throw new Error("Gagal menghapus klaim");
       toast.success("Klaim berhasil dihapus");
       fetchClaims();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     }
   };
 
@@ -111,7 +128,7 @@ export default function AdminWarrantyPage() {
                 </td>
                 <td className="p-4 max-w-xs truncate" title={claim.description}>{claim.description}</td>
                 <td className="p-4">
-                  <select 
+                  <select id={`warranty-status-${claim.trackingId}`}
                     value={claim.status}
                     onChange={(e) => updateStatus(claim.id, e.target.value)}
                     className={`px-3 py-1.5 rounded-full font-label-bold text-xs border-none outline-none cursor-pointer appearance-none ${getStatusColor(claim.status)}`}
@@ -123,7 +140,7 @@ export default function AdminWarrantyPage() {
                   </select>
                 </td>
                 <td className="p-4 flex items-center gap-2">
-                  <button onClick={() => deleteClaim(claim.id)} className="text-error hover:bg-error-container/20 p-2 rounded transition-colors" title="Hapus">
+                  <button onClick={() => deleteClaim(claim.id)} className="text-error hover:bg-error-container/20 p-2 rounded transition-colors" title="Hapus" aria-label="Hapus">
                     <span className="material-symbols-outlined text-[20px]">delete</span>
                   </button>
                 </td>

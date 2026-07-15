@@ -44,8 +44,9 @@ export default function KontakForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block font-label-md text-on-surface mb-1.5">Nama Lengkap *</label>
+        <label htmlFor="contact-name" className="block font-label-md text-on-surface mb-1.5">Nama Lengkap *</label>
         <input
+          id="contact-name"
           type="text"
           required
           className={inputClass}
@@ -57,8 +58,9 @@ export default function KontakForm() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block font-label-md text-on-surface mb-1.5">Email</label>
+          <label htmlFor="contact-email" className="block font-label-md text-on-surface mb-1.5">Email</label>
           <input
+            id="contact-email"
             type="email"
             className={inputClass}
             placeholder="opsional@email.com"
@@ -67,8 +69,9 @@ export default function KontakForm() {
           />
         </div>
         <div>
-          <label className="block font-label-md text-on-surface mb-1.5">WhatsApp *</label>
+          <label htmlFor="contact-whatsapp" className="block font-label-md text-on-surface mb-1.5">WhatsApp *</label>
           <input
+            id="contact-whatsapp"
             type="tel"
             required
             className={inputClass}
@@ -80,8 +83,9 @@ export default function KontakForm() {
       </div>
 
       <div>
-        <label className="block font-label-md text-on-surface mb-1.5">Subjek *</label>
+        <label htmlFor="contact-subject" className="block font-label-md text-on-surface mb-1.5">Subjek *</label>
         <input
+          id="contact-subject"
           type="text"
           required
           className={inputClass}
@@ -92,8 +96,9 @@ export default function KontakForm() {
       </div>
 
       <div>
-        <label className="block font-label-md text-on-surface mb-1.5">Pesan *</label>
+        <label htmlFor="contact-message" className="block font-label-md text-on-surface mb-1.5">Pesan *</label>
         <textarea
+          id="contact-message"
           required
           rows={4}
           className={`${inputClass} resize-none`}

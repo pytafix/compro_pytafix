@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { serviceRequestAdminSchema } from '@/lib/validations';
 
 export async function PATCH(
   request: Request,
@@ -9,7 +10,16 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { status, technicianName, technicianNotes } = body;
+    const result = serviceRequestAdminSchema.partial().safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: result.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { status, technicianName, technicianNotes } = result.data;
 
     const existingRequest = await prisma.serviceRequest.findUnique({
       where: { id },
@@ -38,8 +48,8 @@ export async function PATCH(
       data: updateData,
     });
 
-    revalidatePath('/admin/requests', 'layout');
-    revalidatePath('/cek-status-servis', 'layout');
+    revalidatePath('/admin/requests');
+    revalidatePath('/cek-status-servis');
 
     return NextResponse.json(updatedRequest, { status: 200 });
   } catch (error) {
@@ -54,12 +64,15 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    await prisma.serviceRequest.delete({
-      where: { id },
-    });
+    const existing = await prisma.serviceRequest.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: 'Request not found' }, { status: 404 });
+    }
 
-    revalidatePath('/admin/requests', 'layout');
-    revalidatePath('/cek-status-servis', 'layout');
+    await prisma.serviceRequest.delete({ where: { id } });
+
+    revalidatePath('/admin/requests');
+    revalidatePath('/cek-status-servis');
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

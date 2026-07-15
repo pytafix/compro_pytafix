@@ -1,6 +1,8 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
+import { testimonialSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
@@ -16,18 +18,22 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
+    const body = await request.json();
+    const data = testimonialSchema.parse(body);
     const testimonial = await prisma.testimonial.create({
       data: {
         name: data.name,
         rating: data.rating,
         comment: data.comment,
-        isFeatured: data.isFeatured || false,
+        isFeatured: data.isFeatured ?? false,
       },
     });
-    revalidatePath('/', 'layout');
+    revalidatePath('/');
     return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation failed', details: error.issues }, { status: 400 });
+    }
     console.error('Error creating testimonial:', error);
     return NextResponse.json({ error: 'Failed to create testimonial' }, { status: 500 });
   }

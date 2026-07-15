@@ -3,11 +3,26 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface ServiceStatusData {
+  trackingId: string;
+  status: string;
+  deviceType: string;
+  serviceType: string;
+  problemDesc: string;
+  createdAt: string | null;
+  diagnosedAt: string | null;
+  workingAt: string | null;
+  completedAt: string | null;
+  scheduleDate: string | null;
+  technicianName: string | null;
+  technicianNotes: string | null;
+}
+
 export default function CekStatusClient() {
   const [resi, setResi] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [statusData, setStatusData] = useState<Record<string, any> | null>(null);
+  const [statusData, setStatusData] = useState<ServiceStatusData | null>(null);
 
   const handleSearch = async () => {
     if (resi.trim()) {
@@ -56,7 +71,7 @@ export default function CekStatusClient() {
             <input
               className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 pl-12 pr-4 py-4 outline-none transition-all font-body-lg text-body-lg"
               id="resi-input"
-              placeholder="Contoh: PYT-2024-10X"
+              placeholder="Contoh: PYT-2026-A1B2"
               type="text"
               value={resi}
               onChange={(e) => setResi(e.target.value)}
@@ -66,13 +81,16 @@ export default function CekStatusClient() {
             />
           </div>
           <button
-            className="bg-primary text-on-primary font-label-lg text-label-lg px-8 py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all cursor-pointer"
+            className="bg-primary text-on-primary font-label-lg text-label-lg px-8 py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSearch}
+            disabled={isLoading}
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-              search
-            </span>
-            Cek
+            {isLoading ? (
+              <span className="material-symbols-outlined animate-spin" style={{ fontVariationSettings: "'FILL' 1" }}>progress_activity</span>
+            ) : (
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>search</span>
+            )}
+            {isLoading ? "Mencari..." : "Cek"}
           </button>
         </div>
       </div>

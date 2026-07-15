@@ -16,8 +16,26 @@ export const metadata: Metadata = {
 };
 
 export default function TentangKami() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "Tentang Pytafix",
+    "description": "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Bagian dari CV. Pyta Cipta Karya dengan teknisi bersertifikat.",
+    "url": "https://www.pytafix.web.id/tentang-kami",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Pytafix",
+      "description": "Spesialis perbaikan perangkat elektronik di Malang dengan teknisi bersertifikat dan peralatan diagnostik canggih.",
+      "areaServed": { "@type": "City", "name": "Malang" }
+    }
+  };
+
   return (
     <main className="flex-grow pb-24 text-center md:text-left">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero / Headline Section */}
       <section className="mb-24 text-center px-margin-mobile md:px-margin-desktop bg-surface-container-low py-20 border-b border-outline-variant">
         <div className="max-w-container-max mx-auto">

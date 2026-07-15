@@ -1,6 +1,4 @@
 "use client";
-import { TableSkeleton } from "@/components/admin/TableSkeleton";
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -13,25 +11,28 @@ export default function AdminSettings() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
-    try {
-      const res = await fetch("/api/admin/settings");
-      if (res.ok) {
-        const data = await res.json();
-        setFormData({
-          terms: data.terms || "",
-          privacy: data.privacy || ""
-        });
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/settings", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setFormData({
+            terms: data.terms || "",
+            privacy: data.privacy || ""
+          });
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
       }
-    } catch (error) {
-      toast.error("Gagal mengambil data pengaturan");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+    loadData();
+    return () => { cancelled = true; };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,8 +74,8 @@ export default function AdminSettings() {
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div>
-                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Syarat & Ketentuan (Terms of Service)</label>
-                <textarea 
+                <label htmlFor="setting-terms" className="block font-label-bold text-label-bold text-on-surface mb-2">Syarat & Ketentuan (Terms of Service)</label>
+                <textarea id="setting-terms"
                   rows={10} 
                   required
                   placeholder="Masukkan teks syarat & ketentuan di sini..."
@@ -86,8 +87,8 @@ export default function AdminSettings() {
               </div>
 
               <div className="border-t border-outline-variant pt-6">
-                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Kebijakan Privasi (Privacy Policy)</label>
-                <textarea 
+                <label htmlFor="setting-privacy" className="block font-label-bold text-label-bold text-on-surface mb-2">Kebijakan Privasi (Privacy Policy)</label>
+                <textarea id="setting-privacy"
                   rows={10} 
                   required
                   placeholder="Masukkan teks kebijakan privasi di sini..."

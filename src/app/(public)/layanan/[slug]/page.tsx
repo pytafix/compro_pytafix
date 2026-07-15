@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { LOCATIONS, slugifyLocation } from "@/lib/locations";
 import Image from "next/image";
+import { CONTACT } from '@/lib/config';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -93,7 +94,7 @@ export default async function ServiceDetailPage({ params }: Props) {
   const contentText = service.content || service.description;
 
   const waText = encodeURIComponent(`Halo Pytafix, saya tertarik dengan layanan:\n*${service.title}*${location ? ` di area ${location}` : ''}\n\nBisa dibantu untuk konsultasi/booking?`);
-  const waLink = `https://wa.me/6281234567890?text=${waText}`;
+  const waLink = `https://wa.me/${CONTACT.whatsapp}?text=${waText}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -109,7 +110,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       {
         "@type": "Service",
         "serviceType": service.title,
-        "provider": { "@type": "LocalBusiness", "name": "Pytafix" },
+        "provider": { "@id": "https://www.pytafix.web.id/#localbusiness" },
         "areaServed": location ? { "@type": "City", "name": location } : { "@type": "City", "name": "Malang" },
         "description": service.description,
       }

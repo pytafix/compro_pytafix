@@ -1,6 +1,8 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
+import { productSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
@@ -17,21 +19,21 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, category, condition, description, price, stock, imageUrl, isFeatured, isActive, marketplaceLinks } = body;
+    const data = productSchema.parse(body);
 
     const product = await prisma.product.create({
       data: {
-        name,
-        category,
-        condition,
-        description,
-        price: price !== undefined ? Number(price) : 0,
-        stock: stock !== undefined ? Number(stock) : 1,
-        imageUrl,
-        isFeatured: isFeatured ?? false,
-        isActive: isActive ?? true,
-        marketplaceLinks: marketplaceLinks && marketplaceLinks.length > 0 ? {
-          create: marketplaceLinks.map((link: { marketplace: string; url: string }) => ({
+        name: data.name,
+        category: data.category,
+        condition: data.condition,
+        description: data.description ?? null,
+        price: data.price,
+        stock: data.stock,
+        imageUrl: data.imageUrl ?? null,
+        isFeatured: data.isFeatured ?? false,
+        isActive: data.isActive ?? true,
+        marketplaceLinks: data.marketplaceLinks && data.marketplaceLinks.length > 0 ? {
+          create: data.marketplaceLinks.map((link) => ({
             marketplace: link.marketplace,
             url: link.url,
           })),
@@ -40,10 +42,13 @@ export async function POST(request: Request) {
       include: { marketplaceLinks: true },
     });
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/jual-beli', 'layout');
+    revalidatePath('/');
+    revalidatePath('/jual-beli');
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation failed', details: error.issues }, { status: 400 });
+    }
     return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
   }
 }

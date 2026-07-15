@@ -20,9 +20,10 @@ const staggerContainer: Variants = {
   },
 };
 
-import { Promo, Sparepart, Testimonial } from '@prisma/client';
+import { CONTACT } from '@/lib/config';
+import { Promo, Sparepart, Testimonial, Faq } from '@prisma/client';
 
-export default function HomeClient({ promos, spareparts, testimonials }: { promos: Promo[], spareparts: Sparepart[], testimonials: Testimonial[] }) {
+export default function HomeClient({ promos, spareparts, testimonials, faqs }: { promos: Promo[], spareparts: Sparepart[], testimonials: Testimonial[], faqs: Faq[] }) {
   return (
     <main className="relative overflow-hidden">
       <script
@@ -44,8 +45,10 @@ export default function HomeClient({ promos, spareparts, testimonials }: { promo
                 },
                 "sameAs": [
                   "https://www.instagram.com/pytafix",
-                  "https://www.facebook.com/pytafix",
-                  "https://www.tiktok.com/@pytafix"
+                  "https://www.facebook.com/share/18g8dMfLV3/",
+                  "https://www.tiktok.com/@pytafix",
+                  "https://www.youtube.com/@pytafix",
+                  "https://www.threads.net/@pytafix"
                 ]
               },
               {
@@ -66,7 +69,7 @@ export default function HomeClient({ promos, spareparts, testimonials }: { promo
                 "name": "Pytafix",
                 "image": "https://www.pytafix.web.id/logo.png",
                 "url": "https://www.pytafix.web.id",
-                "telephone": "+6281234567890",
+                "telephone": `+${CONTACT.whatsapp}`,
                 "address": {
                   "@type": "PostalAddress",
                   "streetAddress": "Jl. Elektronik No. 123",
@@ -88,82 +91,33 @@ export default function HomeClient({ promos, spareparts, testimonials }: { promo
                     "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                     "opens": "09:00",
                     "closes": "18:00"
+                  },
+                  {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": "Sunday",
+                    "opens": "00:00",
+                    "closes": "00:00"
                   }
                 ],
                 "aggregateRating": testimonials.length > 0 ? {
                   "@type": "AggregateRating",
-                  "ratingValue": "4.9",
+                  "ratingValue": (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1),
                   "reviewCount": testimonials.length.toString(),
                   "bestRating": "5",
                   "worstRating": "1"
                 } : undefined
               },
-              {
+              ...(faqs.length > 0 ? [{
                 "@type": "FAQPage",
-                "mainEntity": [
-                  {
-                    "@type": "Question",
-                    "name": "Berapa lama proses servis biasanya selesai?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Waktu pengerjaan sangat bergantung pada jenis kerusakan. Untuk pergantian baterai atau layar umumnya 1-3 jam. Perbaikan motherboard bisa memakan waktu 1-3 hari kerja. Kami akan memberikan estimasi pasti setelah diagnosa."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Apakah data saya aman selama proses perbaikan?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Sangat aman. Privasi dan keamanan data Anda adalah prioritas utama kami. Kami menerapkan standar operasional yang ketat, dan Anda dipersilakan melakukan backup sebelum perangkat diserahkan jika memungkinkan."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Bagaimana sistem garansi di Pytafix?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Kami memberikan garansi resmi untuk setiap perbaikan dan sparepart. Durasi garansi bervariasi antara 30 hingga 90 hari tergantung jenis layanan. Jika masalah yang sama muncul dalam masa garansi, kami akan perbaiki secara gratis."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Apakah ada biaya pengecekan (diagnosa)?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Jika Anda melanjutkan proses servis dengan kami, biaya diagnosa 100% GRATIS. Transparansi biaya selalu kami berikan sebelum proses perbaikan dimulai."
-                    }
+                "mainEntity": faqs.map(faq => ({
+                  "@type": "Question",
+                  "name": faq.question,
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": faq.answer
                   }
-                ]
-              },
-              {
-                "@type": "HowTo",
-                "name": "Cara Memperbaiki Perangkat di Pytafix",
-                "description": "Proses layanan perbaikan perangkat di Pytafix dari booking hingga garansi.",
-                "totalTime": "P1D",
-                "step": [
-                  {
-                    "@type": "HowToStep",
-                    "name": "Booking Servis",
-                    "text": "Jadwalkan servis melalui website atau WhatsApp. Isikan data perangkat dan keluhan yang dialami.",
-                    "url": "https://www.pytafix.web.id/booking-servis"
-                  },
-                  {
-                    "@type": "HowToStep",
-                    "name": "Diagnosis",
-                    "text": "Teknisi akan melakukan pengecekan teknis dan memberikan estimasi biaya perbaikan."
-                  },
-                  {
-                    "@type": "HowToStep",
-                    "name": "Perbaikan",
-                    "text": "Perbaikan dilakukan oleh teknisi bersertifikat menggunakan sparepart berkualitas dengan standar operasional ketat."
-                  },
-                  {
-                    "@type": "HowToStep",
-                    "name": "Garansi",
-                    "text": "Perangkat diuji terlebih dahulu sebelum diserahkan. Garansi resmi diberikan sebagai jaminan kualitas layanan."
-                  }
-                ]
-              }
+                }))
+              }] : []),
             ]
           })
         }}
@@ -194,7 +148,7 @@ export default function HomeClient({ promos, spareparts, testimonials }: { promo
               <a href="/booking-servis" className="bg-primary text-on-primary font-label-bold text-label-bold px-8 py-3 rounded hover:bg-on-primary-fixed-variant hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer inline-flex items-center justify-center">
                 Perbaiki Sekarang
               </a>
-              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="border border-outline text-primary font-label-bold text-label-bold px-8 py-3 rounded hover:bg-surface-container hover:shadow transition-all flex items-center gap-2 cursor-pointer">
+              <a href={`https://wa.me/${CONTACT.whatsapp}?text=Halo%20Pytafix,%20saya%20butuh%20bantuan.`} target="_blank" rel="noopener noreferrer" className="border border-outline text-primary font-label-bold text-label-bold px-8 py-3 rounded hover:bg-surface-container hover:shadow transition-all flex items-center gap-2 cursor-pointer">
                 <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }} aria-hidden="true">
                   chat
                 </span>

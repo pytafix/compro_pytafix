@@ -69,7 +69,7 @@ export function StatusUpdateModal({ request, onClose, onSuccess }: StatusUpdateM
               {request.trackingId} - {request.name}
             </p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant cursor-pointer">
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant cursor-pointer" aria-label="Tutup">
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
@@ -98,7 +98,9 @@ export function StatusUpdateModal({ request, onClose, onSuccess }: StatusUpdateM
                 <option value="DITERIMA">1 - Diterima</option>
                 <option value="DIAGNOSA">2 - Diagnosa</option>
                 <option value="DIKERJAKAN">3 - Sedang Dikerjakan</option>
-                <option value="SELESAI">4 - Selesai</option>
+                <option value="MENUNGGU_SPAREPART">4 - Menunggu Sparepart</option>
+                <option value="SELESAI">5 - Selesai</option>
+                <option value="DIBATALKAN">6 - Dibatalkan</option>
               </select>
             </div>
 

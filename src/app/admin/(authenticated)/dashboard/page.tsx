@@ -1,6 +1,4 @@
 "use client";
-import { TableSkeleton } from "@/components/admin/TableSkeleton";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -35,9 +33,29 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    fetchRequests(false);
-  }, []);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/requests", { credentials: "include" });
+        if (res.status === 401) {
+          router.push("/admin/login");
+          return;
+        }
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setRequests(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data permintaan.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
+  }, [router]);
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
@@ -124,6 +142,7 @@ export default function AdminDashboard() {
                         onClick={() => setSelectedRequest(req)}
                         className="inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-secondary-container text-secondary transition-colors cursor-pointer"
                         title="Update Status"
+                        aria-label="Update Status"
                       >
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>

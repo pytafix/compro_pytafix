@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import type { Faq } from "@prisma/client";
 
-export default function FaqAccordion({ faqs }: { faqs: any[] }) {
+export default function FaqAccordion({ faqs }: { faqs: Faq[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAccordion = (index: number) => {

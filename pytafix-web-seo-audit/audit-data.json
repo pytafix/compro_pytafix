@@ -1,0 +1,454 @@
+{
+  "summary": {
+    "health_score": 58,
+    "business_type": "Local Service Business - Electronics Repair (Malang, Indonesia)",
+    "top_findings": [
+      "Logo.png used as OG image — not optimized, wrong aspect ratio for social sharing",
+      "Hardcoded fallback lastModified date 2024-06-01 in sitemap — stale signals to crawlers",
+      "Google Maps embed uses generic query, not actual business address coordinates",
+      "No hreflang tags — missing international/multi-regional SEO signals for Indonesian market",
+      "Google service account JSON committed in repository — security vulnerability",
+      "ADMIN_PASSWORD and JWT_SECRET in .env with weak defaults — critical auth risk",
+      "No Web Application Firewall or rate limiting on public API endpoints",
+      "Brand marquee on homepage uses img src with external CDN (cdn.simpleicons.org) — not Next/Image, breaks lazy loading",
+      "Testimonial data hardcoded in client component — not from database, no schema markup for reviews",
+      "Article pages use dangerouslySetInnerHTML for content — potential XSS vector"
+    ],
+    "quick_wins": [
+      "Replace /logo.png OG image with properly sized 1200x630 banner",
+      "Add FAQPage schema on homepage (currently only on /faq)",
+      "Add Organization schema linking to LocalBusiness",
+      "Implement revalidate tags on all dynamic pages (currently inconsistent)",
+      "Fix sparepart URL: /sparepart/[id] uses integer parse — slug-based URLs better for SEO"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 55,
+      "what_works": [
+        "robots.txt correctly blocks /admin/ and /api/ from crawling",
+        "sitemap.xml generates dynamically with static + dynamic URLs from Prisma",
+        "Canonical tags present on all public pages via alternates",
+        "Security headers (X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy) configured in next.config.ts",
+        "No HTTP/HTTPS mixed content issues detected",
+        "Clean URL structure throughout — no query string parameters in public URLs"
+      ],
+      "findings": [
+        {
+          "title": "Sitemap uses stale fallback date 2024-06-01 for all static pages",
+          "severity": "High",
+          "description": "In sitemap.ts line 7: `const fallbackDate = new Date('2024-06-01')`. All static pages (homepage, /layanan, /tentang-kami, etc.) share this outdated lastModified. Google interprets this as stale content.",
+          "recommendation": "Use `new Date()` as fallbackDate for static pages, or derive from package.json build time. For dynamic pages, Prisma's `updatedAt` is correctly used."
+        },
+        {
+          "title": "Sparepart detail URL uses numeric ID (/sparepart/123) instead of slug",
+          "severity": "High",
+          "description": "Prisma Sparepart model uses auto-increment integer @id. The URL /sparepart/123 exposes internal DB IDs, provides no keyword value, and changes if DB is migrated. Sitemap also uses `sparepart.id` (integer) in URLs.",
+          "recommendation": "Add a unique slug field to Sparepart model: `slug String @unique` and generate from name. Update route to /sparepart/[slug] and sitemap accordingly."
+        },
+        {
+          "title": "Location permutations in sitemap generate massive URL list with thin content risk",
+          "severity": "High",
+          "description": "sitemap.ts lines 59-65: for each service × each location = service count × 15 location URLs. If 10 services exist, sitemap generates 150+ location pages. These pages show identical content (introParagraph just swaps location name) — creates near-duplicate content penalty risk.",
+          "recommendation": "Remove location permutation generation from sitemap. Instead, use a single /layanan/[slug] page with location-specific content loaded dynamically, or consolidate into the base service page with a location mention. Use hreflang or canonical tags if geo-pages are needed."
+        },
+        {
+          "title": "Google Maps embed uses generic 'Malang' query instead of actual coordinates",
+          "severity": "Medium",
+          "description": "kontak/page.tsx line 109: `src=\"https://maps.google.com/maps?q=Malang&t=&z=13&ie=UTF8&iwloc=&output=embed\"`. This generic query does not pin to the actual business address. Users searching for directions get imprecise results.",
+          "recommendation": "Replace with actual coordinates: `q=-7.983908,112.621391` (from LocalBusiness schema geo). Use `place_id` for more reliable pinning."
+        },
+        {
+          "title": "No Vercel analytics or GSC integration for monitoring",
+          "severity": "Medium",
+          "description": "No @vercel/analytics or @vercel/speed-insights package installed. No Google Search Console verification meta tag. No performance monitoring pipeline.",
+          "recommendation": "Install @vercel/analytics for real user metrics. Add GSC HTML verification tag in layout.tsx metadata."
+        },
+        {
+          "title": "No language declaration beyond lang='id'",
+          "severity": "Low",
+          "description": "Root layout sets lang='id' but no html lang regional variant (id-ID), and no Content-Language HTTP header.",
+          "recommendation": "Ensure hosting config sends `Content-Language: id-ID` header. Consider adding meta http-equiv='Content-Language'."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 62,
+      "what_works": [
+        "All pages have unique <title> tags with consistent Pytafix branding",
+        "All pages have meta descriptions",
+        "All pages have canonical alternates",
+        "All pages have OpenGraph metadata with locale: id_ID",
+        "All pages have Twitter card metadata",
+        "Navigation includes breadcrumb-style links throughout",
+        "Internal linking structure is solid — Footer, TopNavBar, CTAs provide cross-linking"
+      ],
+      "findings": [
+        {
+          "title": "OG image /logo.png used universally — wrong dimensions and format",
+          "severity": "Critical",
+          "description": "Root layout.tsx line 27 and every page's OpenGraph images: `{ url: '/logo.png', width: 800, height: 600 }`. Logo PNG is a square favicon-style image, not a social sharing banner. Recommended OG image size is 1200×630px (Facebook) / 1200×627px (Twitter). Current image will appear cropped, low quality, or rejected by Twitter.",
+          "recommendation": "Create a dedicated OG banner image (1200×630px) with brand logo, tagline, and contrasting background. Store in /public/images/og-banner.png. Update all OG image URLs."
+        },
+        {
+          "title": "Homepage title template inconsistent — missing keyword 'Service' in default title",
+          "severity": "Medium",
+          "description": "Root layout default title: 'Pytafix - Pusat Servis Laptop, HP, dan Komputer di Malang'. Template: '%s | Pytafix'. On homepage, title IS the full brand name. But many inner pages lose the 'Malang' geographic modifier. Example: /sparepart title 'Jual Sparepart & Aksesoris Laptop di Malang | Pytafix' is good, but /faq only has 'Pertanyaan yang Sering Diajukan (FAQ) | Pytafix' — no location signal.",
+          "recommendation": "Ensure all inner pages include 'Malang' or 'Jawa Timur' in descriptions. For FAQ, add geographic context: 'FAQ Servis Elektronik di Malang | Pytafix'."
+        },
+        {
+          "title": "No structured data on homepage beyond LocalBusiness JSON-LD",
+          "severity": "Medium",
+          "description": "HomeClient.tsx injects LocalBusiness JSON-LD (good), but missing: Organization schema, WebSite schema with SearchAction, BreadcrumbList for navigation, and FAQPage schema (FAQ section exists on homepage but no structured data for it).",
+          "recommendation": "Add Organization schema nested within LocalBusiness. Add WebSite schema with SearchBox. Add FAQPage schema referencing the 4 FAQ items in the homepage section."
+        },
+        {
+          "title": "Booking form and Cek Status are important transactional pages with no schema",
+          "severity": "Low",
+          "description": "No Schema.org markup on /booking-servis or /cek-status-servis. Could benefit from SpeakableSpecification for voice search, or ReservationAction schema.",
+          "recommendation": "Add WebApplication schema on /booking-servis. Add a hidden structured data type on status check page."
+        },
+        {
+          "title": "Material Symbols Outlined font loaded via raw link tag — not optimized",
+          "severity": "Low",
+          "description": "layout.tsx lines 55-58: `<link href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined...'`. Should use next/font or at minimum preconnect. Also material icons via className strings are not semantic.",
+          "recommendation": "Use next/font for Material Symbols, or at minimum add rel='preconnect' to fonts.googleapis.com. Replace decorative material icon spans with aria-hidden and ensure decorative-only icons have no semantic role."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 65,
+      "what_works": [
+        "Service pages (layanan) have good length descriptions from CMS",
+        "About page has company story, values, and area coverage — good E-E-A-T signals",
+        "Tentang-kami mentions CV. Pyta Cipta Karya as parent company — establishes business legitimacy",
+        "Contact page has full address, phone, hours — critical for local SEO",
+        "FAQ section answers common questions — thin but adequate",
+        "Booking and status check forms provide clear UX"
+      ],
+      "findings": [
+        {
+          "title": "Testimonial data hardcoded in HomeClient.tsx — not from database",
+          "severity": "High",
+          "description": "HomeClient.tsx lines 605-647: testimonials are a static array hardcoded in the client component. Prisma has a Testimonial model with isFeatured, rating, comment, name. These are not being used on the homepage. The hardcoded testimonials are duplicates (Budi/Siti/Andi/Ratna appear twice for the marquee loop).",
+          "recommendation": "Fetch featured testimonials from Prisma in the server page component (like testimonials/page.tsx does), pass to HomeClient, and render dynamically. Add Review schema for rich snippets."
+        },
+        {
+          "title": "Article content uses dangerouslySetInnerHTML — XSS risk and no content length validation",
+          "severity": "Critical",
+          "description": "artikel/[slug]/page.tsx line 91-92: `dangerouslySetInnerHTML={{ __html: article.content }}`. Article content stored in Prisma is rendered raw. If article content contains malicious scripts or malformed HTML, it renders directly. No sanitization.",
+          "recommendation": "Use a sanitization library (dompurify with jsdom or isomorphic-dompurify) to sanitize article.content before rendering. Alternatively, migrate article content to a structured format (Markdown with remark/rehype)."
+        },
+        {
+          "title": "Portfolio page has revalidate=3600 but no portfolio count shown",
+          "severity": "Low",
+          "description": "portofolio/page.tsx fetches from Prisma but there is no Portfolio JSON-LD schema, no OG metadata on the listing page, and portfolio items are client-side rendered via portofolio-client.tsx (which was not reviewed).",
+          "recommendation": "Add CreativeWork or ItemList schema for portfolio. Add metadata to portofolio listing page."
+        },
+        {
+          "title": "Stats section on homepage (5000+ devices, 4.9/5 rating) hardcoded — unsubstantiated claims",
+          "severity": "Medium",
+          "description": "HomeClient.tsx lines 497-519: stats like '5.000+ Perangkat Diperbaiki', '99% Pelanggan Puas', '10+ Teknisi Ahli' are hardcoded text. No citation, no source. Google may view unverified claims negatively if challenged.",
+          "recommendation": "Either make these dynamic from database/analytics, or add review/rating aggregation from verified sources. Add AggregateRating schema if ratings are verifiable."
+        },
+        {
+          "title": "Service pages content is plain text from CMS — no semantic HTML structure",
+          "severity": "Medium",
+          "description": "layanan/[slug]/page.tsx lines 159-169: content rendered as `whitespace-pre-wrap` inside a prose div. No heading hierarchy, no lists, no emphasis. The CMS field stores raw text that may not have structure. This is also a UX issue for readability.",
+          "recommendation": "If CMS content supports Markdown, render with remark/rehype to get proper semantic HTML (h2, h3, ul, p tags). If CMS stores plain text, preprocess to detect bullet points and headings."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 58,
+      "what_works": [
+        "LocalBusiness JSON-LD on homepage with geo, opening hours, contact, social links",
+        "Service schema on layanan/[slug] pages",
+        "Article schema on artikel/[slug] pages",
+        "FAQPage schema on /faq",
+        "Schema injected via script[type='application/ld+json'] in server components — good approach"
+      ],
+      "findings": [
+        {
+          "title": "No Organization schema — LocalBusiness not linked to parent entity",
+          "severity": "High",
+          "description": "HomeClient.tsx LocalBusiness schema stands alone. No parent Organization schema. Search engines prefer Organization as the top-level entity with LocalBusiness as a branch. No way to link pytafix.web.id to CV. Pyta Cipta Karya entity.",
+          "recommendation": "Add Organization schema with sameAs links to pytabelajar.web.id and pytagotech.com. Nest LocalBusiness under sameAs or create a parent Organization with branch entities."
+        },
+        {
+          "title": "WebSite schema with SearchAction missing — no internal site search rich result",
+          "severity": "Medium",
+          "description": "No WebSite structured data anywhere. Google Search Console supports site search rich results when WebSite with potentialAction (SearchAction) is present.",
+          "recommendation": "Add WebSite schema in root layout with potentialAction for SearchAction pointing to /cek-status-servis or a dedicated search page."
+        },
+        {
+          "title": "No Product or Offer schema for sparepart pages",
+          "severity": "Medium",
+          "description": "sparepart/[id] pages show price, stock, category but no Product JSON-LD. Cannot appear in Google's Shopping tab or Product rich results.",
+          "recommendation": "Add Product schema with offers array containing price, availability (InStock/LowStock), and seller (LocalBusiness)."
+        },
+        {
+          "title": "BreadcrumbList schema missing from all pages",
+          "severity": "Medium",
+          "description": "sparepart/[id] page has visual breadcrumb navigation but no BreadcrumbList JSON-LD. No other pages have breadcrumbs despite having logical breadcrumb paths.",
+          "recommendation": "Add BreadcrumbList schema on all listing/detail pages. Use the breadcrumb nav from sparepart detail as template."
+        },
+        {
+          "title": "Service schema on layanan/[slug] missing priceSpecification and areaServed detail",
+          "severity": "Low",
+          "description": "layanan/[slug] Service schema only has serviceType, provider, areaServed (City), description. Missing hasOfferCatalog, availableChannel, and areaServed should use PostalAddress or GeoShape for better precision.",
+          "recommendation": "Enhance Service schema with hasOfferCatalog for pricing tiers and areaServed using GeoShape or AdministrativeArea."
+        },
+        {
+          "title": "sameAs in LocalBusiness only lists social — missing Google Business Profile if exists",
+          "severity": "Low",
+          "description": "HomeClient.tsx sameAs array has Instagram, Facebook, TikTok. If a Google Business Profile exists, it should be listed as a sameAs URL for knowledge panel linking.",
+          "recommendation": "Verify if Google Business Profile exists for Pytafix. If yes, add its URL to sameAs."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 50,
+      "what_works": [
+        "Next.js Image component used for most images with proper sizes attributes",
+        "Hero image has priority prop — good LCP optimization",
+        "revalidate = 60 on homepage (ISR) — fresh content without server render per request",
+        "revalidate = 3600 on article, portfolio, promo pages",
+        "No render-blocking CSS — Tailwind is utility-first",
+        "Framer Motion animations only trigger on viewport intersection"
+      ],
+      "findings": [
+        {
+          "title": "Brand marquee on homepage uses raw <img src> instead of Next/Image",
+          "severity": "High",
+          "description": "HomeClient.tsx line 136: `<img src={https://cdn.simpleicons.org/${brand}}`. Uses external CDN URLs for brand icons. This: (1) bypasses Next.js image optimization, (2) loads 40 external images per render, (3) no lazy loading, (4) no format conversion (should be WebP/SVG), (5) no width/height causing CLS risk.",
+          "recommendation": "Use Next/Image for brand icons. Download brand SVGs locally to /public/brand-icons/. Or use cdn.simpleicons.org as a remotePattern in next.config.ts with proper sizing."
+        },
+        {
+          "title": "No Core Web Vitals measurement setup",
+          "severity": "High",
+          "description": "No @vercel/web-vitals, no CrUX data pipeline, no lighthouse ci setup. Performance is unknown — no LCP/CLS/INP measurements exist in the codebase. No performance budget defined.",
+          "recommendation": "Add @vercel/web-vitals for real user measurement. Set up Lighthouse CI in deployment pipeline. Target: LCP < 2.5s, INP < 200ms, CLS < 0.1."
+        },
+        {
+          "title": "Google Fonts loaded via raw link tag — no font-display control",
+          "severity": "Medium",
+          "description": "layout.tsx loads Manrope via next/font (good) but Material Symbols Outlined via raw link tag. Material Symbols is an icon font that blocks rendering. No preconnect, no swap strategy.",
+          "recommendation": "Move Material Symbols to next/font or add preconnect + font-display=swap. Consider replacing with Lucide icons (already installed as lucide-react) for better tree-shaking."
+        },
+        {
+          "title": "No bundle analysis or code splitting visibility",
+          "severity": "Low",
+          "description": "No next/bundle-analysis tool configured. Cannot verify if framer-motion (12.40.0) is properly tree-shaken. Sonner (toast), lucide-react, framer-motion all add weight to client bundle.",
+          "recommendation": "Add @next/bundle-analyzer. Lazy-load framer-motion components that aren't above-fold. Verify sonner Toaster doesn't include full UI on server."
+        },
+        {
+          "title": "SparepartClient and BookingClient are 'use client' but data-fetching patterns unknown",
+          "severity": "Low",
+          "description": "SparepartClient.tsx and BookingClient.tsx not reviewed. If these client components fetch data directly (not via server components), they may be making client-side API calls that bypass ISR caching, causing performance issues.",
+          "recommendation": "Ensure sparepart grid uses server-fetched data with revalidation, not client-side fetch-on-mount."
+        }
+      ]
+    },
+    {
+      "name": "Backend / API / Security",
+      "score": 42,
+      "what_works": [
+        "Admin routes properly protected by middleware with JWT verification",
+        "JWT tokens use httpOnly, secure, sameSite=strict cookies",
+        "API auth uses jose library — standard RS256/HS256 JWT",
+        "Zod validation schemas defined in lib/validations.ts",
+        "Prisma singleton pattern prevents connection pool exhaustion in dev",
+        "Neon PostgreSQL uses SSL mode — good for data in transit"
+      ],
+      "findings": [
+        {
+          "title": "google-service-account.json committed to repository — CRITICAL",
+          "severity": "Critical",
+          "description": "File: pytafix-web/google-service-account.json. Contains GCP service account credentials. .gitignore exists but this file was NOT gitignored or already committed. Anyone with repo access has GCP credentials.",
+          "recommendation": "IMMEDIATELY: (1) Revoke the GCP service account key, (2) Remove the file from git history (git filter-branch or BFG Repo-Cleaner), (3) Add google-service-account.json to .gitignore, (4) Use Vercel Environment Variables or Vercel Secrets for the credential path. This is a critical security incident."
+        },
+        {
+          "title": "Weak hardcoded JWT_SECRET and ADMIN_PASSWORD in .env",
+          "severity": "Critical",
+          "description": ".env file: JWT_SECRET='pytafix_super_secret_key_2024', ADMIN_PASSWORD='admin'. These are extremely weak, predictable credentials. JWT_SECRET is only 32 chars of common words with year. ADMIN_PASSWORD='admin' means any attacker who guesses the endpoint can brute-force login in 1 attempt.",
+          "recommendation": "IMMEDIATELY change ADMIN_PASSWORD to a strong random string (min 16 chars). Generate a proper random JWT_SECRET using `openssl rand -base64 32`. Move both to Vercel Environment Variables, not .env file. Enable rate limiting on /api/auth/login."
+        },
+        {
+          "title": "No rate limiting on public API endpoints",
+          "severity": "High",
+          "description": "/api/booking, /api/status, /api/warranty have no rate limiting, no CAPTCHA, no honeypot fields. Attackers can flood booking/warranty endpoints, create spam service requests, or brute-force tracking IDs to enumerate bookings.",
+          "recommendation": "Add rate limiting middleware (e.g., upstash/ratelimit with Vercel Edge). Add a simple honeypot field to booking form. Consider adding a CAPTCHA (e.g., hCaptcha) to /booking-servis."
+        },
+        {
+          "title": "Service request tracking IDs are guessable — no IDOR protection in status API",
+          "severity": "High",
+          "description": "api/status/route.ts: GET /api/status?trackingId=X returns full service request data (name, address, whatsapp, device, problem) without authentication. Tracking IDs follow a predictable pattern. Anyone can enumerate all booking records.",
+          "recommendation": "Add rate limiting per IP on /api/status. Return minimal data to unauthenticated requests (only status, not personal info). Full data should require a session token. Consider using a hash of the trackingId instead of sequential."
+        },
+        {
+          "title": ".env files (.env, .env.development, .env.prod) not gitignored properly",
+          "severity": "High",
+          "description": "While .env is in the repo (noted in git status), .env.prod may contain production secrets. Need to verify .gitignore blocks all .env* except .env.example. The google-service-account.json being committed suggests gitignore is incomplete.",
+          "recommendation": "Audit .gitignore. Ensure all .env* files except .env.local.example are blocked. Check if .env.prod contains different secrets than .env."
+        },
+        {
+          "title": "POSTGRES_PRISMA_URL and POSTGRES_URL_NON_POOLING credentials visible in .env",
+          "severity": "High",
+          "description": ".env contains Neon PostgreSQL connection strings with credentials. While this is common for development, if .env is committed and credentials aren't rotated, database is exposed.",
+          "recommendation": "Remove database credentials from .env file entirely. Use Vercel Environment Variables for all secrets. Use neon.tech's branch protection and rotation if credentials may be compromised."
+        },
+        {
+          "title": "No CORS configuration on API routes",
+          "severity": "Medium",
+          "description": "API routes (booking, status, warranty) don't set explicit CORS headers. They currently work because Next.js API routes are same-origin by default, but this is a security posture gap if the app ever needs to be accessed from mobile apps or subdomains.",
+          "recommendation": "Add explicit CORS configuration to next.config.ts for API routes, restricting origins to pytafix.web.id and www.pytafix.web.id only."
+        },
+        {
+          "title": "Booking form has no input sanitization beyond required fields",
+          "severity": "Medium",
+          "description": "api/booking/route.ts: validation only checks if fields exist (not empty), not their format. No phone number format validation (whatsapp field), no length limits, no XSS sanitization on text fields before storing in PostgreSQL.",
+          "recommendation": "Add Zod schema validation in API route (lib/validations.ts has serviceRequestSchema). Validate whatsapp with regex for Indonesian phone format. Sanitize all text fields."
+        }
+      ]
+    },
+    {
+      "name": "Images & Media",
+      "score": 52,
+      "what_works": [
+        "Next/Image used for all local images (hero, Unsplash, sparepart thumbnails)",
+        "fill + sizes attributes used correctly on most images",
+        "alt text present on all images",
+        "Unsplash images have format/quality params (?auto=format&fit=crop&w=800&q=80)"
+      ],
+      "findings": [
+        {
+          "title": "Brand icon images use raw <img> tags from external CDN — no optimization",
+          "severity": "High",
+          "description": "HomeClient.tsx uses <img src='https://cdn.simpleicons.org/{brand}'> for 20 brand logos. These are not optimized by Next.js, load as whatever format the CDN returns, have no width/height attributes, and cause CLS.",
+          "recommendation": "Download brand SVG icons locally to /public/brand-icons/. Configure cdn.simpleicons.org as a remote pattern in next.config.ts and use Next/Image with explicit width/height. Add sizes='80px'."
+        },
+        {
+          "title": "Sparepart images lack width/height — CLS risk",
+          "severity": "Medium",
+          "description": "SparepartClient.tsx (not reviewed fully) likely renders sparepart images. Sparepart detail page at sparepart/[id] uses Next/Image with fill (good) but the grid listing may not have aspect ratio containers set.",
+          "recommendation": "Ensure all sparepart image containers have explicit aspect-ratio CSS. Verify SparepartClient uses Next/Image with fill inside a container that has a defined aspect ratio."
+        },
+        {
+          "title": "OG image /logo.png is a PNG not optimized for web",
+          "severity": "Medium",
+          "description": "public/logo.png is used for all OpenGraph images. It's likely a large, uncompressed PNG. OG images should be JPG or WebP at 1200px wide, < 1MB.",
+          "recommendation": "Export OG banner as WebP at 1200×630px. Store as /public/images/og-banner.webp. Update all OpenGraph image URLs."
+        },
+        {
+          "title": "No lazy loading for below-fold Unsplash images on about page",
+          "severity": "Low",
+          "description": "tentang-kami/page.tsx uses Unsplash images for about/circuit board imagery. The second image in the Story section has no loading='lazy' attribute. Next/Image applies lazy by default, but explicit is safer.",
+          "recommendation": "Confirm Next/Image handles lazy loading automatically (default in Next.js). Add loading='lazy' explicitly for clarity."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness (GEO)",
+      "score": 48,
+      "what_works": [
+        "LocalBusiness schema provides entity signals for AI crawlers",
+        "Clear NAP (Name, Address, Phone) consistency across pages",
+        "FAQPage schema present for direct Q&A retrieval",
+        "About page mentions parent company CV. Pyta Cipta Karya"
+      ],
+      "findings": [
+        {
+          "title": "No llms.txt or dedicated AI-accessible content endpoint",
+          "severity": "High",
+          "description": "No /llms.txt, /sitemap.txt, or robots.txt with AI crawler directives. Google AI Overviews, ChatGPT, Perplexity cannot easily access structured site content.",
+          "recommendation": "Create /app/llms.txt route that returns a plain-text summary of the site: services, pricing, contact info, FAQ in a format AI can parse. Add AI crawler allowances in robots.txt."
+        },
+        {
+          "title": "Business hours inconsistently stated — Sunday status unclear",
+          "severity": "Medium",
+          "description": "kontak/page.tsx says 'Senin - Sabtu: 09:00 - 18:00, Minggu: Tutup'. tentang-kami/page.tsx only lists kecamatan coverage, no hours. HomeClient LocalBusiness has openingHoursSpecification for Mon-Sat but no Sunday exclusion. FAQ page says 'Waktu pengerjaan' but not hours.",
+          "recommendation": "Standardize opening hours across all pages. Add Sunday closure explicitly in LocalBusiness openingHoursSpecification. Consider adding HolidayOpeningHoursSpecification."
+        },
+        {
+          "title": "No structured data for 'HowTo' or 'Q&A' on service process",
+          "severity": "Low",
+          "description": "'How it Works' section on homepage (Booking → Diagnosis → Repair → Warranty) has no HowTo schema. This 4-step process is ideal for HowTo structured data and featured snippet capture.",
+          "recommendation": "Add HowTo schema for the 4-step service process. Each step as 'HowToStep' with name, text, and image if applicable."
+        },
+        {
+          "title": "Author entity for articles lacks Person schema depth",
+          "severity": "Low",
+          "description": "artikel/[slug] Article schema uses `{ '@type': 'Person', 'name': article.author }` but no url, jobTitle, or sameAs (social profiles) for the author. Strong author authority signals are missing.",
+          "recommendation": "Create author profiles in Prisma (or hardcode mapping) with jobTitle 'Teknisi Pytafix' or 'Tim Pytafix' and sameAs social links."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Security Fixes (Week 1)",
+        "timeframe": "Week 1",
+        "items": [
+          "Revoke GCP service account key and remove google-service-account.json from repo history",
+          "Change ADMIN_PASSWORD to strong random string in Vercel Environment Variables",
+          "Generate new JWT_SECRET using openssl rand -base64 32",
+          "Add rate limiting to /api/status and /api/booking endpoints",
+          "Fix tracking ID enumeration vulnerability in status API (return minimal data publicly)",
+          "Remove all credentials from .env file, use Vercel Environment Variables only"
+        ]
+      },
+      {
+        "name": "Phase 2: SEO Quick Wins (Weeks 1-2)",
+        "timeframe": "Weeks 1-2",
+        "items": [
+          "Create 1200x630 OG banner image and update all OG image URLs site-wide",
+          "Fix sitemap fallbackDate to current date",
+          "Add Organization schema nested with LocalBusiness",
+          "Add WebSite + SearchAction schema in root layout",
+          "Add BreadcrumbList schema on detail pages",
+          "Add Product schema for sparepart detail pages",
+          "Fix brand marquee to use Next/Image with local SVGs",
+          "Replace dangerouslySetInnerHTML in articles with DOMPurify sanitization"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Schema Improvements (Weeks 3-4)",
+        "timeframe": "Weeks 3-4",
+        "items": [
+          "Make homepage testimonials dynamic from Prisma, add AggregateRating schema",
+          "Remove location permutation URL generation from sitemap",
+          "Add slug field to Sparepart model and convert URLs to /sparepart/[slug]",
+          "Add FAQPage schema to homepage to match visible FAQ section",
+          "Add HowTo schema for 'How it Works' section",
+          "Add author Person schema depth to article pages",
+          "Fix Google Maps embed with actual coordinates",
+          "Standardize opening hours across all pages"
+        ]
+      },
+      {
+        "name": "Phase 4: Performance & Monitoring (Month 2)",
+        "timeframe": "Month 2",
+        "items": [
+          "Install @vercel/analytics and @vercel/speed-insights",
+          "Add Lighthouse CI to deployment pipeline",
+          "Replace Material Symbols Outlined font with lucide-react icons",
+          "Lazy-load framer-motion components",
+          "Create /llms.txt for AI crawler accessibility",
+          "Add GSC HTML verification meta tag",
+          "Set up performance budgets in next.config.ts"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}

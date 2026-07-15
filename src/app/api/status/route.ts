@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
-import prisma from '../../../lib/prisma';
+import prisma from '@/lib/prisma';
+import { statusRateLimit } from '@/lib/rate-limit';
 
 export async function GET(req: Request) {
+  const rateLimitResponse = await statusRateLimit(req);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { searchParams } = new URL(req.url);
     const trackingId = searchParams.get('trackingId');

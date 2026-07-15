@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Klaim Garansi Servis | Pytafix",
@@ -13,3 +13,7 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
+
+export default function KlaimGaransiLayout({ children }: { children: React.ReactNode }) {
+  return children;
+}

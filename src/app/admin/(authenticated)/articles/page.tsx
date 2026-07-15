@@ -52,8 +52,24 @@ export default function AdminArticles() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    fetchArticles(false);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/articles", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setArticles(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (article?: Article) => {
@@ -234,10 +250,10 @@ export default function AdminArticles() {
                       )}
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(article)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(article)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(article.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(article.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -257,7 +273,7 @@ export default function AdminArticles() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit Artikel" : "Tambah Artikel Baru"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -266,43 +282,43 @@ export default function AdminArticles() {
               <form id="article-form" onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Artikel</label>
-                    <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="article-title" className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Artikel</label>
+                    <input id="article-title" type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">URL Slug (SEO)</label>
-                    <input type="text" required placeholder="misal: tips-merawat-laptop" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="article-slug" className="block font-label-bold text-label-bold text-on-surface mb-1">URL Slug (SEO)</label>
+                    <input id="article-slug" type="text" required placeholder="misal: tips-merawat-laptop" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Penulis</label>
-                    <input type="text" required value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="article-author" className="block font-label-bold text-label-bold text-on-surface mb-1">Penulis</label>
+                    <input id="article-author" type="text" required value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tanggal Publikasi</label>
-                    <input type="datetime-local" value={formData.publishedAt} onChange={e => setFormData({...formData, publishedAt: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="article-publishedAt" className="block font-label-bold text-label-bold text-on-surface mb-1">Tanggal Publikasi</label>
+                    <input id="article-publishedAt" type="datetime-local" value={formData.publishedAt} onChange={e => setFormData({...formData, publishedAt: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                     <p className="text-xs text-on-surface-variant mt-1">Biarkan kosong jika ini adalah draft.</p>
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Kutipan Singkat (Excerpt)</label>
-                  <textarea required rows={2} value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="article-excerpt" className="block font-label-bold text-label-bold text-on-surface mb-1">Kutipan Singkat (Excerpt)</label>
+                  <textarea id="article-excerpt" required rows={2} value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Konten Lengkap</label>
-                  <textarea required rows={8} placeholder="Teks lengkap artikel..." value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="article-content" className="block font-label-bold text-label-bold text-on-surface mb-1">Konten Lengkap</label>
+                  <textarea id="article-content" required rows={8} placeholder="Teks lengkap artikel..." value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar Utama</label>
+                  <label htmlFor="article-imageUrl" className="block font-label-bold text-label-bold text-on-surface mb-1">Gambar Utama</label>
                   <div className="flex gap-2">
-                    <input type="text" required placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
-                    <label className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
-                      <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                    <input id="article-imageUrl" type="text" required placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="article-imageUpload" className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
+                      <input id="article-imageUpload" type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                       Upload
                     </label>
                   </div>

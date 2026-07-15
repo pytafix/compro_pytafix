@@ -1,7 +1,7 @@
-import React from 'react';
+
 import prisma from '@/lib/prisma';
 import { Metadata } from 'next';
-import sanitizeHtml from 'sanitize-html';
+import { sanitizeContent } from '@/lib/sanitize';
 
 export const metadata: Metadata = {
   title: "Syarat & Ketentuan | Pytafix",
@@ -21,11 +21,11 @@ export default async function TermsAndConditionsPage() {
   const setting = await prisma.setting.findUnique({ where: { id: "terms" } });
 
   return (
-    <div className="min-h-screen bg-surface">
+    <main className="min-h-screen bg-surface">
       {/* Hero Header */}
       <section className="bg-surface-container-low py-16 text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h1 className="font-display-md text-on-surface mb-4">Syarat & Ketentuan</h1>
+          <h1 className="font-headline-md text-headline-md text-on-surface mb-4">Syarat & Ketentuan</h1>
           <p className="font-body-lg text-on-surface-variant">
             Harap baca dengan saksama sebelum menggunakan layanan perbaikan kami.
           </p>
@@ -36,7 +36,7 @@ export default async function TermsAndConditionsPage() {
       <section className="max-w-3xl mx-auto px-4 py-12">
         <div className="prose">
           {setting?.content ? (
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(setting.content) }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeContent(setting.content) }} />
           ) : (
             <>
               <h2 className="font-headline-md text-on-surface mb-6 mt-8">1. Tanggung Jawab Kehilangan Data</h2>
@@ -74,6 +74,6 @@ export default async function TermsAndConditionsPage() {
           )}
         </div>
       </section>
-    </div>
+    </main>
   );
 }

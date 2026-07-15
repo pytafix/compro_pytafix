@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import Link from "next/link";
-
 export default function KlaimGaransiPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -29,8 +27,8 @@ export default function KlaimGaransiPage() {
 
       setIsSuccess(true);
       toast.success("Klaim garansi berhasil diajukan!");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Terjadi kesalahan");
     } finally {
       setIsSubmitting(false);
     }
@@ -114,7 +112,7 @@ export default function KlaimGaransiPage() {
                   value={formData.trackingId}
                   onChange={(e) => setFormData({ ...formData, trackingId: e.target.value })}
                   className="w-full px-4 py-3 bg-surface-container-lowest border border-outline rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-on-surface"
-                  placeholder="Contoh: PYT-2024-A1B2"
+                  placeholder="Contoh: PYT-2026-A1B2"
                 />
               </div>
 

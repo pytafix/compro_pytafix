@@ -50,8 +50,24 @@ export default function AdminSpareparts() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    fetchSpareparts(false);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/spareparts", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setSpareparts(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (item?: Sparepart) => {
@@ -225,10 +241,10 @@ export default function AdminSpareparts() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(item)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(item)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -248,7 +264,7 @@ export default function AdminSpareparts() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit Sparepart" : "Tambah Sparepart"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -256,37 +272,37 @@ export default function AdminSpareparts() {
             <div className="p-6 overflow-y-auto">
               <form id="sparepart-form" onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Barang</label>
-                  <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                  <label htmlFor="sparepart-name" className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Barang</label>
+                  <input id="sparepart-name" type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Kategori</label>
-                    <input type="text" required placeholder="e.g. RAM, SSD, Baterai" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="sparepart-category" className="block font-label-bold text-label-bold text-on-surface mb-1">Kategori</label>
+                    <input id="sparepart-category" type="text" required placeholder="e.g. RAM, SSD, Baterai" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Stok Tersedia</label>
-                    <input type="number" required min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="sparepart-stock" className="block font-label-bold text-label-bold text-on-surface mb-1">Stok Tersedia</label>
+                    <input id="sparepart-stock" type="number" required min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Harga (Rupiah)</label>
-                  <input type="number" required min="0" value={formData.price} onChange={e => setFormData({...formData, price: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                  <label htmlFor="sparepart-price" className="block font-label-bold text-label-bold text-on-surface mb-1">Harga (Rupiah)</label>
+                  <input id="sparepart-price" type="number" required min="0" value={formData.price} onChange={e => setFormData({...formData, price: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Spesifikasi</label>
-                  <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="sparepart-description" className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Spesifikasi</label>
+                  <textarea id="sparepart-description" rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Foto Produk (Opsional)</label>
+                  <label htmlFor="sparepart-imageUrl" className="block font-label-bold text-label-bold text-on-surface mb-1">Foto Produk (Opsional)</label>
                   <div className="flex gap-2">
-                    <input type="text" placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
-                    <label className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
-                      <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                    <input id="sparepart-imageUrl" type="text" placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="sparepart-imageUpload" className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
+                      <input id="sparepart-imageUpload" type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                       Upload
                     </label>
                   </div>
@@ -298,8 +314,8 @@ export default function AdminSpareparts() {
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
-                  <select value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                  <label htmlFor="sparepart-isFeatured" className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
+                  <select id="sparepart-isFeatured" value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                     <option value="true">Ya, Tampilkan (Max 3 yang akan muncul)</option>
                     <option value="false">Tidak</option>
                   </select>

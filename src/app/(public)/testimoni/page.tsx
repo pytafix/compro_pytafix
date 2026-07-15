@@ -23,8 +23,33 @@ export default async function TestimoniPage() {
     ]
   });
 
+  const avgRating = testimonials.length > 0
+    ? (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1)
+    : null;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Testimoni & Ulasan Pelanggan | Pytafix",
+    "mainEntity": avgRating ? {
+      "@type": "AggregateRating",
+      "itemReviewed": {
+        "@type": "Organization",
+        "name": "Pytafix",
+        "url": "https://www.pytafix.web.id"
+      },
+      "ratingValue": avgRating,
+      "reviewCount": testimonials.length,
+      "bestRating": 5
+    } : undefined
+  };
+
   return (
     <main className="flex-grow bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop text-center border-b border-outline-variant mb-12">
         <div className="max-w-container-max mx-auto">
@@ -76,9 +101,9 @@ export default async function TestimoniPage() {
                 </div>
                 
                 <p className="font-body-lg text-on-surface-variant italic relative z-10">
-                  <span className="text-4xl font-serif text-primary/20 absolute -top-4 -left-2 -z-10">"</span>
+                  <span className="text-4xl font-serif text-primary/20 absolute -top-4 -left-2 -z-10">&quot;</span>
                   {item.comment}
-                  <span className="text-4xl font-serif text-primary/20 absolute -bottom-6 ml-1 -z-10">"</span>
+                  <span className="text-4xl font-serif text-primary/20 absolute -bottom-6 ml-1 -z-10">&quot;</span>
                 </p>
                 
                 <div className="mt-6 pt-4 border-t border-outline-variant/50 text-right">

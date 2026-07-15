@@ -22,5 +22,11 @@ export default async function Home() {
     orderBy: { createdAt: 'desc' },
   });
 
-  return <HomeClient promos={promos} spareparts={spareparts} testimonials={testimonials} />;
+  const faqs = await prisma.faq.findMany({
+    where: { isActive: true },
+    take: 4,
+    orderBy: { createdAt: 'asc' },
+  });
+
+  return <HomeClient promos={promos} spareparts={spareparts} testimonials={testimonials} faqs={faqs} />;
 }

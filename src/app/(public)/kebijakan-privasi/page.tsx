@@ -1,7 +1,7 @@
-import React from 'react';
+
 import prisma from '@/lib/prisma';
 import { Metadata } from 'next';
-import sanitizeHtml from 'sanitize-html';
+import { sanitizeContent } from '@/lib/sanitize';
 
 export const metadata: Metadata = {
   title: "Kebijakan Privasi | Pytafix",
@@ -21,11 +21,11 @@ export default async function PrivacyPolicyPage() {
   const setting = await prisma.setting.findUnique({ where: { id: "privacy" } });
 
   return (
-    <div className="min-h-screen bg-surface">
+    <main className="min-h-screen bg-surface">
       {/* Hero Header */}
       <section className="bg-surface-container-low py-16 text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h1 className="font-display-md text-on-surface mb-4">Kebijakan Privasi</h1>
+          <h1 className="font-headline-md text-headline-md text-on-surface mb-4">Kebijakan Privasi</h1>
           <p className="font-body-lg text-on-surface-variant">
             Kami menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi Anda.
           </p>
@@ -36,7 +36,7 @@ export default async function PrivacyPolicyPage() {
       <section className="max-w-3xl mx-auto px-4 py-12">
         <div className="prose">
           {setting?.content ? (
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(setting.content) }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeContent(setting.content) }} />
           ) : (
             <>
               <h2 className="font-headline-md text-on-surface mb-6 mt-8">1. Pengumpulan Data Selama Pemesanan</h2>
@@ -69,6 +69,6 @@ export default async function PrivacyPolicyPage() {
           )}
         </div>
       </section>
-    </div>
+    </main>
   );
 }

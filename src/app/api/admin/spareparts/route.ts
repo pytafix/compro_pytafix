@@ -1,6 +1,8 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
+import { sparepartSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
@@ -17,25 +19,35 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, category, description, price, stock, imageUrl, isFeatured, condition } = body;
+    const data = sparepartSchema.parse(body);
 
     const sparepart = await prisma.sparepart.create({
       data: {
-        name,
-        category,
-        description,
-        price: price !== undefined ? Number(price) : 0,
-        stock: stock !== undefined ? Number(stock) : 0,
-        imageUrl,
-        isFeatured: isFeatured ?? false,
-        condition,
-      }
+        name: data.name,
+        category: data.category,
+        description: data.description ?? null,
+        price: data.price,
+        stock: data.stock,
+        imageUrl: data.imageUrl ?? null,
+        isFeatured: data.isFeatured ?? false,
+        condition: data.condition ?? null,
+        marketplaceLinks: data.marketplaceLinks && data.marketplaceLinks.length > 0 ? {
+          create: data.marketplaceLinks.map((link) => ({
+            marketplace: link.marketplace,
+            url: link.url,
+          })),
+        } : undefined,
+      },
+      include: { marketplaceLinks: true },
     });
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/sparepart', 'layout');
+    revalidatePath('/');
+    revalidatePath('/sparepart');
     return NextResponse.json(sparepart, { status: 201 });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation failed', details: error.issues }, { status: 400 });
+    }
     return NextResponse.json({ error: 'Failed to create sparepart' }, { status: 500 });
   }
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
+import { CONTACT, MARKETPLACES } from "@/lib/config";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -29,20 +30,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
-
-const marketplaceIcons: Record<string, { src: string; label: string }> = {
-  SHOPEE: { src: "/images/marketplaces/shopee.svg", label: "Shopee" },
-  TOKOPEDIA: { src: "/images/marketplaces/tokopedia.svg", label: "Tokopedia" },
-  BLIBLI: { src: "/images/marketplaces/blibli.svg", label: "BLIBLI" },
-  LAZADA: { src: "/images/marketplaces/lazada.svg", label: "Lazada" },
-};
-
-const marketplaceBg: Record<string, string> = {
-  SHOPEE: "bg-[#EE4D2D] hover:bg-[#d43c1f]",
-  TOKOPEDIA: "bg-[#03D30F] hover:bg-[#02b30c]",
-  BLIBLI: "bg-[#1A7BB9] hover:bg-[#156695]",
-  LAZADA: "bg-[#F05A00] hover:bg-[#d14e00]",
-};
 
 const conditionLabels: Record<string, string> = {
   BARU: "Baru",
@@ -73,16 +60,31 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description || "",
-    image: product.imageUrl || undefined,
-    offers: {
-      "@type": "Offer",
-      price: product.price,
-      priceCurrency: "IDR",
-      availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-    },
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://www.pytafix.web.id" },
+          { "@type": "ListItem", "position": 2, "name": "Jual Beli", "item": "https://www.pytafix.web.id/jual-beli" },
+          { "@type": "ListItem", "position": 3, "name": product.name }
+        ]
+      },
+      {
+        "@type": "Product",
+        name: product.name,
+        description: product.description || "",
+        image: product.imageUrl || undefined,
+        brand: { "@type": "Brand", "name": "Pytafix" },
+        sku: product.id.toString(),
+        offers: {
+          "@type": "Offer",
+          price: product.price,
+          priceCurrency: "IDR",
+          availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          seller: { "@id": "https://www.pytafix.web.id/#organization" },
+        },
+      }
+    ]
   };
 
   return (
@@ -171,16 +173,16 @@ export default async function ProductDetailPage({ params }: Props) {
                   <h2 className="font-label-bold text-label-bold text-on-surface mb-4">Beli di Marketplace</h2>
                   <div className="flex flex-wrap gap-3">
                     {product.marketplaceLinks.map((link, i) => {
-                      const icon = marketplaceIcons[link.marketplace];
+                      const mp = MARKETPLACES[link.marketplace];
                       return (
                         <a
                           key={i}
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`flex items-center gap-2 px-5 py-3 rounded-xl font-label-bold text-label-bold text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all ${marketplaceBg[link.marketplace] || "bg-primary hover:bg-primary/90"}`}
+                          className={`flex items-center gap-2 px-5 py-3 rounded-xl font-label-bold text-label-bold text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all ${mp ? mp.bg : "bg-primary hover:bg-primary/90"}`}
                         >
-                          {icon && <img src={icon.src} alt={icon.label} className="w-5 h-5 object-contain" />}
+                          {mp && <img src={mp.src} alt={mp.label} className="w-5 h-5 object-contain" />}
                           {link.marketplace}
                         </a>
                       );
@@ -193,7 +195,7 @@ export default async function ProductDetailPage({ params }: Props) {
               <div className="flex flex-col sm:flex-row gap-3">
                 {product.marketplaceLinks.length === 0 && (
                   <a
-                    href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Pytafix, saya tertarik dengan:\n\n*Nama:* ${product.name}\n*Harga:* Rp ${product.price.toLocaleString("id-ID")}\n*Kondisi:* ${conditionLabels[product.condition] || product.condition}\n\nApakah produk ini masih tersedia?`)}`}
+                    href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Halo Pytafix, saya tertarik dengan:\n\n*Nama:* ${product.name}\n*Harga:* Rp ${product.price.toLocaleString("id-ID")}\n*Kondisi:* ${conditionLabels[product.condition] || product.condition}\n\nApakah produk ini masih tersedia?`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-label-bold text-label-bold bg-[#25D366] hover:bg-[#1DA851] text-white shadow-md hover:shadow-lg transition-all"

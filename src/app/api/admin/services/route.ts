@@ -1,6 +1,8 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
+import { serviceContentSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
@@ -16,24 +18,27 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { slug, title, description, content, icon, imageUrl, isActive } = body;
+    const data = serviceContentSchema.parse(body);
 
     const service = await prisma.serviceContent.create({
       data: {
-        slug,
-        title,
-        description,
-        content,
-        icon,
-        imageUrl,
-        isActive: isActive ?? true
+        slug: data.slug,
+        title: data.title,
+        description: data.description,
+        content: data.content ?? null,
+        icon: data.icon ?? null,
+        imageUrl: data.imageUrl ?? null,
+        isActive: data.isActive ?? true
       }
     });
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/layanan', 'layout');
+    revalidatePath('/');
+    revalidatePath('/layanan');
     return NextResponse.json(service, { status: 201 });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation failed', details: error.issues }, { status: 400 });
+    }
     return NextResponse.json({ error: 'Failed to create service' }, { status: 500 });
   }
 }

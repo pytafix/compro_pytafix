@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import prisma from '@/lib/prisma';
+
+const warrantyPatchSchema = z.object({
+  status: z.enum(['MENUNGGU', 'DIPROSES', 'SELESAI', 'DITOLAK']),
+});
 
 export async function PATCH(
   request: Request,
@@ -7,12 +12,20 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const data = await request.json();
+    const body = await request.json();
+    const result = warrantyPatchSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: result.error.issues },
+        { status: 400 }
+      );
+    }
 
     const claim = await prisma.warrantyClaim.update({
       where: { id },
       data: {
-        status: data.status,
+        status: result.data.status,
       },
     });
 
@@ -29,9 +42,12 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    await prisma.warrantyClaim.delete({
-      where: { id },
-    });
+    const existing = await prisma.warrantyClaim.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: 'Warranty claim not found' }, { status: 404 });
+    }
+
+    await prisma.warrantyClaim.delete({ where: { id } });
 
     return NextResponse.json({ success: true });
   } catch (error) {

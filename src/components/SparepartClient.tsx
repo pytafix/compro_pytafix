@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { CONTACT, MARKETPLACES } from '@/lib/config';
 
 interface MarketplaceLink {
   marketplace: string;
@@ -32,13 +33,6 @@ const SORT_OPTIONS = [
   { value: "termahal", label: "Termahal" },
   { value: "stok", label: "Stok Terbanyak" },
 ];
-
-const marketplaceIcons: Record<string, { src: string; label: string }> = {
-  SHOPEE: { src: "/images/marketplaces/shopee.svg", label: "Shopee" },
-  TOKOPEDIA: { src: "/images/marketplaces/tokopedia.svg", label: "Tokopedia" },
-  BLIBLI: { src: "/images/marketplaces/blibli.svg", label: "BLIBLI" },
-  LAZADA: { src: "/images/marketplaces/lazada.svg", label: "Lazada" },
-};
 
 export function SparepartClient({ initialSpareparts }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -87,6 +81,7 @@ export function SparepartClient({ initialSpareparts }: Props) {
           <div className="relative">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
             <input
+              id="sparepart-search"
               type="text"
               placeholder="Cari sparepart (Contoh: RAM 8GB, SSD 512GB...)"
               value={searchQuery}
@@ -138,7 +133,7 @@ export function SparepartClient({ initialSpareparts }: Props) {
 
             {/* Sort */}
             <div className="ml-auto">
-              <select
+              <select id="sparepart-sort"
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
                 className="px-4 py-2 bg-surface-container-high border border-outline rounded-full font-label-bold text-label-sm text-on-surface focus:border-primary outline-none cursor-pointer"
@@ -168,8 +163,11 @@ export function SparepartClient({ initialSpareparts }: Props) {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredSpareparts.map((item) => {
-              const waText = encodeURIComponent(`Halo Pytafix, saya tertarik ingin membeli sparepart:\n\n*Nama Barang:* ${item.name}\n*Harga:* Rp ${item.price.toLocaleString("id-ID")}\n\nApakah stoknya masih tersedia?`);
-              const waLink = `https://wa.me/6281234567890?text=${waText}`;
+
+              const waText = encodeURIComponent(
+                `Halo Pytafix, saya tertarik ingin membeli sparepart:\n\n*Nama Barang:* ${item.name}\n*Harga:* Rp ${item.price.toLocaleString("id-ID")}\n\nApakah stoknya masih tersedia?`
+              );
+              const waLink = `https://wa.me/${CONTACT.whatsapp}?text=${waText}`;
 
               return (
                 <div key={item.id} className="bg-surface rounded-2xl shadow-sm border border-outline-variant overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group">
@@ -215,18 +213,18 @@ export function SparepartClient({ initialSpareparts }: Props) {
                     {item.marketplaceLinks.length > 0 && (
                       <div className="flex items-center gap-1.5 mb-3">
                         {item.marketplaceLinks.map((link, i) => {
-                          const icon = marketplaceIcons[link.marketplace];
-                          if (!icon) return null;
+                          const mp = MARKETPLACES[link.marketplace];
+                          if (!mp) return null;
                           return (
                             <a
                               key={i}
                               href={link.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              title={`Beli di ${icon.label}`}
+                              title={`Beli di ${mp.label}`}
                               className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
                             >
-                              <img src={icon.src} alt={icon.label} className="w-5 h-5 object-contain" />
+                              <img src={mp.src} alt={mp.label} className="w-5 h-5 object-contain" />
                             </a>
                           );
                         })}

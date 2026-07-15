@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import type { Promo } from "@prisma/client";
+import { CONTACT } from '@/lib/config';
 
-export default function PromoList({ promos }: { promos: any[] }) {
+export default function PromoList({ promos }: { promos: Promo[] }) {
   return (
     <>
       {/* Hero Section */}
@@ -32,7 +33,7 @@ export default function PromoList({ promos }: { promos: any[] }) {
               <span className="material-symbols-outlined text-[64px] text-on-surface-variant opacity-50 mb-4 block">sell</span>
               <h2 className="font-headline-sm text-on-surface mb-2">Belum Ada Promo</h2>
               <p className="font-body-md text-on-surface-variant mb-8">Saat ini belum ada promo aktif. Kunjungi kembali nanti atau hubungi kami untuk penawaran spesial.</p>
-              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl hover:opacity-90 transition-opacity">
+              <a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl hover:opacity-90 transition-opacity">
                 Tanya Promo via WhatsApp
               </a>
             </div>
@@ -61,7 +62,7 @@ export default function PromoList({ promos }: { promos: any[] }) {
                   <svg className="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Berlaku hingga: <strong className="ml-1 text-on-surface">{promo.validUntil}</strong>
+                  Berlaku hingga: <strong className="ml-1 text-on-surface">{new Date(promo.validUntil).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</strong>
                 </div>
                 <Link 
                   href={`/promo/${promo.slug}`}

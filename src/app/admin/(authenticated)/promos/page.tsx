@@ -17,6 +17,16 @@ interface Promo {
   isFeatured: boolean;
 }
 
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function toDateInputValue(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toISOString().split('T')[0];
+}
+
 export default function AdminPromos() {
   const [promos, setPromos] = useState<Promo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,8 +64,24 @@ export default function AdminPromos() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    fetchPromos(false);
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/promos", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setPromos(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const openModal = (promo?: Promo) => {
@@ -66,7 +92,7 @@ export default function AdminPromos() {
         badge: promo.badge || "",
         title: promo.title || "",
         description: promo.description || "",
-        validUntil: promo.validUntil || "",
+        validUntil: promo.validUntil ? toDateInputValue(promo.validUntil) : "",
         terms: promo.terms || "",
         howToClaim: promo.howToClaim || "",
         isActive: promo.isActive,
@@ -186,7 +212,7 @@ export default function AdminPromos() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col text-sm">
-                        <span className="text-on-surface"><span className="font-label-bold">Berlaku sampai:</span> {promo.validUntil}</span>
+                        <span className="text-on-surface"><span className="font-label-bold">Berlaku sampai:</span> {formatDate(promo.validUntil)}</span>
                         <p className="text-on-surface-variant mt-1 line-clamp-2 max-w-[250px]" title={promo.terms}>
                           <span className="font-label-bold">S&K:</span> {promo.terms}
                         </p>
@@ -203,10 +229,10 @@ export default function AdminPromos() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(promo)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(promo)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(promo.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(promo.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -226,7 +252,7 @@ export default function AdminPromos() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit Promo" : "Tambah Promo Baru"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -235,52 +261,52 @@ export default function AdminPromos() {
               <form id="promo-form" onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Promo</label>
-                    <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="promo-title" className="block font-label-bold text-label-bold text-on-surface mb-1">Judul Promo</label>
+                    <input id="promo-title" type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">URL Slug</label>
-                    <input type="text" required placeholder="misal: promo-ramadhan-2026" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="promo-slug" className="block font-label-bold text-label-bold text-on-surface mb-1">URL Slug</label>
+                    <input id="promo-slug" type="text" required placeholder="misal: promo-ramadhan-2026" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Badge (Label Singkat)</label>
-                    <input type="text" required placeholder="misal: Diskon 20%" value={formData.badge} onChange={e => setFormData({...formData, badge: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="promo-badge" className="block font-label-bold text-label-bold text-on-surface mb-1">Badge (Label Singkat)</label>
+                    <input id="promo-badge" type="text" required placeholder="misal: Diskon 20%" value={formData.badge} onChange={e => setFormData({...formData, badge: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Berlaku Sampai</label>
-                    <input type="text" required placeholder="misal: 31 Desember 2026" value={formData.validUntil} onChange={e => setFormData({...formData, validUntil: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="promo-validUntil" className="block font-label-bold text-label-bold text-on-surface mb-1">Berlaku Sampai</label>
+                    <input id="promo-validUntil" type="date" required value={formData.validUntil} onChange={e => setFormData({...formData, validUntil: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Singkat</label>
-                  <textarea required rows={2} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="promo-description" className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi Singkat</label>
+                  <textarea id="promo-description" required rows={2} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Syarat & Ketentuan</label>
-                  <textarea required rows={3} placeholder="S&K berlaku..." value={formData.terms} onChange={e => setFormData({...formData, terms: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="promo-terms" className="block font-label-bold text-label-bold text-on-surface mb-1">Syarat & Ketentuan</label>
+                  <textarea id="promo-terms" required rows={3} placeholder="S&K berlaku..." value={formData.terms} onChange={e => setFormData({...formData, terms: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Cara Klaim</label>
-                  <textarea required rows={3} placeholder="Langkah klaim promo..." value={formData.howToClaim} onChange={e => setFormData({...formData, howToClaim: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
+                  <label htmlFor="promo-howToClaim" className="block font-label-bold text-label-bold text-on-surface mb-1">Cara Klaim</label>
+                  <textarea id="promo-howToClaim" required rows={3} placeholder="Langkah klaim promo..." value={formData.howToClaim} onChange={e => setFormData({...formData, howToClaim: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none"></textarea>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
-                    <select value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="promo-isActive" className="block font-label-bold text-label-bold text-on-surface mb-1">Status Visibilitas</label>
+                    <select id="promo-isActive" value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       <option value="true">Aktif (Ditampilkan)</option>
                       <option value="false">Nonaktif (Disembunyikan)</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
-                    <select value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="promo-isFeatured" className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
+                    <select id="promo-isFeatured" value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       <option value="true">Ya, Tampilkan</option>
                       <option value="false">Tidak</option>
                     </select>

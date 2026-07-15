@@ -2,16 +2,30 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { CONTACT } from '@/lib/config';
 
 export default function BookingClient() {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<Record<string, string> | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
+    const rawData = Object.fromEntries(formData) as Record<string, string>;
+
+    // Map snake_case form field names to camelCase API field names
+    const data: Record<string, string> = {
+      name: rawData.name,
+      whatsapp: rawData.whatsapp,
+      address: rawData.address,
+      deviceType: rawData.device_type,
+      serviceType: rawData.service_type,
+      problemDesc: rawData.problem_desc,
+      date: rawData.date,
+    };
 
     try {
       const res = await fetch("/api/booking", {
@@ -29,6 +43,8 @@ export default function BookingClient() {
     } catch (err) {
       console.error(err);
       toast.error("Gagal mengirim data.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -39,7 +55,7 @@ export default function BookingClient() {
   // Get today's date in YYYY-MM-DD format for min attribute
   const today = new Date().toISOString().split("T")[0];
 
-  let waUrl = "https://wa.me/6281234567890?text=";
+  let waUrl = `https://wa.me/${CONTACT.whatsapp}?text=`;
   if (formData) {
     const deviceName = formData.device_type === "smartphone" ? "Smartphone" : formData.device_type === "laptop" ? "Laptop / MacBook" : formData.device_type === "tablet" ? "Tablet / iPad" : formData.device_type === "console" ? "Konsol Game" : "Lainnya";
     const serviceName = formData.service_type === "screen" ? "Ganti Layar / LCD" : formData.service_type === "battery" ? "Ganti Baterai" : formData.service_type === "water" ? "Kerusakan Air" : formData.service_type === "software" ? "Instalasi Software / OS" : formData.service_type === "diagnostic" ? "Cek Total / Diagnostik" : "Lainnya";
@@ -223,13 +239,16 @@ Terima kasih.`;
                 {/* Submit Action */}
                 <div className="pt-8">
                   <button
-                    className="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl shadow-sm hover:shadow-md hover:bg-primary/90 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl shadow-sm hover:shadow-md hover:bg-primary/90 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     type="submit"
+                    disabled={isSubmitting}
                   >
-                    <span className="material-symbols-outlined" data-icon="send" aria-hidden="true">
-                      send
-                    </span>
-                    Kirim Permintaan Servis
+                    {isSubmitting ? (
+                      <span className="material-symbols-outlined animate-spin" aria-hidden="true">progress_activity</span>
+                    ) : (
+                      <span className="material-symbols-outlined" data-icon="send" aria-hidden="true">send</span>
+                    )}
+                    {isSubmitting ? "Mengirim..." : "Kirim Permintaan Servis"}
                   </button>
                 </div>
               </form>

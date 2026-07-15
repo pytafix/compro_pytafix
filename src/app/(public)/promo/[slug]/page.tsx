@@ -1,4 +1,4 @@
-import React from "react";
+
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import PromoDetailClient from "./PromoDetailClient";
@@ -54,6 +54,7 @@ export default async function PromoDetailPage({ params }: { params: Promise<{ sl
   const promo = {
     ...promoRecord,
     terms,
+    validUntil: promoRecord.validUntil.toISOString(),
   };
 
   const jsonLd = {
@@ -72,7 +73,7 @@ export default async function PromoDetailPage({ params }: { params: Promise<{ sl
         "name": promo.title,
         "description": promo.description,
         "url": `https://www.pytafix.web.id/promo/${promo.slug}`,
-        "validUntil": promo.validUntil,
+        "validUntil": promoRecord.validUntil.toISOString(),
         "termsOfService": promo.terms,
       }
     ]

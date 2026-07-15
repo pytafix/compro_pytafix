@@ -1,6 +1,8 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
+import { sparepartSchema } from '@/lib/validations';
 
 export async function PUT(
   request: Request,
@@ -9,26 +11,26 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, category, description, price, stock, imageUrl, isFeatured, condition, marketplaceLinks } = body;
+    const data = sparepartSchema.partial().parse(body);
 
-    if (marketplaceLinks !== undefined) {
+    if (data.marketplaceLinks !== undefined) {
       await prisma.marketplaceLink.deleteMany({ where: { sparepartId: id } });
     }
 
     const updateData: Record<string, unknown> = {
-      name,
-      category,
-      description,
-      price: price !== undefined ? Number(price) : undefined,
-      stock: stock !== undefined ? Number(stock) : undefined,
-      imageUrl,
-      isFeatured: isFeatured !== undefined ? Boolean(isFeatured) : undefined,
-      condition,
+      name: data.name,
+      category: data.category,
+      description: data.description,
+      price: data.price,
+      stock: data.stock,
+      imageUrl: data.imageUrl,
+      isFeatured: data.isFeatured,
+      condition: data.condition,
     };
 
-    if (marketplaceLinks !== undefined) {
-      updateData.marketplaceLinks = marketplaceLinks.length > 0 ? {
-        create: marketplaceLinks.map((link: { marketplace: string; url: string }) => ({
+    if (data.marketplaceLinks !== undefined) {
+      updateData.marketplaceLinks = data.marketplaceLinks.length > 0 ? {
+        create: data.marketplaceLinks.map((link) => ({
           marketplace: link.marketplace,
           url: link.url,
         })),
@@ -41,10 +43,13 @@ export async function PUT(
       include: { marketplaceLinks: true },
     });
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/sparepart', 'layout');
+    revalidatePath('/');
+    revalidatePath('/sparepart');
     return NextResponse.json(sparepart);
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation failed', details: error.issues }, { status: 400 });
+    }
     return NextResponse.json({ error: 'Failed to update sparepart' }, { status: 500 });
   }
 }
@@ -60,8 +65,8 @@ export async function DELETE(
       where: { id }
     });
 
-    revalidatePath('/', 'layout');
-    revalidatePath('/sparepart', 'layout');
+    revalidatePath('/');
+    revalidatePath('/sparepart');
     return NextResponse.json({ message: 'Sparepart deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete sparepart' }, { status: 500 });

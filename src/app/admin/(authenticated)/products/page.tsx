@@ -67,7 +67,26 @@ export default function AdminProducts() {
     finally { setIsLoading(false); }
   };
 
-  useEffect(() => { fetchProducts(false); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/admin/products", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setProducts(data);
+        } else {
+          if (!cancelled) toast.error("Gagal mengambil data.");
+        }
+      } catch (err) {
+        if (!cancelled) toast.error("Kesalahan jaringan.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => { cancelled = true; };
+  }, []);
 
   const openModal = (item?: Product) => {
     if (item) {
@@ -234,10 +253,10 @@ export default function AdminProducts() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => openModal(item)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit">
+                      <button onClick={() => openModal(item)} className="p-2 rounded-full hover:bg-secondary-container text-secondary transition-colors" title="Edit" aria-label="Edit">
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-full hover:bg-error-container text-error transition-colors" title="Hapus" aria-label="Hapus">
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
@@ -256,7 +275,7 @@ export default function AdminProducts() {
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 {editingId ? "Edit Produk" : "Tambah Produk Jual Beli"}
               </h2>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer" aria-label="Tutup">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -264,20 +283,20 @@ export default function AdminProducts() {
             <div className="p-6 overflow-y-auto">
               <form id="product-form" onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Produk</label>
-                  <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Contoh: MacBook Pro 2019" />
+                  <label htmlFor="product-name" className="block font-label-bold text-label-bold text-on-surface mb-1">Nama Produk</label>
+                  <input id="product-name" type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Contoh: MacBook Pro 2019" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Kategori</label>
-                    <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="product-category" className="block font-label-bold text-label-bold text-on-surface mb-1">Kategori</label>
+                    <select id="product-category" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       {CATEGORIES.map(c => <option key={c} value={c}>{categoryLabels[c]}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Kondisi</label>
-                    <select value={formData.condition} onChange={e => setFormData({...formData, condition: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="product-condition" className="block font-label-bold text-label-bold text-on-surface mb-1">Kondisi</label>
+                    <select id="product-condition" value={formData.condition} onChange={e => setFormData({...formData, condition: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       {CONDITIONS.map(c => <option key={c} value={c}>{conditionLabels[c]}</option>)}
                     </select>
                   </div>
@@ -285,26 +304,26 @@ export default function AdminProducts() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Harga (Rupiah)</label>
-                    <input type="number" required min="0" value={formData.price} onChange={e => setFormData({...formData, price: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="product-price" className="block font-label-bold text-label-bold text-on-surface mb-1">Harga (Rupiah)</label>
+                    <input id="product-price" type="number" required min="0" value={formData.price} onChange={e => setFormData({...formData, price: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Stok</label>
-                    <input type="number" required min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="product-stock" className="block font-label-bold text-label-bold text-on-surface mb-1">Stok</label>
+                    <input id="product-stock" type="number" required min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi</label>
-                  <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Spesifikasi lengkap produk..." />
+                  <label htmlFor="product-description" className="block font-label-bold text-label-bold text-on-surface mb-1">Deskripsi</label>
+                  <textarea id="product-description" rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Spesifikasi lengkap produk..." />
                 </div>
 
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface mb-1">Foto Produk</label>
+                  <label htmlFor="product-imageUrl" className="block font-label-bold text-label-bold text-on-surface mb-1">Foto Produk</label>
                   <div className="flex gap-2">
-                    <input type="text" placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
-                    <label className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
-                      <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                    <input id="product-imageUrl" type="text" placeholder="URL Gambar..." value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none" />
+                    <label htmlFor="product-imageUpload" className="bg-surface-container px-4 py-2 rounded font-label-bold text-label-bold cursor-pointer hover:bg-surface-container-high transition-colors flex items-center justify-center">
+                      <input id="product-imageUpload" type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                       Upload
                     </label>
                   </div>
@@ -313,15 +332,15 @@ export default function AdminProducts() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
-                    <select value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="product-isFeatured" className="block font-label-bold text-label-bold text-on-surface mb-1">Tampilkan di Homepage?</label>
+                    <select id="product-isFeatured" value={formData.isFeatured ? "true" : "false"} onChange={e => setFormData({...formData, isFeatured: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       <option value="true">Ya</option>
                       <option value="false">Tidak</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block font-label-bold text-label-bold text-on-surface mb-1">Status</label>
-                    <select value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
+                    <label htmlFor="product-isActive" className="block font-label-bold text-label-bold text-on-surface mb-1">Status</label>
+                    <select id="product-isActive" value={formData.isActive ? "true" : "false"} onChange={e => setFormData({...formData, isActive: e.target.value === "true"})} className="w-full bg-surface border border-outline-variant rounded px-3 py-2 font-body-md focus:ring-2 focus:ring-primary outline-none">
                       <option value="true">Aktif</option>
                       <option value="false">Nonaktif</option>
                     </select>
@@ -335,7 +354,7 @@ export default function AdminProducts() {
                   </div>
                   <div className="space-y-2">
                     {marketplaceLinks.length === 0 && (
-                      <p className="text-sm text-on-surface-variant font-body-sm">Belum ada link marketplace. Klik "+ Tambah Link" untuk menambahkan.</p>
+                       <p className="text-sm text-on-surface-variant font-body-sm">Belum ada link marketplace. Klik &quot;+ Tambah Link&quot; untuk menambahkan.</p>
                     )}
                     {marketplaceLinks.map((link, idx) => (
                       <div key={idx} className="flex gap-2 items-center">
@@ -343,7 +362,7 @@ export default function AdminProducts() {
                           {MARKETPLACES.map(m => <option key={m} value={m}>{m}</option>)}
                         </select>
                         <input type="url" required placeholder="https://..." value={link.url} onChange={e => updateMarketplaceLink(idx, "url", e.target.value)} className="flex-1 bg-surface border border-outline-variant rounded px-3 py-2 font-body-sm focus:ring-2 focus:ring-primary outline-none" />
-                        <button type="button" onClick={() => removeMarketplaceLink(idx)} className="text-error hover:bg-error-container/20 p-2 rounded transition-colors cursor-pointer">
+                        <button type="button" onClick={() => removeMarketplaceLink(idx)} className="text-error hover:bg-error-container/20 p-2 rounded transition-colors cursor-pointer" aria-label="Hapus tautan marketplace">
                           <span className="material-symbols-outlined text-[20px]">delete</span>
                         </button>
                       </div>

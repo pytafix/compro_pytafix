@@ -1,36 +1,49 @@
 import { NextResponse } from 'next/server';
-import prisma from '../../../lib/prisma';
-import { withErrorHandler } from '../../../lib/api-error';
-import { serviceRequestSchema } from '../../../lib/validations';
+import prisma from '@/lib/prisma';
+import { serviceRequestSchema } from '@/lib/validations';
+import { generateUniqueTrackingId } from '@/lib/tracking';
 import { z } from 'zod';
+import { bookingRateLimit } from '@/lib/rate-limit';
 
-// Override schema because frontend sends 'date'
-const bookingSchema = serviceRequestSchema.extend({
-  date: z.string().or(z.date()),
-}).omit({ scheduleDate: true });
+export async function POST(req: Request) {
+  const rateLimitResponse = await bookingRateLimit(req);
+  if (rateLimitResponse) return rateLimitResponse;
 
-export const POST = withErrorHandler(async (req: Request) => {
-  const body = await req.json();
-  
-  // Zod Validation will throw ZodError which is caught by withErrorHandler
-  const validatedData = bookingSchema.parse(body);
+  try {
+    const body = await req.json();
 
-  // Generate tracking ID: PYT-2024-XXXX
-  const randomChars = Math.random().toString(36).substring(2, 6).toUpperCase();
-  const trackingId = `PYT-2024-${randomChars}`;
+    // Override schema because frontend sends 'date'
+    const bookingSchema = serviceRequestSchema.extend({
+      date: z.string().or(z.date()),
+    }).omit({ scheduleDate: true });
 
-  const serviceRequest = await prisma.serviceRequest.create({
-    data: {
-      trackingId,
-      name: validatedData.name,
-      whatsapp: validatedData.whatsapp,
-      address: validatedData.address,
-      deviceType: validatedData.deviceType,
-      serviceType: validatedData.serviceType,
-      problemDesc: validatedData.problemDesc,
-      scheduleDate: new Date(validatedData.date),
-    },
-  });
+    const result = bookingSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: result.error.issues },
+        { status: 400 }
+      );
+    }
 
-  return NextResponse.json({ trackingId: serviceRequest.trackingId }, { status: 200 });
-});
+    const validatedData = result.data;
+    const trackingId = await generateUniqueTrackingId();
+
+    const serviceRequest = await prisma.serviceRequest.create({
+      data: {
+        trackingId,
+        name: validatedData.name,
+        whatsapp: validatedData.whatsapp,
+        address: validatedData.address,
+        deviceType: validatedData.deviceType,
+        serviceType: validatedData.serviceType,
+        problemDesc: validatedData.problemDesc,
+        scheduleDate: new Date(validatedData.date),
+      },
+    });
+
+    return NextResponse.json({ trackingId: serviceRequest.trackingId }, { status: 200 });
+  } catch (error) {
+    console.error('[Booking Error]:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

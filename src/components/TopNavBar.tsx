@@ -64,8 +64,10 @@ export function TopNavBar() {
     setOpenAccordion(null);
   };
 
-  // Close menu on route change
+  // Close menu on route change - valid pattern for closing mobile menus on navigation
+  // closeMenu() resets UI state, doesn't sync with external system
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     closeMenu();
   }, [pathname]);
 
@@ -77,7 +79,7 @@ export function TopNavBar() {
   };
 
   return (
-    <>
+    <header>
       <nav className="bg-surface/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant shadow-sm">
         <div className="flex justify-between items-center h-20 px-4 md:px-8 lg:px-margin-desktop max-w-container-max mx-auto">
           <Link href="/" className="flex items-center gap-3 md:gap-4" onClick={closeMenu}>
@@ -102,12 +104,12 @@ export function TopNavBar() {
                     {item.name}
                   </Link>
                 ) : (
-                  <button 
+                  <button
                     aria-haspopup="true"
-                    aria-expanded={false}
+                    aria-expanded={openAccordion === item.name}
                     className={`flex items-center gap-1 font-label-bold text-label-bold transition-colors duration-200 h-full border-b-2 ${
                       isActive(item)
-                        ? "text-primary border-primary" 
+                        ? "text-primary border-primary"
                         : "text-on-surface-variant hover:text-primary border-transparent group-hover:text-primary"
                     }`}
                   >
@@ -238,6 +240,6 @@ export function TopNavBar() {
           </div>
         </div>
       )}
-    </>
+    </header>
   );
 }

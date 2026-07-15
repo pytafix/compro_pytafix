@@ -1,4 +1,4 @@
-import React from "react";
+
 import prisma from "@/lib/prisma";
 import PortofolioClient from "./portofolio-client";
 import { Metadata } from "next";

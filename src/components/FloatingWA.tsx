@@ -1,16 +1,17 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { CONTACT } from "@/lib/config";
 
 export function FloatingWA() {
   const pathname = usePathname();
 
   // Hide on admin routes
-  if (pathname?.startsWith("/admin")) {
+  if (pathname.startsWith("/admin")) {
     return null;
   }
 
-  const waUrl = "https://wa.me/6281234567890?text=Halo%20Pytafix,%20saya%20butuh%20bantuan.";
+  const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=Halo%20Pytafix,%20saya%20butuh%20bantuan.`;
 
   return (
     <div className="fixed bottom-6 right-6 z-[60] flex items-center justify-center animate-in fade-in slide-in-from-bottom-8 duration-500">

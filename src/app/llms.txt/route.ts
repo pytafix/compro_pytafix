@@ -26,7 +26,7 @@ export async function GET() {
     ``,
     `## Informasi Kontak`,
     `Alamat: Jl. Elektronik No. 123, Kec. Lowokwaru, Malang Raya, Jawa Timur 65141`,
-    `Telepon/WhatsApp: +62 812-3456-7890`,
+    `Telepon/WhatsApp: +62 881-4081-894`,
     `Jam Operasional: Senin - Sabtu 09:00 - 18:00 (Minggu Tutup)`,
     ``,
     `## Layanan`,
@@ -42,7 +42,7 @@ export async function GET() {
   for (const p of promos) {
     lines.push(`### ${p.title} (${p.badge})`);
     lines.push(p.description);
-    lines.push(`Berlaku hingga: ${p.validUntil}`);
+    lines.push(`Berlaku hingga: ${new Date(p.validUntil).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}`);
     lines.push(`Syarat: ${stripHtml(p.terms)}`);
     lines.push(``);
   }

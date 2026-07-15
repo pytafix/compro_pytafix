@@ -1,10 +1,21 @@
 "use client";
 
-import React from "react";
+
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function PromoDetailClient({ promo }: { promo: any }) {
+interface PromoDetail {
+  id: string;
+  slug: string;
+  badge: string;
+  title: string;
+  description: string;
+  validUntil: string | Date;
+  terms: string[];
+  howToClaim: string;
+}
+
+export default function PromoDetailClient({ promo }: { promo: PromoDetail }) {
   return (
     <>
       {/* Detail Header */}
@@ -28,7 +39,7 @@ export default function PromoDetailClient({ promo }: { promo: any }) {
             </h1>
             <div className="flex items-center text-on-surface-variant bg-surface px-4 py-2 rounded-xl inline-flex shadow-sm border border-outline-variant">
               <span className="material-symbols-outlined text-[20px] text-primary mr-2">event_available</span>
-              <span>Berlaku hingga: <strong className="text-on-surface ml-1">{promo.validUntil}</strong></span>
+              <span>Berlaku hingga: <strong className="text-on-surface ml-1">{new Date(promo.validUntil).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</strong></span>
             </div>
           </motion.div>
         </div>

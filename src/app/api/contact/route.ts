@@ -1,31 +1,34 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { contactRateLimit } from "@/lib/rate-limit";
+import { indonesianWhatsAppSchema } from "@/lib/whatsapp";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
   email: z.string().email("Email tidak valid").or(z.literal("")),
-  whatsapp: z.string().min(10, "Nomor WhatsApp wajib diisi"),
+  whatsapp: indonesianWhatsAppSchema,
   subject: z.string().min(1, "Subjek wajib diisi"),
   message: z.string().min(10, "Pesan minimal 10 karakter"),
 });
 
 export async function POST(request: Request) {
+  const rateLimitResponse = await contactRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const body = await request.json();
     const validatedData = contactSchema.parse(body);
 
-    // Store in database (you can create a Contact model or use a simple log)
-    // For now we store via Prisma if you add a Contact model
-    // Or we can send via email — integrate with your email provider
-
-    console.log("[Contact Form]", {
-      name: validatedData.name,
-      email: validatedData.email,
-      whatsapp: validatedData.whatsapp,
-      subject: validatedData.subject,
-      message: validatedData.message,
-      timestamp: new Date().toISOString(),
+    // Persist the submission so it is not lost.
+    await prisma.contact.create({
+      data: {
+        name: validatedData.name,
+        email: validatedData.email,
+        whatsapp: validatedData.whatsapp,
+        subject: validatedData.subject,
+        message: validatedData.message,
+      },
     });
 
     return NextResponse.json(
