@@ -1,8 +1,7 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Faq } from "@prisma/client";
+import Link from "next/link";
 import { fadeUpVariant, staggerContainer } from "./animations";
 
 export function FaqSection({ faqs }: { faqs: Faq[] }) {
@@ -56,6 +55,13 @@ export function FaqSection({ faqs }: { faqs: Faq[] }) {
             <FAQItem key={idx} question={faq.question} answer={faq.answer} />
           ))}
         </motion.div>
+
+        <div className="mt-10 text-center">
+          <Link href="/faq" className="inline-flex items-center gap-2 font-label-bold text-label-bold text-primary hover:underline transition-colors">
+            Lihat Semua Pertanyaan
+            <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </Link>
+        </div>
       </div>
     </section>
   );
