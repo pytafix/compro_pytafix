@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "Klaim garansi servis laptop, HP, atau komputer Anda di Pytafix. Perbaikan tanpa biaya tambahan selama masa garansi masih berlaku.",
   alternates: { canonical: "/klaim-garansi" },
   openGraph: {
-    title: "Klaim Garansi Servis | Pytafix",
+  title: "Klaim Garansi Servis",
     description: "Ajukan klaim garansi servis perangkat Anda di Pytafix Malang. Gratis selama masa garansi berlaku.",
     url: "https://www.pytafix.web.id/klaim-garansi",
     images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Klaim Garansi" }],

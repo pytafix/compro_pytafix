@@ -42,14 +42,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!service) {
     return {
-      title: "Layanan Tidak Ditemukan | Pytafix",
+      title: "Layanan Tidak Ditemukan",
       alternates: { canonical: `/layanan/${slug}` },
     };
   }
 
   if (location) {
     return {
-      title: `${service.title} di ${location} | Pytafix`,
+      title: `${service.title} di ${location}`,
       description: `Layanan ${service.title.toLowerCase()} terdekat dan terpercaya di area ${location}. ${service.description}`,
       alternates: { canonical: `/layanan/${slug}` },
       openGraph: {
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${service.title} | Pytafix`,
+    title: service.title,
     description: service.description,
     alternates: { canonical: `/layanan/${slug}` },
     openGraph: {

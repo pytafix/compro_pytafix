@@ -4,11 +4,11 @@ import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "Jasa Service Laptop & MacBook di Malang | Pytafix",
+  title: "Jasa Service Laptop, HP, PC & MacBook di Malang",
   description: "Solusi perbaikan profesional untuk semua perangkat Anda.",
   alternates: { canonical: "/layanan" },
   openGraph: {
-    title: "Layanan Servis Laptop, HP & Komputer | Pytafix Malang",
+    title: "Layanan Servis Laptop, HP & Komputer",
     description: "Pytafix menyediakan layanan servis laptop, HP, dan komputer dengan teknisi bersertifikat dan garansi resmi di Malang.",
     url: "https://www.pytafix.web.id/layanan",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Layanan Servis" }],

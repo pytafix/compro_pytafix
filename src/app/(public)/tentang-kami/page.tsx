@@ -2,11 +2,11 @@ import Image from "next/image";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tentang Kami | Pytafix",
+  title: "Tentang Kami",
   description: "Solusi profesional untuk perbaikan perangkat keras Anda. Kami berdedikasi untuk memulihkan kinerja optimal elektronik esensial Anda dengan presisi teknis.",
   alternates: { canonical: "/tentang-kami" },
   openGraph: {
-    title: "Tentang Pytafix | Servis Elektronik Terpercaya di Malang",
+    title: "Tentang Pytafix - Servis Elektronik Terpercaya di Malang",
     description: "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Bagian dari CV. Pyta Cipta Karya dengan teknisi bersertifikat dan standar enterprise.",
     url: "https://www.pytafix.web.id/tentang-kami",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Tentang Kami" }],

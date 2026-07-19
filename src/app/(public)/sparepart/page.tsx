@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 import { SparepartClient } from "@/components/SparepartClient";
 
 export const metadata: Metadata = {
-  title: "Jual Sparepart & Aksesoris Laptop di Malang | Pytafix",
+  title: "Jual Sparepart & Aksesoris Laptop di Malang",
   description: "Beli berbagai macam suku cadang (sparepart) original untuk komputer dan laptop Anda. Tersedia RAM, SSD, baterai, dan lainnya.",
   alternates: { canonical: "/sparepart" },
   openGraph: {
-    title: "Sparepart & Aksesoris Laptop Original | Pytafix",
+    title: "Sparepart & Aksesoris Laptop Original",
     description: "Beli sparepart laptop original di Pytafix Malang. Tersedia RAM, SSD, baterai, keyboard dengan garansi pemasangan resmi.",
     url: "https://www.pytafix.web.id/sparepart",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Sparepart" }],

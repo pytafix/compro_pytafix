@@ -10,10 +10,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const article = await prisma.article.findUnique({ where: { slug } });
 
-  if (!article) return { title: "Artikel Tidak Ditemukan | Pytafix" };
+  if (!article) return { title: "Artikel Tidak Ditemukan" };
 
   return {
-    title: `${article.title} | Pytafix Edukasi`,
+    title: article.title,
     description: article.excerpt,
     alternates: { canonical: `/artikel/${slug}` },
     openGraph: {

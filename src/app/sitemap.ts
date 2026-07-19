@@ -24,6 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/sparepart`, lastModified: fallbackDate },
     { url: `${baseUrl}/jual-beli`, lastModified: fallbackDate },
     { url: `${baseUrl}/klaim-garansi`, lastModified: fallbackDate },
+    
   ];
 
   // Fetch all active services

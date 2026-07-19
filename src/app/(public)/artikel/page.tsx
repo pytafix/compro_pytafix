@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
   alternates: { canonical: "/artikel" },
   openGraph: {
-    title: "Artikel & Edukasi Servis | Pytafix",
+  title: "Artikel & Edukasi Servis",
     description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
     url: "https://www.pytafix.web.id/artikel",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Artikel" }],

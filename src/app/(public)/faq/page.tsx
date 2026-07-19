@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 import FaqAccordion from "./FaqAccordion";
 
 export const metadata = {
-  title: "Pertanyaan yang Sering Diajukan (FAQ) | Pytafix",
+  title: "Pertanyaan yang Sering Diajukan (FAQ)",
   description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan perbaikan, garansi, dan proses servis di Pytafix.",
   alternates: { canonical: "/faq" },
   openGraph: {
-    title: "FAQ | Pytafix - Pertanyaan Seputar Servis Elektronik",
+    title: "FAQ - Pertanyaan Seputar Servis Elektronik",
     description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan perbaikan, garansi, dan proses servis di Pytafix Malang.",
     url: "https://www.pytafix.web.id/faq",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix FAQ" }],

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
   alternates: { canonical: "/kebijakan-privasi" },
   openGraph: {
-    title: "Kebijakan Privasi | Pytafix",
+  title: "Kebijakan Privasi",
     description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
     url: "https://www.pytafix.web.id/kebijakan-privasi",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Kebijakan Privasi" }],

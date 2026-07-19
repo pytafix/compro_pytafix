@@ -4,7 +4,7 @@ import { SocialIcons } from "@/components/SocialIcons";
 import { CONTACT } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "Kontak Kami | Pytafix",
+  title: "Kontak Kami",
   description: "Hubungi Pytafix untuk layanan perbaikan HP, Tablet, Laptop, dan PC. Kami siap membantu menyelesaikan masalah perangkat elektronik Anda di Malang.",
   alternates: { canonical: "/kontak" },
   openGraph: {

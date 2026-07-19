@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: "Produk Tidak Ditemukan" };
 
   return {
-    title: `${product.name} — Jual Beli di Pytafix`,
+    title: product.name,
     description: product.description || `Beli ${product.name} berkualitas di Pytafix Malang. Kondisi ${product.condition}, harga Rp ${product.price.toLocaleString("id-ID")}.`,
     alternates: { canonical: `/jual-beli/${id}` },
     openGraph: {

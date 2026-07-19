@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 import PromoList from "./PromoList";
 
 export const metadata = {
-  title: "Promo & Penawaran Spesial | Pytafix",
+    title: "Promo & Penawaran Spesial",
   description: "Nikmati berbagai promo menarik dan penawaran spesial servis laptop, HP, dan komputer dari Pytafix Malang.",
   alternates: { canonical: "/promo" },
   openGraph: {
-    title: "Promo & Penawaran Spesial | Pytafix",
+  title: "Promo & Penawaran Spesial",
     description: "Nikmati berbagai promo menarik dan penawaran spesial servis laptop, HP, dan komputer dari Pytafix Malang.",
     url: "https://www.pytafix.web.id/promo",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Promo" }],

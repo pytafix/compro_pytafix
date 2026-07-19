@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!promo) {
     return {
-      title: "Promo Tidak Ditemukan | Pytafix",
+      title: "Promo Tidak Ditemukan",
       alternates: { canonical: `/promo/${slug}` },
     };
   }
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       canonical: `/promo/${slug}`,
     },
     openGraph: {
-      title: `${promo.title} | Promo Pytafix`,
+    title: promo.title,
       description: promo.description,
       url: `https://www.pytafix.web.id/promo/${slug}`,
       images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: promo.title }],

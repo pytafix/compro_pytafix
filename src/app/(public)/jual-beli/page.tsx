@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 import JualBeliClient from "./JualBeliClient";
 
 export const metadata: Metadata = {
-  title: "Jual Beli Laptop & HP Bekas Malang | Pytafix",
+    title: "Jual Beli Laptop & HP Bekas Malang",
   description: "Beli dan jual laptop bekas, HP second, tablet dengan harga terbaik di Malang. MacBook, iPhone, Samsung, dan berbagai merek tersedia. Cek juga sparepart original.",
   alternates: { canonical: "/jual-beli" },
   openGraph: {
-    title: "Jual Beli Laptop & HP Bekas Malang | Pytafix",
+  title: "Jual Beli Laptop & HP Bekas Malang",
     description: "Pilihan laptop bekas dan HP second berkualitas di Malang. Harga terbaik, kondisi terjamin. MacBook, iPhone, Samsung, Xiaomi, dan lainnya.",
     url: "https://www.pytafix.web.id/jual-beli",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Jual Beli" }],

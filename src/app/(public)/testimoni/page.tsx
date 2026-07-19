@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Lihat apa kata pelanggan kami tentang layanan perbaikan dan service dari Pytafix Malang.",
   alternates: { canonical: "/testimoni" },
   openGraph: {
-    title: "Testimoni & Ulasan Pelanggan | Pytafix",
+  title: "Testimoni & Ulasan Pelanggan",
     description: "Lihat apa kata pelanggan kami tentang layanan perbaikan dan service dari Pytafix Malang.",
     url: "https://www.pytafix.web.id/testimoni",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Testimoni" }],
@@ -30,7 +30,7 @@ export default async function TestimoniPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Testimoni & Ulasan Pelanggan | Pytafix",
+    "name": "Testimoni & Ulasan Pelanggan",
     "mainEntity": avgRating ? {
       "@type": "AggregateRating",
       "itemReviewed": {
