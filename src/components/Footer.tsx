@@ -15,6 +15,9 @@ export function Footer() {
           <p className="font-label-sm text-label-sm text-on-surface-variant mb-6 pr-4 lg:pr-12">
             Solusi perbaikan hardware terpercaya untuk keberlangsungan digital Anda.
           </p>
+          <div className="flex items-center gap-3">
+            <SocialIcons />
+          </div>
         </div>
 
         {/* Col 2: Layanan & Produk */}
@@ -67,9 +70,6 @@ export function Footer() {
               <span>Mon-Sat 09:00 - 18:00</span>
             </li>
           </ul>
-          <div className="flex items-center gap-3">
-            <SocialIcons className="flex items-center gap-3" />
-          </div>
         </div>
       </div>
 
