@@ -10,6 +10,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
+    "gsc:submit": "node scripts/submit-gsc.js",
     "postinstall": "prisma generate"
   },
   "dependencies": {
