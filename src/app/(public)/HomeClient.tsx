@@ -1,6 +1,6 @@
 "use client";
 
-import { Promo, Sparepart, Testimonial, Faq } from '@prisma/client';
+import { Promo, Sparepart, Testimonial, Faq, ServiceContent } from '@prisma/client';
 import { Hero } from '@/components/home/Hero';
 import { BrandsMarquee } from '@/components/home/BrandsMarquee';
 import { TrustBadges } from '@/components/home/TrustBadges';
@@ -18,12 +18,14 @@ export default function HomeClient({
   promos, 
   spareparts, 
   testimonials, 
-  faqs 
+  faqs,
+  services
 }: { 
   promos: Promo[], 
   spareparts: Sparepart[], 
   testimonials: Testimonial[], 
-  faqs: Faq[] 
+  faqs: Faq[],
+  services: ServiceContent[]
 }) {
   return (
     <main className="relative overflow-hidden">
@@ -132,7 +134,7 @@ export default function HomeClient({
       <Hero />
       <BrandsMarquee />
       <TrustBadges />
-      <ServicesPreview />
+      <ServicesPreview services={services} />
       <HowItWorks />
       <PromoSection promos={promos} />
       <WhyUs />
