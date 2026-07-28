@@ -3,11 +3,11 @@
 Audit date: 28 July 2026
 Repository baseline: `3c37fb1`
 Production audited: `https://www.pytafix.web.id`
-Local implementation: uncommitted and not deployed
+Local implementation: committed as `1565654` and deployed to the linked Vercel production project
 
 ## Executive summary
 
-The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired local build scores **84/100 overall readiness**. The gap to a production-ready 100 is not cosmetic: it requires confirmation of the remaining business facts, production environment configuration for the implemented distributed limiter and media store, removal/deactivation of legacy geo rows in the database, preview validation, and deployment.
+The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired build scores **84/100 overall readiness** and is now deployed to the linked Vercel production project. The gap to a production-ready 100 is not cosmetic: it requires confirmation of the remaining business facts, production environment/runtime verification for the distributed limiter and media store, removal/deactivation of legacy geo rows in the database, and a complete post-deploy crawl.
 
 The most serious baseline issues were:
 
@@ -22,7 +22,7 @@ The most serious baseline issues were:
 9. Broken booking confirmation/WhatsApp handoff and raw Markdown displayed to users.
 10. Thin, empty, or duplicate pages being submitted as index candidates.
 
-The local remediation removes or mitigates each of these issues. It does not silently claim production delivery.
+The remediation removes or mitigates each of these issues. Production delivery is now confirmed for the pushed commit, while operational and business verification remains explicit below.
 
 ## Evidence boundaries
 
@@ -34,9 +34,9 @@ The local remediation removes or mitigates each of these issues. It does not sil
 | Local crawl | 18 sitemap URLs fetched from the built server | All returned HTTP 200 with no redirect chain |
 | Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
 | Production crawl | 65 sitemap URLs | All 200 with title, description, canonical, H1, and valid JSON-LD syntax |
-| Production quality | 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Still live until deployment |
-| Google Search Console | 25 Apr–23 Jul 2026, domain property | 0 clicks, 1 impression; `/artikel` only |
-| Deployment | No push or Vercel deployment performed | Production unchanged |
+| Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Post-deploy smoke shows the new title, robots policy, schema, and reviewed copy; full crawl still pending |
+| Google Search Console | Historical 25 Apr–23 Jul 2026 baseline plus post-deploy API checks | Sitemap submitted with 0 errors/0 warnings; processing pending; homepage inspection PASS |
+| Deployment | GitHub commit `1565654`; Vercel deployment `dpl_CgAgUveoiPWCvwN5PPu5aQJfHFaS` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the new build |
 
 ## Local scorecard
 

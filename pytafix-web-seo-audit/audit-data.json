@@ -2,7 +2,38 @@
   "audit_date": "2026-07-28",
   "baseline_commit": "3c37fb1",
   "production_url": "https://www.pytafix.web.id",
-  "delivery_state": "local_only_not_committed_not_deployed",
+  "delivery_state": "committed_pushed_deployed_production_smoke_verified",
+  "delivery": {
+    "commit": "15656548ea1843a8bd583a20d0fc8d06fc2518a7",
+    "vercel_project": "pytafix-web",
+    "vercel_deployment": "dpl_CgAgUveoiPWCvwN5PPu5aQJfHFaS",
+    "vercel_ready_state": "READY",
+    "production_host": "www.pytafix.web.id",
+    "smoke": {
+      "robots_http": 200,
+      "homepage_http": 200,
+      "new_metadata_visible": true,
+      "new_robots_policy_visible": true
+    }
+  },
+  "gsc_post_deploy": {
+    "property": "sc-domain:pytafix.web.id",
+    "service_account_permission": "siteOwner",
+    "sitemap": "https://www.pytafix.web.id/sitemap.xml",
+    "submitted_at": "2026-07-28T15:55:47.085Z",
+    "is_pending": true,
+    "errors": 0,
+    "warnings": 0,
+    "homepage_inspection": {
+      "verdict": "PASS",
+      "coverage_state": "Dikirim dan diindeks",
+      "robots": "ALLOWED",
+      "fetch": "SUCCESSFUL",
+      "indexing": "INDEXING_ALLOWED",
+      "google_canonical": "https://www.pytafix.web.id/",
+      "user_canonical": "https://www.pytafix.web.id/"
+    }
+  },
   "baseline": {
     "sitemap_urls": 65,
     "technical_seo_score": 57,

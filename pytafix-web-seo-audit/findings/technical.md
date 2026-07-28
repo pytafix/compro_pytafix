@@ -14,7 +14,7 @@ Audit state: 28 July 2026. Findings below reflect the current local source and b
 
 ## Remaining before release
 
-1. **Production deployment and live verification** — the current public site still serves the previous metadata, coordinates, sitemap, robots policy, and API headers. A preview deploy, smoke crawl, and post-deploy fetch are required after an authorized release.
+1. **Full post-deploy crawl and runtime verification** — the pushed commit is live and homepage/robots smoke checks pass. Complete the full sitemap crawl, API header checks, and environment-backed form/status tests before declaring production fully verified.
 2. **Google Maps NAP confirmation** — the owner must confirm the exact listing pin/address before coordinates or `GeoCoordinates` are published.
 3. **Field performance evidence** — run PageSpeed/CrUX after deployment; local build checks cannot establish real-user CWV.
 4. **Indexing evidence** — verify sitemap processing and representative URLs in Search Console; a 200 response is not proof of indexing.

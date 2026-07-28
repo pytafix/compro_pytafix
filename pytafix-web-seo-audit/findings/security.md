@@ -1,11 +1,11 @@
 # Backend / API / Security Findings
 
-Audit state: 28 July 2026. Local source has been hardened, but secret rotation and production verification remain operational tasks.
+Audit state: 28 July 2026. The hardened commit is live on the linked Vercel project; secret rotation, environment verification, and full production flow tests remain operational tasks.
 
 ## Critical operational actions still required
 
 1. **Rotate exposed credentials** — any previously committed GCP/service-account material, database URLs, admin password, JWT secret, and repository tokens must be revoked/rotated in their owning providers. Do not reuse values from repository history or chat. Local code now expects environment-managed secrets; rotation cannot be completed safely from this workspace alone.
-2. **Release only through an authorized preview/deploy** — production currently exposes the old build, so the local security and cache-header fixes are not yet live.
+2. **Complete post-deploy runtime verification** — homepage/robots smoke checks are current, but production API flows still depend on configured Blob/Upstash/database secrets and require an authenticated smoke pass.
 
 ## Resolved locally
 
