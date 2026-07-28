@@ -175,13 +175,14 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 2. **Configure `BLOB_READ_WRITE_TOKEN`** in preview/production before testing admin upload.
 3. **Confirm ownership and completeness of the Google Business Profile.** The provided Maps link text names Malang, but the current preview exposes a conflicting Sidoarjo-area center. Profile ownership, categories, hours, exact pin, and NAP consistency must be confirmed before the address is treated as verified local-business data.
 4. **Deactivate/delete the 40 legacy geo rows** in the production database after exporting a backup; keep their direct redirects.
-5. **Configure and verify Upstash Redis in preview/production.** Distributed enforcement is implemented, but `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` must be set before login or public form/status smoke tests can pass.
+5. **Configure and verify `JWT_SECRET` and Upstash Redis in preview/production.** The current Vercel environment inventory contains database credentials and `ADMIN_PASSWORD`, but no `JWT_SECRET`, `UPSTASH_REDIS_REST_URL`, or `UPSTASH_REDIS_REST_TOKEN`; the live `GET /api/status` probe correctly fails closed with HTTP 503 until the distributed limiter is configured.
 6. **Adopt individual admin accounts, slow password hashing, MFA, and audit logs.** The current shared password is hardened but remains a single identity.
 7. **Decide retention periods and public/internal note fields** before a schema migration.
 8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
 9. **Run a post-deploy fetch of generated favicon/Apple icons and remote image hosts.** Source assets and local metadata are correct; this remains a runtime verification item.
 10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
-11. **Complete the full post-deploy crawl, API/runtime smoke, GSC sitemap processing, and CrUX/field checks.** The linked production deployment is ready, live smoke endpoints return 200, the sitemap is submitted with 0 errors/0 warnings, and the homepage inspection passes; these broader checks remain pending.
+11. **Complete the full post-deploy crawl, API/runtime smoke, GSC sitemap processing, and CrUX/field checks.** The linked production deployment is ready, all 18 sitemap URLs pass the lightweight HTTP/title/canonical crawl, the sitemap is submitted with 0 errors/0 warnings, and the homepage inspection passes; deeper API/runtime, Google processing, and field checks remain pending.
+13. **Configure GitHub branch protection and required checks.** The public `main` branch currently has no visible protection or required CI checks; enforce review/CI gates before broader team changes.
 12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.
 
 ## Conclusion
