@@ -171,7 +171,7 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 
 ## Remaining blockers and limitations
 
-1. **Rotate the exposed GitHub token.** It was removed from the current remote URL, but revocation must happen in GitHub.
+1. **Rotate historical exposed credentials.** The current GitHub token was used only through in-memory environment authentication and was not committed; revoke/rotate any token that was previously exposed and refresh the local secret afterward.
 2. **Configure `BLOB_READ_WRITE_TOKEN`** in preview/production before testing admin upload.
 3. **Confirm ownership and completeness of the Google Business Profile.** The provided Maps link text names Malang, but the current preview exposes a conflicting Sidoarjo-area center. Profile ownership, categories, hours, exact pin, and NAP consistency must be confirmed before the address is treated as verified local-business data.
 4. **Deactivate/delete the 40 legacy geo rows** in the production database after exporting a backup; keep their direct redirects.
@@ -179,11 +179,11 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 6. **Adopt individual admin accounts, slow password hashing, MFA, and audit logs.** The current shared password is hardened but remains a single identity.
 7. **Decide retention periods and public/internal note fields** before a schema migration.
 8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
-9. **Verify generated favicon/Apple icons and all remote image hosts after deployment.** Source assets and local metadata are now correct.
+9. **Run a post-deploy fetch of generated favicon/Apple icons and remote image hosts.** Source assets and local metadata are correct; this remains a runtime verification item.
 10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
-11. **Preview, deploy, and rerun production/GSC checks.** Local readiness is not production delivery or Google indexing.
+11. **Complete the full post-deploy crawl, API/runtime smoke, GSC sitemap processing, and CrUX/field checks.** The linked production deployment is ready, live smoke endpoints return 200, the sitemap is submitted with 0 errors/0 warnings, and the homepage inspection passes; these broader checks remain pending.
 12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.
 
 ## Conclusion
 
-The repository has moved from a high-risk marketing prototype toward an evidence-led service site. The local code now has a much stronger trust model, index boundary, privacy boundary, content contract, and conversion flow. Production should not be updated until the action plan’s deployment prerequisites are completed.
+The repository has moved from a high-risk marketing prototype toward an evidence-led service site. The local code now has a much stronger trust model, index boundary, privacy boundary, content contract, and conversion flow. Production has been updated for the pushed release commits; do not declare the audit fully verified until the remaining operational, business, and post-deploy evidence items above are complete.
