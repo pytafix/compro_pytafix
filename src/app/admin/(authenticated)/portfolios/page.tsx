@@ -1,5 +1,6 @@
 "use client";
 import { TableSkeleton } from "@/components/admin/TableSkeleton";
+import { deletePendingAdminUpload } from "@/lib/admin-media-client";
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -34,6 +35,9 @@ export default function AdminPortfolios() {
     completionDate: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingUploadUrls, setPendingUploadUrls] = useState<
+    Partial<Record<"beforeImage" | "afterImage", string>>
+  >({});
 
   const fetchPortfolios = async (isRefresh = false) => {
     if (isRefresh) setIsLoading(true);
@@ -104,7 +108,13 @@ export default function AdminPortfolios() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    for (const url of Object.values(pendingUploadUrls)) {
+      void deletePendingAdminUpload(url);
+    }
+    setPendingUploadUrls({});
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'beforeImage' | 'afterImage') => {
     const file = e.target.files?.[0];
@@ -122,6 +132,11 @@ export default function AdminPortfolios() {
 
       if (res.ok) {
         const { url } = await res.json();
+        const previousUpload = pendingUploadUrls[field];
+        if (previousUpload && previousUpload !== url) {
+          void deletePendingAdminUpload(previousUpload);
+        }
+        setPendingUploadUrls((previous) => ({ ...previous, [field]: url }));
         setFormData(prev => ({ ...prev, [field]: url }));
         toast.success("Gambar berhasil diunggah", { id: "upload" });
       } else {
@@ -153,7 +168,20 @@ export default function AdminPortfolios() {
 
       if (res.ok) {
         toast.success(`Portfolio berhasil ${editingId ? "diperbarui" : "ditambahkan"}`);
-        closeModal();
+        if (
+          pendingUploadUrls.beforeImage &&
+          pendingUploadUrls.beforeImage !== formData.beforeImage
+        ) {
+          void deletePendingAdminUpload(pendingUploadUrls.beforeImage);
+        }
+        if (
+          pendingUploadUrls.afterImage &&
+          pendingUploadUrls.afterImage !== formData.afterImage
+        ) {
+          void deletePendingAdminUpload(pendingUploadUrls.afterImage);
+        }
+        setPendingUploadUrls({});
+        setIsModalOpen(false);
         fetchPortfolios();
       } else {
         toast.error("Gagal menyimpan data");

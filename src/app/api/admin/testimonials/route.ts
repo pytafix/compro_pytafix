@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { testimonialSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if (auth) return auth;
   try {
     const testimonials = await prisma.testimonial.findMany({
       orderBy: { createdAt: 'desc' },
@@ -17,6 +20,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const body = await request.json();
     const data = testimonialSchema.parse(body);
@@ -29,6 +34,7 @@ export async function POST(request: Request) {
       },
     });
     revalidatePath('/');
+    revalidatePath('/testimoni');
     return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {

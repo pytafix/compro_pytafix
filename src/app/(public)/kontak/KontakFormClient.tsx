@@ -27,7 +27,7 @@ export default function KontakForm() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Pesan kamu sudah terkirim! Kami akan menghubungi segera.");
+        toast.success(data.message || "Pesan kamu sudah tersimpan.");
         setForm({ name: "", email: "", whatsapp: "", subject: "", message: "" });
       } else {
         toast.error(data.error || "Gagal mengirim pesan.");
@@ -115,6 +115,14 @@ export default function KontakForm() {
       >
         {loading ? "Mengirim..." : "Kirim Pesan"}
       </button>
+      <p className="text-sm text-on-surface-variant">
+        Dengan mengirim pesan, kamu menyetujui pemrosesan data untuk menindaklanjuti
+        permintaan ini. Baca{" "}
+        <a href="/kebijakan-privasi" className="text-primary underline underline-offset-4">
+          kebijakan privasi
+        </a>
+        .
+      </p>
     </form>
   );
 }

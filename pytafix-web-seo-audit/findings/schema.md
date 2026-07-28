@@ -1,75 +1,22 @@
 # Schema / Structured Data Findings
 
-## HIGH
+Audit state: 28 July 2026. Current local source/build is the reference; production still needs a post-deploy fetch and validator pass.
 
-### 1. Organization schema missing — LocalBusiness not linked to parent entity
-- **File**: `src/app/(public)/HomeClient.tsx`
-- **Issue**: LocalBusiness stands alone. No parent Organization, no link to CV. Pyta Cipta Karya, no nested branches
-- **Fix**: Add Organization schema:
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "CV. Pyta Cipta Karya",
-  "url": "https://pytagotech.com",
-  "sameAs": ["https://www.pytafix.web.id", "https://www.pytabelajar.web.id"]
-}
-```
-Nest LocalBusiness under sameAs or create parent Organization with branch LocalBusiness
+## Resolved locally
 
-### 2. WebSite + SearchAction missing — no internal site search rich result
-- **File**: `src/app/(public)/HomeClient.tsx`
-- **Issue**: No WebSite schema for Google Sitelinks search box
-- **Fix**: Add WebSite schema in root layout or homepage:
-```json
-{
-  "@type": "WebSite",
-  "name": "Pytafix",
-  "url": "https://www.pytafix.web.id",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://www.pytafix.web.id/layanan?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-```
+- Root `Organization` and `ProfessionalService` entities use stable `@id` references; the professional service links to the legal organization and service area.
+- `PostalAddress` and `GeoCoordinates` are conditionally withheld while the supplied Maps text/pin conflict is unresolved; `hasMap` remains the navigation link.
+- Homepage WebSite and FAQ graphs, article author/publisher references, service graphs, Product/Offer graphs, promo Offer graphs, and detail BreadcrumbList graphs are emitted for the relevant page types.
+- JSON-LD passes through a shared serializer that escapes `<` and prevents script breakout.
+- Fake brands, ratings, logo dimensions, Sunday pseudo-hours, and unsupported business claims were removed.
 
-## MEDIUM
+## Remaining evidence gaps
 
-### 3. No Product/Offer schema for sparepart pages
-- **File**: `src/app/(public)/sparepart/[id]/page.tsx`
-- **Issue**: Price, stock, category displayed but no JSON-LD. No Shopping tab / Product rich results
-- **Fix**: Add Product schema:
-```json
-{
-  "@type": "Product",
-  "name": "...",
-  "description": "...",
-  "image": "...",
-  "offers": {
-    "@type": "Offer",
-    "price": "...",
-    "priceCurrency": "IDR",
-    "availability": "https://schema.org/InStock"
-  }
-}
-```
+1. **Business entity proof** — verify legal entity, GBP ownership, pin, NAP, categories, and hours before adding a verified address or coordinates.
+2. **Author authority** — generic editorial attribution is not the same as a named expert. Add verifiable reviewer/author details only when the owner can substantiate them.
+3. **Ratings and reviews** — do not add AggregateRating or Review schema until the underlying consented, representative dataset is real and maintained.
+4. **Production validation** — rerun Schema Markup Validator/Rich Results checks on deployed HTML; local build validity is not Google eligibility or indexing.
 
-### 4. BreadcrumbList schema missing from all pages
-- **Issue**: sparepart/[id] has visual breadcrumbs but no JSON-LD BreadcrumbList
-- **Fix**: Add BreadcrumbList on sparepart/[id], layanan/[slug], artikel/[slug], promo/[slug]
+## Deliberate omissions
 
-### 5. Service schema on layanan/[slug] missing priceSpecification
-- **File**: `src/app/(public)/layanan/[slug]/page.tsx`
-- **Issue**: Service schema lacks hasOfferCatalog, availableChannel, priceRange
-- **Fix**: Add `priceRange: "$$"` and `hasOfferCatalog` to Service schema
-
-### 6. sameAs missing Google Business Profile link
-- **File**: `src/app/(public)/HomeClient.tsx`
-- **Issue**: Social links present but no Google Business Profile URL if one exists
-- **Fix**: Create/claim Google Business Profile for Pytafix. Add URL to sameAs array
-
-### 7. FAQPage schema only on /faq — homepage FAQ section has no schema
-- **File**: `src/app/(public)/HomeClient.tsx`
-- **Issue**: 4 FAQ items visible on homepage but no FAQPage JSON-LD
-- **Fix**: Add FAQPage schema in HomeClient mirroring the 4 FAQItem components
+HowTo, price ranges, and broad service guarantees are not emitted where the source has no stable, verified values. Adding plausible-looking schema would create a trust and policy risk.

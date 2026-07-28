@@ -19,7 +19,7 @@ export function GlobalCTA() {
             Perangkat Bermasalah?<br className="hidden md:block" /> Jangan Tunggu Sampai Parah.
           </h2>
           <p className="text-lg md:text-xl mb-8 opacity-90 font-body-md max-w-xl mx-auto md:mx-0">
-            Konsultasikan gratis sekarang dan dapatkan estimasi biaya perbaikan oleh tim profesional kami.
+            Kirim gejala perangkat dan pilih jadwal. Tim akan mengonfirmasi pemeriksaan awal serta langkah berikutnya.
           </p>
           <Link
             href="/booking-servis"
@@ -37,7 +37,7 @@ export function GlobalCTA() {
           <div className="relative w-64 h-64 md:absolute md:bottom-0 md:right-8 lg:right-12 md:w-[350px] md:h-[400px] lg:w-[450px] lg:h-[500px]">
             <Image 
               src="/images/cta-model.png" 
-              alt="Customer Service Pytafix" 
+              alt="Ilustrasi layanan pelanggan Pytafix"
               fill
               className="object-contain object-bottom drop-shadow-[0_15px_15px_rgba(0,0,0,0.3)]"
               sizes="(max-width: 768px) 256px, (max-width: 1024px) 350px, 450px"

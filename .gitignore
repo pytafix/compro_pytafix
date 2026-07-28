@@ -57,3 +57,6 @@ google-service-account.json
 
 # helper scripts
 scripts/
+
+# local SEO audit cache
+.seo-cache/

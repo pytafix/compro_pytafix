@@ -2,14 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import prisma from "@/lib/prisma";
+import { isLocationServiceSlug } from "@/lib/locations";
+import { getPublicServiceCopy, isPublicReviewedServiceSlug, PUBLIC_SERVICE_COPY } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "Jasa Service Laptop, HP, PC & MacBook di Malang",
-  description: "Solusi perbaikan profesional untuk semua perangkat Anda.",
+const serviceMetadata: Metadata = {
+  title: "Jasa Servis Laptop, HP, dan Komputer di Malang",
+  description: "Pemeriksaan dan perbaikan laptop, HP, serta komputer di Malang dengan estimasi sebelum pengerjaan.",
   alternates: { canonical: "/layanan" },
   openGraph: {
     title: "Layanan Servis Laptop, HP & Komputer",
-    description: "Pytafix menyediakan layanan servis laptop, HP, dan komputer dengan teknisi bersertifikat dan garansi resmi di Malang.",
+    description: "Lihat layanan pemeriksaan dan perbaikan perangkat Pytafix di Malang.",
     url: "https://www.pytafix.web.id/layanan",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Layanan Servis" }],
     locale: "id_ID",
@@ -17,11 +19,27 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  const count = await prisma.serviceContent.count({
+    where: {
+      isActive: true,
+      slug: { in: Object.keys(PUBLIC_SERVICE_COPY) },
+    },
+  });
+  return {
+    ...serviceMetadata,
+    robots: count > 0 ? { index: true, follow: true } : { index: false, follow: true },
+  };
+}
+
 export default async function Layanan() {
-  const services = await prisma.serviceContent.findMany({
+  const serviceRecords = await prisma.serviceContent.findMany({
     where: { isActive: true },
     orderBy: { createdAt: "asc" },
   });
+  const services = serviceRecords
+    .filter((service) => !isLocationServiceSlug(service.slug) && isPublicReviewedServiceSlug(service.slug))
+    .map(getPublicServiceCopy);
 
   return (
     <main>
@@ -32,7 +50,8 @@ export default async function Layanan() {
             Layanan Kami
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Solusi perbaikan profesional untuk semua perangkat Anda. Teknisi tersertifikasi, suku cadang berkualitas, dan garansi resmi.
+            Pilih jenis layanan untuk melihat ruang lingkup awal. Diagnosis, opsi komponen,
+            estimasi, dan ketentuan garansi dikonfirmasi sesuai kondisi perangkat.
           </p>
         </div>
       </section>
@@ -68,7 +87,7 @@ export default async function Layanan() {
                       <span className="material-symbols-outlined text-sm">
                         verified_user
                       </span>
-                      <span className="font-label-bold text-label-bold">Bergaransi</span>
+                      <span className="font-label-bold text-label-bold">Ketentuan tertulis</span>
                     </div>
                     <span className="text-primary font-label-bold text-label-bold flex items-center gap-1 bg-primary/10 px-3 py-1 rounded group-hover:bg-primary group-hover:text-on-primary transition-colors">
                       Lihat Detail <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -89,7 +108,7 @@ export default async function Layanan() {
               Kebijakan Garansi
             </h2>
             <p className="font-body-lg text-body-lg text-on-surface-variant">
-              Komitmen kami terhadap kualitas layanan dan kepuasan pelanggan.
+              Cakupan dan durasi mengikuti pekerjaan, komponen, serta keterangan pada nota servis.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-gutter">
@@ -98,12 +117,12 @@ export default async function Layanan() {
                 <span className="material-symbols-outlined text-primary" data-icon="schedule">
                   schedule
                 </span>
-                <h4 className="font-headline-md text-headline-md text-primary">Durasi Garansi</h4>
+                <h3 className="font-headline-md text-headline-md text-primary">Cakupan garansi</h3>
               </div>
               <ul className="list-disc list-inside font-body-md text-body-md text-on-surface-variant space-y-2">
-                <li>Service Hardware: 30 - 90 Hari</li>
-                <li>Penggantian Sparepart: 3 - 6 Bulan (tergantung jenis)</li>
-                <li>Instalasi Software: 14 Hari</li>
+                <li>Durasi dan bagian yang tercakup dicatat pada nota servis.</li>
+                <li>Klaim diperiksa untuk memastikan kendala dan penyebabnya sesuai cakupan.</li>
+                <li>Kerusakan baru, benturan, cairan, atau perubahan pihak lain dapat berada di luar cakupan.</li>
               </ul>
             </div>
             <div className="bg-surface p-6 border border-outline-variant rounded">
@@ -111,12 +130,12 @@ export default async function Layanan() {
                 <span className="material-symbols-outlined text-primary" data-icon="fact_check">
                   fact_check
                 </span>
-                <h4 className="font-headline-md text-headline-md text-primary">Proses Klaim</h4>
+                <h3 className="font-headline-md text-headline-md text-primary">Proses klaim</h3>
               </div>
               <ol className="list-decimal list-inside font-body-md text-body-md text-on-surface-variant space-y-2">
-                <li>Bawa perangkat dan nota perbaikan asli.</li>
-                <li>Teknisi melakukan pengecekan ulang.</li>
-                <li>Perbaikan dilakukan tanpa biaya tambahan jika masuk kriteria garansi.</li>
+                <li>Siapkan ID servis dan nomor WhatsApp saat booking.</li>
+                <li>Jelaskan kendala yang muncul setelah servis selesai.</li>
+                <li>Tim memeriksa perangkat sebelum mengonfirmasi hasil klaim.</li>
               </ol>
             </div>
           </div>

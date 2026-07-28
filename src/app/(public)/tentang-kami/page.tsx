@@ -1,15 +1,20 @@
+import type { Metadata } from "next";
 import Image from "next/image";
-import { Metadata } from "next";
+import Link from "next/link";
+import { CONTACT, LEGAL_ENTITY_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/config";
+import { SERVICE_PRINCIPLES } from "@/lib/site-content";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Tentang Kami",
-  description: "Solusi profesional untuk perbaikan perangkat keras Anda. Kami berdedikasi untuk memulihkan kinerja optimal elektronik esensial Anda dengan presisi teknis.",
+  title: "Tentang Pytafix",
+  description:
+    "Kenali Pytafix, proses pemeriksaan perangkat, prinsip layanan, dan area operasional di Malang Raya.",
   alternates: { canonical: "/tentang-kami" },
   openGraph: {
-    title: "Tentang Pytafix - Servis Elektronik Terpercaya di Malang",
-    description: "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Bagian dari CV. Pyta Cipta Karya dengan teknisi bersertifikat dan standar enterprise.",
-    url: "https://www.pytafix.web.id/tentang-kami",
-    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Tentang Kami" }],
+    title: "Tentang Pytafix",
+    description: SITE_DESCRIPTION,
+    url: `${SITE_URL}/tentang-kami`,
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Tentang Pytafix" }],
     locale: "id_ID",
     type: "website",
   },
@@ -19,158 +24,105 @@ export default function TentangKami() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    "name": "Tentang Pytafix",
-    "description": "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Bagian dari CV. Pyta Cipta Karya dengan teknisi bersertifikat.",
-    "url": "https://www.pytafix.web.id/tentang-kami",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Pytafix",
-      "description": "Spesialis perbaikan perangkat elektronik di Malang dengan teknisi bersertifikat dan peralatan diagnostik canggih.",
-      "areaServed": { "@type": "City", "name": "Malang" }
-    }
+    name: "Tentang Pytafix",
+    description: SITE_DESCRIPTION,
+    url: `${SITE_URL}/tentang-kami`,
+    mainEntity: { "@id": `${SITE_URL}/#organization` },
   };
 
   return (
-    <main className="flex-grow pb-24 text-center md:text-left">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      {/* Hero / Headline Section */}
-      <section className="mb-24 text-center px-margin-mobile md:px-margin-desktop bg-surface-container-low py-20 border-b border-outline-variant">
-        <div className="max-w-container-max mx-auto">
-          <h1 className="font-headline-lg-mobile md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-primary mb-6">
+    <main className="flex-grow pb-24">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+
+      <section className="mb-20 border-b border-outline-variant bg-surface-container-low px-4 py-20 text-center md:px-8">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="mb-6 font-headline-lg-mobile text-headline-lg-mobile text-primary md:font-headline-xl md:text-headline-xl">
             Tentang Pytafix
           </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto">
-            Berdiri di Malang, kami adalah spesialis perbaikan perangkat elektronik yang memadukan keahlian teknisi tersertifikasi dengan peralatan diagnostik canggih. Kepercayaan Anda adalah prioritas utama kami.
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            Pytafix adalah layanan perangkat dari {LEGAL_ENTITY_NAME}. Fokus kami adalah
+            pemeriksaan dan perbaikan laptop, HP, serta komputer dengan persetujuan pelanggan
+            sebelum pengerjaan.
           </p>
         </div>
       </section>
 
-      <div className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-        {/* Story Section (Bento Grid) */}
-        <section className="mb-24 grid grid-cols-1 md:grid-cols-12 gap-gutter text-left">
-          <div className="md:col-span-7 bg-surface-container-lowest p-8 md:p-12 border border-outline-variant rounded-xl flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                corporate_fare
-              </span>
-              <h2 className="font-headline-md text-headline-md text-primary">Bagian dari CV. Pyta Cipta Karya</h2>
-            </div>
-            <p className="mb-4 text-on-surface-variant">
-              Pytafix merupakan divisi layanan perangkat keras dari <strong className="text-on-surface">CV. Pyta Cipta Karya</strong>, sebuah ekosistem inovasi teknologi yang juga menaungi anak usaha lainnya yaitu:{" "}
-              <a href="https://www.pytafix.web.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Pytafix</a>,{" "}
-              <a href="https://www.pytabelajar.web.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Pytabelajar</a>, dan{" "}
-              <a href="https://www.pytagotech.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Pytagotech</a>.
-            </p>
+      <div className="mx-auto max-w-container-max px-4 md:px-8 lg:px-margin-desktop">
+        <section className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-12">
+          <div className="flex flex-col justify-center rounded-2xl border border-outline-variant bg-surface-container-lowest p-8 md:col-span-7 md:p-12">
+            <h2 className="mb-5 font-headline-md text-headline-md text-primary">
+              Peran dan tanggung jawab kami
+            </h2>
             <p className="text-on-surface-variant">
-              Dengan dukungan standar operasional korporat dari grup kami, Pytafix tidak beroperasi seperti tempat servis biasa. Setiap proses diagnostik, SOP perbaikan, dan jaminan keamanan data pelanggan diawasi secara ketat. Kami memastikan Anda mendapatkan kualitas layanan kelas enterprise dengan harga yang bersahabat.
+              Informasi awal dari pelanggan digunakan untuk menyiapkan pemeriksaan. Hasil
+              pemeriksaan, opsi tindakan, komponen, dan estimasi biaya perlu dikonfirmasi sebelum
+              pekerjaan dilanjutkan. Kondisi tertentu baru dapat diketahui setelah perangkat
+              dibuka dengan persetujuan pelanggan.
+            </p>
+            <p className="mt-4 text-on-surface-variant">
+              Pytafix tidak memublikasikan angka keberhasilan, lama pengalaman, sertifikasi,
+              ulasan, atau jaminan komponen yang belum dapat dibuktikan. Ketentuan garansi yang
+              berlaku adalah yang tercantum pada nota servis.
             </p>
           </div>
-          <div className="md:col-span-5 rounded-xl overflow-hidden border border-outline-variant relative min-h-[300px]">
+          <div className="relative min-h-[320px] overflow-hidden rounded-2xl border border-outline-variant md:col-span-5">
             <Image
-              className="absolute inset-0 w-full h-full object-cover"
-              alt="A macro shot of a sophisticated electronic circuit board undergoing repair in a pristine, brightly lit laboratory setting."
-              src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
+              alt="Ilustrasi papan sirkuit elektronik"
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&q=80"
               fill
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, 42vw"
+              className="object-cover"
             />
           </div>
         </section>
 
-        {/* Values Section */}
-        <section className="mb-24">
-          <h2 className="font-headline-lg text-headline-lg text-primary text-center mb-12">Nilai Inti Kami</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter text-center">
-            {/* Value 1 */}
-            <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-lg hover:border-primary transition-colors group">
-              <span className="material-symbols-outlined text-primary text-4xl mb-4 group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>
-                handshake
-              </span>
-              <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Jujur</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Diagnosa transparan tanpa biaya tersembunyi. Kami komunikasikan kondisi nyata perangkat Anda.
-              </p>
-            </div>
-            {/* Value 2 */}
-            <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-lg hover:border-primary transition-colors group">
-              <span className="material-symbols-outlined text-primary text-4xl mb-4 group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>
-                verified
-              </span>
-              <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Bergaransi</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Setiap layanan dilindungi jaminan kualitas. Keandalan jangka panjang adalah janji kami.
-              </p>
-            </div>
-            {/* Value 3 */}
-            <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-lg hover:border-primary transition-colors group">
-              <span className="material-symbols-outlined text-primary text-4xl mb-4 group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>
-                memory
-              </span>
-              <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Sparepart Asli</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Penggunaan komponen original untuk memastikan integritas struktural dan fungsionalitas optimal.
-              </p>
-            </div>
-            {/* Value 4 */}
-            <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-lg hover:border-primary transition-colors group">
-              <span className="material-symbols-outlined text-primary text-4xl mb-4 group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>
-                engineering
-              </span>
-              <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Berpengalaman</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Teknisi bersertifikat dengan jam terbang tinggi dalam menangani berbagai anomali perangkat keras.
-              </p>
-            </div>
+        <section className="mb-20">
+          <h2 className="mb-10 text-center font-headline-lg text-headline-lg text-primary">
+            Prinsip layanan
+          </h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {SERVICE_PRINCIPLES.map((principle) => (
+              <article key={principle.title} className="rounded-xl border border-outline-variant bg-surface p-6">
+                <span className="material-symbols-outlined text-4xl text-primary" aria-hidden="true">
+                  {principle.icon}
+                </span>
+                <h3 className="mb-2 mt-4 font-label-bold text-on-surface">{principle.title}</h3>
+                <p className="text-on-surface-variant">{principle.description}</p>
+              </article>
+            ))}
           </div>
         </section>
 
-        {/* Service Area Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center text-left">
-          <div className="order-2 lg:order-1 h-96 bg-surface-container border border-outline-variant rounded-xl relative overflow-hidden flex items-center justify-center">
-            <Image
-              className="absolute inset-0 w-full h-full object-cover opacity-80"
-              alt="A stylized, modern, top-down map interface showing an urban grid"
-              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-primary/10"></div>
-            <div className="relative bg-surface-container-lowest/90 backdrop-blur-sm border border-primary p-4 rounded shadow-sm text-center">
-              <span className="material-symbols-outlined text-primary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>
-                location_on
-              </span>
-              <p className="font-label-bold text-label-bold text-primary">Pusat Layanan Malang</p>
-            </div>
-          </div>
-          <div className="order-1 lg:order-2 pl-0 lg:pl-8">
-            <h2 className="font-headline-md text-headline-md text-primary mb-6">Area Jangkauan Layanan</h2>
-            <p className="text-on-surface-variant mb-6">
-              Kami melayani perbaikan dan penjemputan perangkat di wilayah <strong className="text-on-surface">Malang Raya</strong>. Fokus cakupan operasional kami memastikan respon cepat untuk keadaan darurat perangkat keras Anda.
-            </p>
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3 border-b border-outline-variant pb-3">
-                <span className="material-symbols-outlined text-primary">my_location</span>
-                <span className="font-label-bold text-label-bold text-on-surface">Kecamatan Klojen</span>
-              </li>
-              <li className="flex items-center gap-3 border-b border-outline-variant pb-3">
-                <span className="material-symbols-outlined text-primary">my_location</span>
-                <span className="font-label-bold text-label-bold text-on-surface">Kecamatan Blimbing</span>
-              </li>
-              <li className="flex items-center gap-3 border-b border-outline-variant pb-3">
-                <span className="material-symbols-outlined text-primary">my_location</span>
-                <span className="font-label-bold text-label-bold text-on-surface">Kecamatan Lowokwaru</span>
-              </li>
-              <li className="flex items-center gap-3 border-b border-outline-variant pb-3">
-                <span className="material-symbols-outlined text-primary">my_location</span>
-                <span className="font-label-bold text-label-bold text-on-surface">Kecamatan Sukun</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary">my_location</span>
-                <span className="font-label-bold text-label-bold text-on-surface">Kecamatan Kedungkandang</span>
-              </li>
-            </ul>
+        <section className="rounded-2xl border border-outline-variant bg-surface-container-low p-8 md:p-12">
+          <h2 className="font-headline-md text-headline-md text-primary">Area dan jadwal layanan</h2>
+          <p className="mt-4 text-on-surface-variant">
+            Area operasional: {CONTACT.serviceArea}. Ketersediaan kunjungan atau penjemputan
+            bergantung pada lokasi dan antrean. {CONTACT.hours.note}
+          </p>
+          <p className="mt-3 text-on-surface-variant">
+            Lokasi Pytafix:{" "}
+            <a
+              href={CONTACT.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline underline-offset-4"
+            >
+              {CONTACT.address}
+            </a>
+            .
+          </p>
+          <p className="mt-2 text-sm text-on-surface-variant">{CONTACT.locationNote}</p>
+          <p className="mt-3 text-on-surface-variant">
+            Jam operasional: {CONTACT.hours.days}, {CONTACT.hours.opens}–{CONTACT.hours.closes};
+            Minggu {CONTACT.hours.sunday.toLowerCase()}.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-4">
+            <Link href="/layanan" className="rounded-full bg-primary px-6 py-3 font-label-bold text-on-primary">
+              Pelajari layanan
+            </Link>
+            <Link href="/kontak" className="rounded-full border border-primary px-6 py-3 font-label-bold text-primary">
+              Hubungi Pytafix
+            </Link>
           </div>
         </section>
       </div>

@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   const fetchRequests = async (isRefresh = false) => {
     if (isRefresh) setIsLoading(true);
     try {
-      const res = await fetch("/api/admin/requests");
+      const res = await fetch("/api/admin/requests?page=1&pageSize=20");
       if (res.status === 401) {
         // Token expired or missing
         router.push("/admin/login");
@@ -21,7 +21,7 @@ export default function AdminDashboard() {
       }
       if (res.ok) {
         const data = await res.json();
-        setRequests(data);
+        setRequests(data.items);
       } else {
         toast.error("Gagal mengambil data permintaan.");
       }
@@ -36,14 +36,14 @@ export default function AdminDashboard() {
     let cancelled = false;
     const loadData = async () => {
       try {
-        const res = await fetch("/api/admin/requests", { credentials: "include" });
+        const res = await fetch("/api/admin/requests?page=1&pageSize=20", { credentials: "include" });
         if (res.status === 401) {
           router.push("/admin/login");
           return;
         }
         if (res.ok) {
           const data = await res.json();
-          if (!cancelled) setRequests(data);
+          if (!cancelled) setRequests(data.items);
         } else {
           if (!cancelled) toast.error("Gagal mengambil data permintaan.");
         }

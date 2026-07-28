@@ -18,8 +18,8 @@ export function TrustBadges() {
             <span className="material-symbols-outlined text-on-primary-fixed text-[28px]" aria-hidden="true">verified</span>
           </div>
           <div>
-            <h3 className="font-label-bold text-label-bold text-on-surface">Garansi Resmi</h3>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">Jaminan layanan hingga 90 hari</p>
+            <p className="font-label-bold text-label-bold text-on-surface">Estimasi Disetujui</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Biaya dikonfirmasi sebelum pengerjaan</p>
           </div>
         </motion.div>
         <motion.div variants={fadeUpVariant} className="flex items-center gap-4 group">
@@ -27,8 +27,8 @@ export function TrustBadges() {
             <span className="material-symbols-outlined text-on-primary-fixed text-[28px]" aria-hidden="true">memory</span>
           </div>
           <div>
-            <h3 className="font-label-bold text-label-bold text-on-surface">Sparepart Original</h3>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">Komponen bersertifikasi pabrik</p>
+            <p className="font-label-bold text-label-bold text-on-surface">Pilihan Komponen Jelas</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Jenis dan kondisi komponen dijelaskan</p>
           </div>
         </motion.div>
         <motion.div variants={fadeUpVariant} className="flex items-center gap-4 group">
@@ -36,8 +36,8 @@ export function TrustBadges() {
             <span className="material-symbols-outlined text-on-primary-fixed text-[28px]" aria-hidden="true">home_repair_service</span>
           </div>
           <div>
-            <h3 className="font-label-bold text-label-bold text-on-surface">Home Service</h3>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">Teknisi datang ke lokasi Anda</p>
+            <p className="font-label-bold text-label-bold text-on-surface">Antar-Jemput Berdasarkan Area</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Ketersediaan dikonfirmasi sesuai area</p>
           </div>
         </motion.div>
       </div>

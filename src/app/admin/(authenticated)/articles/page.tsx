@@ -1,5 +1,6 @@
 "use client";
 import { TableSkeleton } from "@/components/admin/TableSkeleton";
+import { deletePendingAdminUpload } from "@/lib/admin-media-client";
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -36,6 +37,7 @@ export default function AdminArticles() {
     publishedAt: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingUploadUrl, setPendingUploadUrl] = useState<string | null>(null);
 
   const fetchArticles = async (isRefresh = false) => {
     if (isRefresh) setIsLoading(true);
@@ -99,7 +101,13 @@ export default function AdminArticles() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if (pendingUploadUrl) {
+      void deletePendingAdminUpload(pendingUploadUrl);
+      setPendingUploadUrl(null);
+    }
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -117,6 +125,10 @@ export default function AdminArticles() {
 
       if (res.ok) {
         const { url } = await res.json();
+        if (pendingUploadUrl && pendingUploadUrl !== url) {
+          void deletePendingAdminUpload(pendingUploadUrl);
+        }
+        setPendingUploadUrl(url);
         setFormData(prev => ({ ...prev, imageUrl: url }));
         toast.success("Gambar berhasil diunggah", { id: "upload" });
       } else {
@@ -148,7 +160,13 @@ export default function AdminArticles() {
 
       if (res.ok) {
         toast.success(`Artikel berhasil ${editingId ? "diperbarui" : "ditambahkan"}`);
-        closeModal();
+        const unusedUpload =
+          pendingUploadUrl && pendingUploadUrl !== formData.imageUrl
+            ? pendingUploadUrl
+            : null;
+        setPendingUploadUrl(null);
+        setIsModalOpen(false);
+        if (unusedUpload) void deletePendingAdminUpload(unusedUpload);
         fetchArticles();
       } else {
         toast.error("Gagal menyimpan data");

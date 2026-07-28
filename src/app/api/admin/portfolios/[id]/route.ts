@@ -3,15 +3,26 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { portfolioSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
+import { cleanupManagedBlobs } from '@/lib/media-cleanup';
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
     const body = await request.json();
     const data = portfolioSchema.partial().parse(body);
+    const existing = await prisma.portfolio.findUnique({
+      where: { id },
+      select: { beforeImage: true, afterImage: true },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: 'Portfolio not found' }, { status: 404 });
+    }
 
     const portfolio = await prisma.portfolio.update({
       where: { id },
@@ -25,6 +36,15 @@ export async function PUT(
         completionDate: data.completionDate ? new Date(data.completionDate) : undefined,
       }
     });
+
+    await cleanupManagedBlobs([
+      data.beforeImage !== undefined && data.beforeImage !== existing.beforeImage
+        ? existing.beforeImage
+        : null,
+      data.afterImage !== undefined && data.afterImage !== existing.afterImage
+        ? existing.afterImage
+        : null,
+    ]);
 
     revalidatePath('/');
     revalidatePath('/portofolio');
@@ -41,6 +61,8 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
 
@@ -50,6 +72,7 @@ export async function DELETE(
     }
 
     await prisma.portfolio.delete({ where: { id } });
+    await cleanupManagedBlobs([existing.beforeImage, existing.afterImage]);
 
     revalidatePath('/');
     revalidatePath('/portofolio');

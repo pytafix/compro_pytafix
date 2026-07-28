@@ -1,36 +1,22 @@
 # AI Search Readiness (GEO) Findings
 
-## HIGH
+Audit state: 28 July 2026. Current source is locally repaired; production and Google indexing remain unverified.
 
-### 1. No llms.txt or AI-accessible content endpoint
-- **Issue**: Google AI Overviews, ChatGPT, Perplexity cannot easily parse site content. No structured text summary exists for AI crawlers
-- **Fix**: Create `src/app/llms.txt/route.ts` returning plain-text summary of: services, contact info, FAQ, pricing philosophy. Add to robots.txt: `Allow: /llms.txt`
+## Resolved locally
 
-## MEDIUM
+- `llms.txt` exposes reviewed services, FAQs, article excerpts, official references, contact channels, update dates when available, and a static fallback when the database is unavailable.
+- `robots.txt` explicitly allows the site and `/llms.txt` to major answer/search crawlers while disallowing `/admin` and `/api`.
+- FAQ answers and reviewed service passages are present in server-rendered HTML, making them available without client hydration.
+- Unsupported city variants and unreviewed service/article records are kept out of public index candidates.
+- Root Organization/ProfessionalService entities and page-level references are serialized safely and consistently.
 
-### 2. Business hours inconsistently stated across pages
-- **Files**: `kontak/page.tsx`, `HomeClient.tsx` LocalBusiness schema, about page
-- **Issue**: kontak says "Senin-Sabtu 09:00-18:00, Minggu: Tutup". LocalBusiness schema says same but no Sunday exclusion. about page has no hours at all
-- **Fix**: Standardize to one source of truth. Update LocalBusiness openingHoursSpecification to explicitly exclude Sunday
+## Remaining evidence gaps
 
-### 3. HowTo schema missing for service process
-- **File**: `src/app/(public)/HomeClient.tsx` lines 279-339
-- **Issue**: "How it Works" section (Booking → Diagnosis → Repair → Warranty) has no HowTo structured data
-- **Fix**: Add HowTo schema:
-```json
-{
-  "@type": "HowTo",
-  "name": "Cara Memperbaiki Perangkat di Pytafix",
-  "step": [
-    { "@type": "HowToStep", "name": "Booking", "text": "..." },
-    { "@type": "HowToStep", "name": "Diagnosis", "text": "..." },
-    { "@type": "HowToStep", "name": "Repair", "text": "..." },
-    { "@type": "HowToStep", "name": "Warranty", "text": "..." }
-  ]
-}
-```
+1. **Google Maps conflict** — the provided short link text names a Malang listing, while the current preview exposes a conflicting Sidoarjo-area center. The link remains available for navigation, but the exact pin/NAP, categories, hours, and ownership require owner verification. Address and coordinates are withheld from verified business schema until then.
+2. **Local proof** — there is no current verified GBP ownership export, review evidence, local citations, or post-deploy Maps/GBP consistency check.
+3. **Citation depth** — `llms.txt` intentionally caps long passages; raise citation readiness with deeper, reviewer-attributed, first-hand content rather than fabricated claims.
+4. **External truth** — GSC, CrUX, AI Overview/Perplexity visibility, and production crawl results must be rechecked after an authorized deployment.
 
-### 4. Article author schema lacks authority depth
-- **File**: `src/app/(public)/artikel/[slug]/page.tsx` lines 57-60
-- **Issue**: `author: [{ "@type": "Person", "name": article.author }]` — no jobTitle, no sameAs social links
-- **Fix**: Add `"jobTitle": "Tim Teknisi Pytafix"` and `"sameAs"` array with Instagram/social links
+## Release check
+
+Confirm the listing pin and NAP first. Then publish only facts that match the verified profile and rerun production/GSC checks.

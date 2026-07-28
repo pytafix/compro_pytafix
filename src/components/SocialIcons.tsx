@@ -89,6 +89,7 @@ export function SocialIcons({ className = "" }: SocialIconsProps) {
       {socialLinks.map((social, index) => (
         <a
           key={index}
+          role="listitem"
           href={social.href}
           target="_blank"
           rel="noopener noreferrer"

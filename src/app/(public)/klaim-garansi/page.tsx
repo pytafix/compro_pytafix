@@ -43,7 +43,8 @@ export default function KlaimGaransiPage() {
             Klaim Garansi Servis
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Masih dalam masa garansi dan perangkat mengalami kendala yang sama? Isi form di bawah ini untuk mengajukan klaim garansi tanpa biaya tambahan.
+            Ajukan pemeriksaan jika kendala yang sama muncul dalam cakupan dan durasi yang
+            tercantum pada nota servis. Hasil klaim ditentukan setelah verifikasi.
           </p>
         </div>
       </section>
@@ -57,7 +58,8 @@ export default function KlaimGaransiPage() {
             </span>
             <h2 className="font-headline-md text-headline-md text-on-secondary-container mb-4">Pengajuan Berhasil</h2>
             <p className="font-body-lg text-body-lg text-on-secondary-container/80 mb-8 max-w-lg mx-auto">
-              Tim kami telah menerima pengajuan garansi Anda. Kami akan segera menghubungi Anda melalui WhatsApp untuk proses verifikasi selanjutnya.
+              Tim telah menerima pengajuan Anda dan akan meninjaunya pada jam operasional.
+              Pengajuan belum berarti klaim telah disetujui.
             </p>
             <button 
               onClick={() => { setIsSuccess(false); setFormData({name:'', whatsapp:'', trackingId:'', description:''}) }}

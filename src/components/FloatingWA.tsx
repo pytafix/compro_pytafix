@@ -14,7 +14,7 @@ export function FloatingWA() {
   const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=Halo%20Pytafix,%20saya%20butuh%20bantuan.`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[60] flex items-center justify-center animate-in fade-in slide-in-from-bottom-8 duration-500">
+    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-[60] flex items-center justify-center animate-in fade-in slide-in-from-bottom-8 duration-500 md:bottom-6 md:right-6">
       <div className="absolute inset-0 bg-[#25D366] rounded-full animate-ping opacity-20"></div>
       <a
         href={waUrl}

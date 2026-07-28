@@ -82,13 +82,20 @@ export function AdminSidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
-    toast.success("Berhasil logout.");
+    try {
+      const response = await fetch("/api/auth/logout", { method: "POST" });
+      if (!response.ok) throw new Error("Logout failed");
+      router.push("/admin/login");
+      router.refresh();
+      toast.success("Berhasil logout.");
+    } catch {
+      toast.error("Logout gagal. Silakan coba lagi.");
+    }
   };
 
   const navLinks: NavLink[] = [
     { label: "Tiket Servis", href: "/admin/requests", icon: "inbox" },
+    { label: "Pesan Kontak", href: "/admin/contacts", icon: "contact_mail" },
     { label: "Layanan", href: "/admin/services", icon: "build" },
     { label: "Sparepart", href: "/admin/spareparts", icon: "inventory_2" },
     { label: "Jual Beli", href: "/admin/products", icon: "sell" },

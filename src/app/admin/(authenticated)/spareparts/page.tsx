@@ -1,5 +1,6 @@
 "use client";
 import { TableSkeleton } from "@/components/admin/TableSkeleton";
+import { deletePendingAdminUpload } from "@/lib/admin-media-client";
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ export default function AdminSpareparts() {
     isFeatured: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingUploadUrl, setPendingUploadUrl] = useState<string | null>(null);
 
   const fetchSpareparts = async (isRefresh = false) => {
     if (isRefresh) setIsLoading(true);
@@ -89,7 +91,13 @@ export default function AdminSpareparts() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if (pendingUploadUrl) {
+      void deletePendingAdminUpload(pendingUploadUrl);
+      setPendingUploadUrl(null);
+    }
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -107,6 +115,10 @@ export default function AdminSpareparts() {
 
       if (res.ok) {
         const { url } = await res.json();
+        if (pendingUploadUrl && pendingUploadUrl !== url) {
+          void deletePendingAdminUpload(pendingUploadUrl);
+        }
+        setPendingUploadUrl(url);
         setFormData(prev => ({ ...prev, imageUrl: url }));
         toast.success("Gambar berhasil diunggah", { id: "upload" });
       } else {
@@ -138,7 +150,13 @@ export default function AdminSpareparts() {
 
       if (res.ok) {
         toast.success(`Sparepart berhasil ${editingId ? "diperbarui" : "ditambahkan"}`);
-        closeModal();
+        const unusedUpload =
+          pendingUploadUrl && pendingUploadUrl !== formData.imageUrl
+            ? pendingUploadUrl
+            : null;
+        setPendingUploadUrl(null);
+        setIsModalOpen(false);
+        if (unusedUpload) void deletePendingAdminUpload(unusedUpload);
         fetchSpareparts();
       } else {
         toast.error("Gagal menyimpan data");

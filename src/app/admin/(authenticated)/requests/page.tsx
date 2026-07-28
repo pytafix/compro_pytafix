@@ -19,9 +19,26 @@ interface ServiceRequest {
   technicianNotes: string | null;
 }
 
+interface ServiceRequestResponse {
+  items: ServiceRequest[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export default function AdminRequests() {
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,32 +58,35 @@ export default function AdminRequests() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchRequests = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/admin/requests");
-      if (res.ok) {
-        setRequests(await res.json());
-      }
-    } catch {
-      toast.error("Gagal mengambil data resi");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     let cancelled = false;
     const loadData = async () => {
+      setIsLoading(true);
       try {
-        const res = await fetch("/api/admin/requests", { credentials: "include" });
+        const params = new URLSearchParams({
+          page: String(page),
+          pageSize: "20",
+          status: statusFilter,
+        });
+        if (searchQuery) params.set("query", searchQuery);
+        const res = await fetch(`/api/admin/requests?${params.toString()}`, {
+          credentials: "include",
+        });
         if (res.status === 401) {
           // handled by middleware
           return;
         }
         if (res.ok) {
-          const data = await res.json();
-          if (!cancelled) setRequests(data);
+          const data = (await res.json()) as ServiceRequestResponse;
+          if (!cancelled) {
+            if (data.pagination.page > data.pagination.totalPages) {
+              setPage(data.pagination.totalPages);
+              return;
+            }
+            setRequests(data.items);
+            setTotal(data.pagination.total);
+            setTotalPages(data.pagination.totalPages);
+          }
         } else {
           if (!cancelled) toast.error("Gagal mengambil data.");
         }
@@ -78,7 +98,17 @@ export default function AdminRequests() {
     };
     loadData();
     return () => { cancelled = true; };
-  }, []);
+  }, [page, refreshKey, searchQuery, statusFilter]);
+
+  const refreshRequests = () => {
+    setRefreshKey((current) => current + 1);
+  };
+
+  const submitSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPage(1);
+    setSearchQuery(searchInput.trim());
+  };
 
   const openModal = (req?: ServiceRequest) => {
     if (req) {
@@ -130,7 +160,7 @@ export default function AdminRequests() {
       if (res.ok) {
         toast.success(`Resi berhasil ${editingId ? "diperbarui" : "dibuat"}`);
         closeModal();
-        fetchRequests();
+        refreshRequests();
       } else {
         toast.error("Gagal menyimpan data");
       }
@@ -147,7 +177,7 @@ export default function AdminRequests() {
       const res = await fetch(`/api/admin/requests/${id}`, { method: "DELETE" });
       if (res.ok) {
         toast.success("Resi berhasil dihapus");
-        fetchRequests();
+        refreshRequests();
       } else {
         toast.error("Gagal menghapus resi");
       }
@@ -168,6 +198,46 @@ export default function AdminRequests() {
             <span className="material-symbols-outlined text-[20px]">add</span>
             Buat Resi Manual
           </button>
+        </div>
+
+        <div className="mb-6 rounded-xl border border-outline-variant bg-surface p-4">
+          <form onSubmit={submitSearch} className="flex flex-col gap-3 lg:flex-row">
+            <label className="flex-1">
+              <span className="sr-only">Cari tiket servis</span>
+              <input
+                type="search"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                placeholder="Cari ID resi, pelanggan, WhatsApp, perangkat, atau kendala"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary"
+              />
+            </label>
+            <label>
+              <span className="sr-only">Filter status tiket</span>
+              <select
+                value={statusFilter}
+                onChange={(event) => {
+                  setStatusFilter(event.target.value);
+                  setPage(1);
+                }}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary lg:w-56"
+              >
+                <option value="ALL">Semua status</option>
+                <option value="DITERIMA">Diterima</option>
+                <option value="DIAGNOSA">Diagnosa</option>
+                <option value="DIKERJAKAN">Dikerjakan</option>
+                <option value="MENUNGGU_SPAREPART">Menunggu sparepart</option>
+                <option value="SELESAI">Selesai</option>
+                <option value="DIBATALKAN">Dibatalkan</option>
+              </select>
+            </label>
+            <button
+              type="submit"
+              className="rounded-lg bg-primary px-5 py-3 font-label-bold text-on-primary"
+            >
+              Cari
+            </button>
+          </form>
         </div>
 
         <div className="bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden overflow-x-auto">
@@ -230,6 +300,31 @@ export default function AdminRequests() {
               </tbody>
             </table>
           )}
+        </div>
+
+        <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
+          <p className="text-sm text-on-surface-variant">{total} tiket ditemukan</p>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              disabled={page <= 1}
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              className="rounded-lg border border-outline-variant px-4 py-2 font-label-bold text-on-surface disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Sebelumnya
+            </button>
+            <span className="text-sm text-on-surface-variant">
+              Halaman {page} dari {totalPages}
+            </span>
+            <button
+              type="button"
+              disabled={page >= totalPages}
+              onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+              className="rounded-lg border border-outline-variant px-4 py-2 font-label-bold text-on-surface disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Berikutnya
+            </button>
+          </div>
         </div>
       </main>
 

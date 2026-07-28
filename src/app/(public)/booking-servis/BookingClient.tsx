@@ -4,24 +4,39 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { CONTACT } from '@/lib/config';
 
+type BookingData = {
+  name: string;
+  whatsapp: string;
+  address: string;
+  deviceType: string;
+  deviceBrand: string;
+  serviceType: string;
+  problemDesc: string;
+  date: string;
+};
+
+type BookingConfirmation = {
+  trackingId: string;
+  data: BookingData;
+};
+
 export default function BookingClient() {
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [formData, setFormData] = useState<Record<string, string> | null>(null);
+  const [confirmation, setConfirmation] = useState<BookingConfirmation | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const rawData = Object.fromEntries(formData) as Record<string, string>;
+    const submittedForm = new FormData(form);
+    const rawData = Object.fromEntries(submittedForm) as Record<string, string>;
 
-    // Map snake_case form field names to camelCase API field names
-    const data: Record<string, string> = {
+    const data: BookingData = {
       name: rawData.name,
       whatsapp: rawData.whatsapp,
       address: rawData.address,
       deviceType: rawData.device_type,
+      deviceBrand: rawData.device_brand,
       serviceType: rawData.service_type,
       problemDesc: rawData.problem_desc,
       date: rawData.date,
@@ -33,12 +48,12 @@ export default function BookingClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (res.ok) {
-        setFormData(data);
-        setIsSuccess(true);
+      const responseData = await res.json().catch(() => null);
+      if (res.ok && responseData?.trackingId) {
+        setConfirmation({ trackingId: responseData.trackingId, data });
         toast.success("Permintaan berhasil dikirim!");
       } else {
-        toast.error("Terjadi kesalahan. Silakan coba lagi.");
+        toast.error(responseData?.error || "Terjadi kesalahan. Silakan periksa isian.");
       }
     } catch (err) {
       console.error(err);
@@ -49,32 +64,40 @@ export default function BookingClient() {
   };
 
   const handleReset = () => {
-    setIsSuccess(false);
+    setConfirmation(null);
+    document.querySelector<HTMLFormElement>("#service-form")?.reset();
   };
 
-  // Get today's date in YYYY-MM-DD format for min attribute
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
 
   let waUrl = `https://wa.me/${CONTACT.whatsapp}?text=`;
-  if (formData) {
-    const deviceName = formData.device_type === "smartphone" ? "Smartphone" : formData.device_type === "laptop" ? "Laptop / MacBook" : formData.device_type === "tablet" ? "Tablet / iPad" : formData.device_type === "console" ? "Konsol Game" : "Lainnya";
-    const serviceName = formData.service_type === "screen" ? "Ganti Layar / LCD" : formData.service_type === "battery" ? "Ganti Baterai" : formData.service_type === "water" ? "Kerusakan Air" : formData.service_type === "software" ? "Instalasi Software / OS" : formData.service_type === "diagnostic" ? "Cek Total / Diagnostik" : "Lainnya";
+  if (confirmation) {
+    const { data, trackingId } = confirmation;
+    const deviceName = data.deviceType === "smartphone" ? "Smartphone" : data.deviceType === "laptop" ? "Laptop / MacBook" : data.deviceType === "tablet" ? "Tablet / iPad" : data.deviceType === "console" ? "Konsol Game" : "Lainnya";
+    const serviceName = data.serviceType === "screen" ? "Ganti Layar / LCD" : data.serviceType === "battery" ? "Ganti Baterai" : data.serviceType === "water" ? "Kerusakan Air" : data.serviceType === "software" ? "Instalasi Software / OS" : data.serviceType === "diagnostic" ? "Cek Total / Diagnostik" : "Lainnya";
     
     const text = `Halo Pytafix, saya ingin booking servis dengan detail berikut:
 
+ID Servis: ${trackingId}
+
 *Info Pemesan:*
-- Nama: ${formData.name}
-- WhatsApp: ${formData.whatsapp}
-- Alamat: ${formData.address}
+- Nama: ${data.name}
+- WhatsApp: ${data.whatsapp}
+- Alamat: ${data.address}
 
 *Detail Servis:*
 - Jenis Perangkat: ${deviceName}
-- Merk/Tipe: ${formData.device_brand}
+- Merk/Tipe: ${data.deviceBrand}
 - Jenis Layanan: ${serviceName}
-- Tanggal Booking: ${formData.date}
+- Tanggal Booking: ${data.date}
 
 *Deskripsi Kendala:*
-${formData.problem_desc}
+${data.problemDesc}
 
 Terima kasih.`;
     waUrl += encodeURIComponent(text);
@@ -91,7 +114,7 @@ Terima kasih.`;
             Jadwalkan Perbaikan Anda
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto">
-            Isi formulir di bawah ini untuk memulai proses servis. Tim teknisi ahli kami akan segera menghubungi Anda untuk konfirmasi dan estimasi awal.
+            Isi formulir di bawah ini untuk memulai proses servis. Tim akan meninjau permintaan Anda dan menghubungi pada jam operasional untuk konfirmasi serta estimasi awal.
           </p>
         </div>
       </section>
@@ -101,7 +124,7 @@ Terima kasih.`;
           {/* Form Area (Bento Grid Style) */}
           <div className="lg:col-span-8">
             <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-10 shadow-sm relative overflow-hidden h-full">
-            {!isSuccess ? (
+            {!confirmation ? (
               <form className="space-y-6" id="service-form" onSubmit={handleSubmit}>
                 {/* Personal Info Group */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -238,6 +261,10 @@ Terima kasih.`;
 
                 {/* Submit Action */}
                 <div className="pt-8">
+                  <p className="mb-4 font-body-sm text-body-sm text-on-surface-variant">
+                    Dengan mengirim formulir, Anda menyetujui penggunaan data ini untuk menangani
+                    permintaan servis sesuai <a href="/kebijakan-privasi" className="text-primary underline">kebijakan privasi</a>.
+                  </p>
                   <button
                     className="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-8 py-4 rounded-xl shadow-sm hover:shadow-md hover:bg-primary/90 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     type="submit"
@@ -269,7 +296,11 @@ Terima kasih.`;
                 </div>
                 <h2 className="font-headline-md text-headline-md text-on-background mb-4">Permintaan Diterima!</h2>
                 <p className="font-body-md text-body-md text-on-surface-variant mb-8 max-w-md">
-                  Terima kasih. Detail permintaan Anda telah kami rekam. Untuk mempercepat proses, silakan lanjutkan obrolan melalui WhatsApp agar tim kami dapat langsung merespon.
+                  Simpan ID servis berikut untuk memeriksa status. Tim akan meninjau permintaan dan
+                  menghubungi Anda pada jam operasional.
+                </p>
+                <p className="mb-8 rounded-xl bg-surface-container-low px-5 py-3 font-mono text-lg font-bold text-on-surface">
+                  {confirmation.trackingId}
                 </p>
                 <a
                   className="bg-[#25D366] text-white font-label-bold text-label-bold px-8 py-4 rounded hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
@@ -305,8 +336,8 @@ Terima kasih.`;
                 </span>
               </div>
               <div>
-                <h3 className="font-label-bold text-label-bold text-on-background">Teknisi Bersertifikat</h3>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">Tim ahli dengan pengalaman &gt;5 tahun.</p>
+                <h3 className="font-label-bold text-label-bold text-on-background">Diagnosis sebelum pengerjaan</h3>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">Ruang lingkup dan estimasi dikonfirmasi terlebih dahulu.</p>
               </div>
             </div>
           </div>
@@ -320,8 +351,8 @@ Terima kasih.`;
                 </span>
               </div>
               <div>
-                <h3 className="font-label-bold text-label-bold text-on-background">Garansi Resmi</h3>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">Hingga 90 hari untuk sparepart & jasa.</p>
+                <h3 className="font-label-bold text-label-bold text-on-background">Ketentuan tertulis</h3>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">Cakupan garansi mengikuti pekerjaan dan nota servis.</p>
               </div>
             </div>
           </div>
@@ -331,14 +362,10 @@ Terima kasih.`;
             <h3 className="font-headline-md text-headline-md text-on-background mb-4">Jam Operasional</h3>
             <ul className="space-y-2 font-body-md text-body-md text-on-surface-variant">
               <li className="flex justify-between border-b border-outline-variant pb-2">
-                <span>Senin - Jumat</span>
-                <span className="font-label-bold text-on-background">09:00 - 20:00</span>
+                <span>Senin - Sabtu</span>
+                <span className="font-label-bold text-on-background">09:00 - 18:00</span>
               </li>
               <li className="flex justify-between border-b border-outline-variant pb-2">
-                <span>Sabtu</span>
-                <span className="font-label-bold text-on-background">10:00 - 18:00</span>
-              </li>
-              <li className="flex justify-between pt-2">
                 <span>Minggu</span>
                 <span className="font-label-bold text-error">Tutup</span>
               </li>

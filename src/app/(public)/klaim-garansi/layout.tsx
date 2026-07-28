@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Klaim Garansi Servis | Pytafix",
-  description: "Klaim garansi servis laptop, HP, atau komputer Anda di Pytafix. Perbaikan tanpa biaya tambahan selama masa garansi masih berlaku.",
+  title: "Klaim Garansi Servis",
+  description: "Ajukan pemeriksaan klaim sesuai cakupan dan durasi yang tercantum pada nota servis Pytafix.",
   alternates: { canonical: "/klaim-garansi" },
+  robots: { index: false, follow: true },
   openGraph: {
   title: "Klaim Garansi Servis",
-    description: "Ajukan klaim garansi servis perangkat Anda di Pytafix Malang. Gratis selama masa garansi berlaku.",
+    description: "Ajukan pemeriksaan klaim sesuai ketentuan pada nota servis.",
     url: "https://www.pytafix.web.id/klaim-garansi",
-    images: [{ url: "/logo.png", width: 800, height: 600, alt: "Pytafix Klaim Garansi" }],
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Klaim Garansi" }],
     locale: "id_ID",
     type: "website",
   },

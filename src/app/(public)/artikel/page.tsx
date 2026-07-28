@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
+import { ARTICLE_EDITORIAL_OVERRIDES, isPublicReviewedArticleSlug } from "@/lib/site-content";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Artikel & Edukasi Servis | Pytafix",
+const articleMetadata: Metadata = {
+  title: "Artikel & Edukasi Servis",
   description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
   alternates: { canonical: "/artikel" },
   openGraph: {
@@ -17,12 +18,31 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  const count = await prisma.article.count({
+    where: {
+      publishedAt: { lte: new Date() },
+      slug: { in: Object.keys(ARTICLE_EDITORIAL_OVERRIDES) },
+    },
+  });
+  return {
+    ...articleMetadata,
+    robots: count > 0 ? { index: true, follow: true } : { index: false, follow: true },
+  };
+}
+
 export const revalidate = 3600;
 
 export default async function ArtikelPage() {
-  const articles = await prisma.article.findMany({
-    orderBy: { createdAt: "desc" },
+  const storedArticles = await prisma.article.findMany({
+    where: { publishedAt: { lte: new Date() } },
+    orderBy: { publishedAt: "desc" },
   });
+  const articles = storedArticles.filter((article) => isPublicReviewedArticleSlug(article.slug)).map((article) => ({
+    ...article,
+    ...ARTICLE_EDITORIAL_OVERRIDES[article.slug],
+    author: "Tim Editorial Pytafix",
+  }));
 
   const featured = articles[0];
   const regularArticles = articles.slice(1);
@@ -44,6 +64,7 @@ export default async function ArtikelPage() {
                 src={featured.imageUrl || "/images/og-banner.png"} 
                 alt={featured.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute top-4 left-4">
@@ -84,6 +105,7 @@ export default async function ArtikelPage() {
                 src={article.imageUrl || "/images/og-banner.png"} 
                 alt={article.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute top-4 left-4">

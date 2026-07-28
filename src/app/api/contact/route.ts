@@ -2,22 +2,36 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { contactRateLimit } from "@/lib/rate-limit";
-import { indonesianWhatsAppSchema } from "@/lib/whatsapp";
+import { indonesianWhatsAppSchema, normalizeWhatsApp } from "@/lib/whatsapp";
+import { hasTrustedMutationOrigin } from "@/lib/request-origin";
 
 const contactSchema = z.object({
-  name: z.string().min(1, "Nama wajib diisi"),
-  email: z.string().email("Email tidak valid").or(z.literal("")),
+  name: z.string().trim().min(2, "Nama wajib diisi").max(100),
+  email: z.string().trim().email("Email tidak valid").max(254).or(z.literal("")),
   whatsapp: indonesianWhatsAppSchema,
-  subject: z.string().min(1, "Subjek wajib diisi"),
-  message: z.string().min(10, "Pesan minimal 10 karakter"),
-});
+  subject: z.string().trim().min(3, "Subjek wajib diisi").max(150),
+  message: z.string().trim().min(10, "Pesan minimal 10 karakter").max(3000),
+}).strict();
 
 export async function POST(request: Request) {
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > 32_768) {
+    return NextResponse.json({ error: "Permintaan terlalu besar." }, { status: 413, headers: { "Cache-Control": "no-store" } });
+  }
+  if (!hasTrustedMutationOrigin(request)) {
+    return NextResponse.json({ error: "Permintaan tidak berasal dari situs yang dipercaya." }, { status: 403, headers: { "Cache-Control": "no-store" } });
+  }
   const rateLimitResponse = await contactRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse;
 
+  let body: unknown;
   try {
-    const body = await request.json();
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "JSON tidak valid." }, { status: 400, headers: { "Cache-Control": "no-store" } });
+  }
+
+  try {
     const validatedData = contactSchema.parse(body);
 
     // Persist the submission so it is not lost.
@@ -25,7 +39,7 @@ export async function POST(request: Request) {
       data: {
         name: validatedData.name,
         email: validatedData.email,
-        whatsapp: validatedData.whatsapp,
+        whatsapp: normalizeWhatsApp(validatedData.whatsapp),
         subject: validatedData.subject,
         message: validatedData.message,
       },
@@ -34,21 +48,21 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: "Pesan kamu sudah terkirim. Kami akan menghubungi kamu segera.",
+        message: "Pesan kamu sudah tersimpan. Tim akan meninjaunya sesuai antrean dan jam operasional.",
       },
-      { status: 201 }
+      { status: 201, headers: { "Cache-Control": "no-store" } }
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validasi gagal", details: error.issues },
-        { status: 400 }
+        { status: 400, headers: { "Cache-Control": "no-store" } }
       );
     }
     console.error("Contact form error:", error);
     return NextResponse.json(
       { error: "Gagal mengirim pesan" },
-      { status: 500 }
+      { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }
 }

@@ -1,10 +1,13 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Metadata } from "next";
-import { LOCATIONS, slugifyLocation } from "@/lib/locations";
+import { getCanonicalServiceSlug, splitLocationServiceSlug } from "@/lib/locations";
 import Image from "next/image";
 import { CONTACT } from '@/lib/config';
+import { serializeJsonLd } from "@/lib/json-ld";
+import { renderStoredContent } from "@/lib/content";
+import { getPublicServiceCopy, isPublicReviewedServiceSlug } from "@/lib/site-content";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,50 +16,53 @@ interface Props {
 import { cache } from 'react';
 
 const resolveServiceData = cache(async (slug: string) => {
-  // 1. Direct match (e.g. /layanan/jual-beli-sparepart)
-  let service = await prisma.serviceContent.findUnique({
-    where: { slug }
-  });
-  
-  if (service) return { service, location: null };
-
-  // 2. Try matching with known locations (e.g. /layanan/jual-beli-sparepart-malang)
-  for (const loc of LOCATIONS) {
-    const locSlug = slugifyLocation(loc);
-    const suffix = `-${locSlug}`;
-    if (slug.endsWith(suffix)) {
-      const baseSlug = slug.slice(0, -suffix.length);
-      service = await prisma.serviceContent.findUnique({
-        where: { slug: baseSlug }
-      });
-      if (service) return { service, location: loc };
+  const locationVariant = splitLocationServiceSlug(slug);
+  if (locationVariant) {
+    const canonicalSlug = getCanonicalServiceSlug(slug);
+    const baseService = await prisma.serviceContent.findUnique({
+      where: { slug: canonicalSlug },
+    });
+    if (baseService?.isActive && isPublicReviewedServiceSlug(baseService.slug)) {
+      return {
+        service: baseService,
+        location: locationVariant.location,
+        redirectSlug: baseService.slug,
+      };
     }
   }
 
-  return { service: null, location: null };
+  const service = await prisma.serviceContent.findUnique({ where: { slug } });
+  if (service && !isPublicReviewedServiceSlug(service.slug)) {
+    return { service: null, location: null, redirectSlug: null };
+  }
+  return { service, location: null, redirectSlug: null };
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const { service, location } = await resolveServiceData(slug);
+  const { service, location, redirectSlug } = await resolveServiceData(slug);
 
   if (!service) {
     return {
       title: "Layanan Tidak Ditemukan",
+      robots: { index: false, follow: false },
       alternates: { canonical: `/layanan/${slug}` },
     };
   }
 
-  if (location) {
+  const publicService = getPublicServiceCopy(service);
+
+  if (location && redirectSlug) {
     return {
-      title: `${service.title} di ${location}`,
-      description: `Layanan ${service.title.toLowerCase()} terdekat dan terpercaya di area ${location}. ${service.description}`,
-      alternates: { canonical: `/layanan/${slug}` },
+      title: `${publicService.title} di ${location}`,
+      description: publicService.description,
+      robots: { index: false, follow: true },
+      alternates: { canonical: `/layanan/${redirectSlug}` },
       openGraph: {
-        title: `${service.title} di ${location} | Pytafix`,
-        description: `Layanan ${service.title.toLowerCase()} terdekat dan terpercaya di area ${location}. ${service.description}`,
-        url: `https://www.pytafix.web.id/layanan/${slug}`,
-        images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: service.title }],
+        title: `${publicService.title} di ${location}`,
+        description: publicService.description,
+        url: `https://www.pytafix.web.id/layanan/${redirectSlug}`,
+        images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: publicService.title }],
         locale: "id_ID",
         type: "website",
       },
@@ -64,14 +70,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: service.title,
-    description: service.description,
+    title: publicService.title,
+    description: publicService.description,
     alternates: { canonical: `/layanan/${slug}` },
     openGraph: {
-      title: `${service.title} | Pytafix`,
-      description: service.description,
+      title: publicService.title,
+      description: publicService.description,
       url: `https://www.pytafix.web.id/layanan/${slug}`,
-      images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: service.title }],
+      images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: publicService.title }],
       locale: "id_ID",
       type: "website",
     },
@@ -80,20 +86,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServiceDetailPage({ params }: Props) {
   const { slug } = await params;
-  const { service, location } = await resolveServiceData(slug);
+  const { service, location, redirectSlug } = await resolveServiceData(slug);
 
   if (!service || !service.isActive) {
     notFound();
   }
 
-  const title = location ? `Layanan ${service.title} Terdekat di ${location}` : service.title;
-  const introParagraph = location 
-    ? `Apakah Anda mencari layanan **${service.title}** terpercaya di area **${location}** dan sekitarnya? Pytafix hadir sebagai solusi terbaik untuk kebutuhan Anda. ${service.description}`
-    : service.description;
+  if (location && redirectSlug) {
+    permanentRedirect(`/layanan/${redirectSlug}`);
+  }
 
-  const contentText = service.content || service.description;
+  const publicService = getPublicServiceCopy(service);
 
-  const waText = encodeURIComponent(`Halo Pytafix, saya tertarik dengan layanan:\n*${service.title}*${location ? ` di area ${location}` : ''}\n\nBisa dibantu untuk konsultasi/booking?`);
+  const title = publicService.title;
+  const introParagraph = publicService.description;
+
+  const contentText = publicService.content || publicService.description;
+
+  const waText = encodeURIComponent(`Halo Pytafix, saya tertarik dengan layanan:\n*${publicService.title}*\n\nBisa dibantu untuk konsultasi/booking?`);
   const waLink = `https://wa.me/${CONTACT.whatsapp}?text=${waText}`;
 
   const jsonLd = {
@@ -109,10 +119,10 @@ export default async function ServiceDetailPage({ params }: Props) {
       },
       {
         "@type": "Service",
-        "serviceType": service.title,
+        "serviceType": publicService.title,
         "provider": { "@id": "https://www.pytafix.web.id/#localbusiness" },
-        "areaServed": location ? { "@type": "City", "name": location } : { "@type": "City", "name": "Malang" },
-        "description": service.description,
+        "areaServed": { "@type": "AdministrativeArea", "name": CONTACT.serviceArea },
+        "description": publicService.description,
       }
     ]
   };
@@ -121,7 +131,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     <main className="flex-grow">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop border-b border-outline-variant">
@@ -147,7 +157,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           </div>
           <div className="hidden md:flex w-40 h-40 lg:w-48 lg:h-48 bg-surface border border-outline-variant text-primary rounded-xl items-center justify-center overflow-hidden relative shadow-sm">
              {service.imageUrl ? (
-                <Image src={service.imageUrl} alt={service.title} fill className="object-cover" />
+                <Image src={service.imageUrl} alt={service.title} fill sizes="(max-width: 768px) 100vw, 42vw" className="object-cover" />
               ) : (
                 <span className="material-symbols-outlined text-[64px] lg:text-[80px]">
                   {service.icon || "build"}
@@ -168,24 +178,17 @@ export default async function ServiceDetailPage({ params }: Props) {
             prose-strong:text-on-surface prose-strong:font-bold
             prose-ul:text-on-surface-variant prose-ul:font-body-lg prose-li:my-1
             prose-li:marker:text-primary">
-            <div className="whitespace-pre-wrap">
-              {contentText}
-            </div>
+            <div dangerouslySetInnerHTML={{ __html: renderStoredContent(contentText) }} />
           </div>
-          
-          {location && (
-             <div className="mt-12 p-6 md:p-8 bg-surface-container-lowest border border-outline-variant rounded-xl flex gap-4 items-start">
-               <span className="material-symbols-outlined text-primary text-3xl shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>
-                 location_on
-               </span>
-               <div>
-                 <h3 className="font-headline-sm text-headline-sm text-primary mb-2">Area Layanan {location}</h3>
-                 <p className="font-body-md text-body-md text-on-surface-variant">
-                   Untuk warga {location}, kami menyediakan opsi antar-jemput perangkat (pickup & delivery) atau pengerjaan langsung jika memungkinkan. Hubungi kami untuk mengatur jadwal pengecekan langsung di {location}.
-                 </p>
-               </div>
-             </div>
-          )}
+
+          <nav aria-label="Informasi terkait" className="mt-8 rounded-xl border border-outline-variant bg-surface p-6">
+            <h2 className="font-headline-sm text-headline-sm text-primary mb-3">Informasi terkait</h2>
+            <div className="flex flex-wrap gap-x-5 gap-y-2 font-body-md">
+              <Link href="/faq" className="text-primary underline underline-offset-4">FAQ servis</Link>
+              <Link href="/kontak" className="text-primary underline underline-offset-4">Kontak dan lokasi</Link>
+              <Link href="/booking-servis" className="text-primary underline underline-offset-4">Booking pemeriksaan</Link>
+            </div>
+          </nav>
           
           <hr className="my-12 border-outline-variant" />
           
@@ -196,7 +199,7 @@ export default async function ServiceDetailPage({ params }: Props) {
             <div>
               <h3 className="font-headline-sm text-headline-sm text-primary mb-2">Garansi Pengerjaan</h3>
               <p className="font-body-md text-body-md text-on-surface-variant">
-                Setiap layanan perbaikan di Pytafix dilengkapi dengan garansi resmi mulai dari 14 hari hingga 6 bulan tergantung jenis perbaikan. Kepuasan Anda adalah prioritas kami.
+                Cakupan dan durasi garansi mengikuti jenis pekerjaan, komponen, serta keterangan yang tercantum pada nota servis.
               </p>
             </div>
           </div>

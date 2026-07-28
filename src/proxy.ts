@@ -1,41 +1,32 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
-
-// ─── Auth Guard ───────────────────────────────────────────────────────────────
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 async function verifyAdminAuth(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const isAdminRoute = path.startsWith("/admin") && path !== "/admin/login";
-  const isAdminApiRoute = path.startsWith("/api/admin");
+  const isAdminPage = path.startsWith("/admin") && path !== "/admin/login";
+  const isAdminApi = path.startsWith("/api/admin");
 
-  if (!isAdminRoute && !isAdminApiRoute) {
-    return null;
-  }
+  if (!isAdminPage && !isAdminApi) return null;
 
   const token = request.cookies.get("admin_token")?.value;
-
-  if (!token) {
-    if (isAdminApiRoute) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.redirect(new URL("/admin/login", request.url));
-  }
-
   const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    console.error("JWT_SECRET is not set in environment variables");
-    if (isAdminApiRoute) {
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-    }
-    return NextResponse.redirect(new URL("/admin/login", request.url));
+  if (!token || !secret || secret.length < 32) {
+    return isAdminApi
+      ? NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      : NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   try {
-    await jwtVerify(token, new TextEncoder().encode(secret));
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(secret), {
+      algorithms: ["HS256"],
+      issuer: "pytafix-admin",
+      audience: "pytafix-admin",
+    });
+    if (payload.role !== "admin") throw new Error("Invalid admin role");
     return null;
   } catch {
-    if (isAdminApiRoute) {
+    if (isAdminApi) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const response = NextResponse.redirect(new URL("/admin/login", request.url));
@@ -44,47 +35,37 @@ async function verifyAdminAuth(request: NextRequest) {
   }
 }
 
-// ─── Security Headers ─────────────────────────────────────────────────────────
+export async function proxy(request: NextRequest) {
+  const authResult = await verifyAdminAuth(request);
+  const path = request.nextUrl.pathname;
+  const isApiRequest = path.startsWith("/api/");
 
-function addSecurityHeaders(response: NextResponse) {
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-  
-  // Content Security Policy
-  const csp = [
-    "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://va.vercel-scripts.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' data: https://fonts.gstatic.com",
-    "img-src 'self' data: https: blob:",
-    "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com",
-    "frame-ancestors 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-  ].join("; ");
-  
-  response.headers.set("Content-Security-Policy", csp);
-  
+  if (isApiRequest) {
+    const contentLength = Number(request.headers.get("content-length") || 0);
+    const isUploadPost = request.method === "POST" && path === "/api/admin/upload";
+    const maxBytes = isUploadPost ? 6 * 1024 * 1024 : 512 * 1024;
+    if (contentLength > maxBytes) {
+      const response = NextResponse.json(
+        { error: "Permintaan terlalu besar." },
+        { status: 413, headers: { "Cache-Control": "no-store" } }
+      );
+      response.headers.set("X-Robots-Tag", "noindex, nofollow");
+      return response;
+    }
+  }
+
+  const response = authResult ?? NextResponse.next();
+
+  if (isApiRequest) {
+    response.headers.set("Cache-Control", "no-store");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  } else if (path.startsWith("/admin")) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+
   return response;
 }
 
-// ─── Proxy ─────────────────────────────────────────────────────────────────────
-
-export async function proxy(request: NextRequest) {
-  // Admin auth for admin routes
-  const authResult = await verifyAdminAuth(request);
-  if (authResult !== null) {
-    return addSecurityHeaders(authResult);
-  }
-
-  const response = NextResponse.next();
-  return addSecurityHeaders(response);
-}
-
-// Run proxy on admin routes
 export const config = {
   matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

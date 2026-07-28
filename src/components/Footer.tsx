@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SocialIcons } from "./SocialIcons";
+import { CONTACT, LEGAL_ENTITY_NAME } from "@/lib/config";
 
 export function Footer() {
   return (
@@ -13,7 +14,7 @@ export function Footer() {
             </span>
           </Link>
           <p className="font-label-sm text-label-sm text-on-surface-variant mb-6 pr-4 lg:pr-12">
-            Solusi perbaikan hardware terpercaya untuk keberlangsungan digital Anda.
+            Pemeriksaan dan perbaikan perangkat dengan estimasi biaya sebelum pengerjaan.
           </p>
           <div className="flex items-center gap-3">
             <SocialIcons />
@@ -63,11 +64,21 @@ export function Footer() {
           <ul className="flex flex-col gap-3 mb-6">
             <li className="font-body-md text-body-md text-on-surface-variant flex items-start gap-2">
               <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">location_on</span>
-              <span>Jl. Elektronik No. 123, Malang Raya</span>
+              <span>
+                <a
+                  href={CONTACT.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary hover:underline"
+                >
+                  {CONTACT.address}
+                </a>
+                <span className="mt-1 block text-xs">{CONTACT.locationNote}</span>
+              </span>
             </li>
             <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
               <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">schedule</span>
-              <span>Mon-Sat 09:00 - 18:00</span>
+              <span>{CONTACT.hours.days}, {CONTACT.hours.opens} - {CONTACT.hours.closes}</span>
             </li>
           </ul>
         </div>
@@ -78,11 +89,10 @@ export function Footer() {
         <div className="max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="font-label-sm text-label-sm text-on-surface-variant flex flex-col gap-2 text-center md:text-left">
             <p>
-              © {new Date().getFullYear()} Pytafix. All rights reserved.
+              © {new Date().getFullYear()} Pytafix. Hak cipta dilindungi.
             </p>
             <p>
-              Pytafix adalah bagian dari <strong>CV. Pyta Cipta Karya</strong> beserta anak usaha lainnya:{" "}
-              <a href="https://www.pytafix.web.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Pytafix</a>,{" "}
+              Pytafix adalah lini layanan dari <strong>{LEGAL_ENTITY_NAME}</strong>. Lihat juga{" "}
               <a href="https://www.pytabelajar.web.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Pytabelajar</a>, dan{" "}
               <a href="https://www.pytagotech.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Pytagotech</a>.
             </p>

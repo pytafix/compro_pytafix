@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Dev-only helper scripts (Node scripts, not part of the app bundle):
     "scratch/**",
+    "scripts/**",
   ]),
   // Rule overrides.
   {

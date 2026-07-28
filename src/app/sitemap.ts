@@ -1,63 +1,61 @@
 import { MetadataRoute } from 'next'
 import prisma from "@/lib/prisma"
+import { isLocationServiceSlug } from "@/lib/locations"
+import { SITE_URL } from "@/lib/config"
+import { isPublicReviewedArticleSlug, isPublicReviewedServiceSlug, PUBLIC_REVIEWED_ARTICLE_SLUGS, PUBLIC_REVIEWED_SERVICE_SLUGS } from "@/lib/site-content"
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.pytafix.web.id';
-  const fallbackDate = new Date();
+  const baseUrl = SITE_URL;
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}`, lastModified: fallbackDate },
-    { url: `${baseUrl}/layanan`, lastModified: fallbackDate },
-    { url: `${baseUrl}/tentang-kami`, lastModified: fallbackDate },
-    { url: `${baseUrl}/booking-servis`, lastModified: fallbackDate },
-    { url: `${baseUrl}/cek-status-servis`, lastModified: fallbackDate },
-    { url: `${baseUrl}/promo`, lastModified: fallbackDate },
-    { url: `${baseUrl}/portofolio`, lastModified: fallbackDate },
-    { url: `${baseUrl}/artikel`, lastModified: fallbackDate },
-    { url: `${baseUrl}/syarat-ketentuan`, lastModified: fallbackDate },
-    { url: `${baseUrl}/kebijakan-privasi`, lastModified: fallbackDate },
-    { url: `${baseUrl}/kontak`, lastModified: fallbackDate },
-    { url: `${baseUrl}/faq`, lastModified: fallbackDate },
-    { url: `${baseUrl}/testimoni`, lastModified: fallbackDate },
-    { url: `${baseUrl}/sparepart`, lastModified: fallbackDate },
-    { url: `${baseUrl}/jual-beli`, lastModified: fallbackDate },
-    { url: `${baseUrl}/klaim-garansi`, lastModified: fallbackDate },
-    
+    { url: `${baseUrl}` },
+    { url: `${baseUrl}/layanan` },
+    { url: `${baseUrl}/tentang-kami` },
+    { url: `${baseUrl}/booking-servis` },
+    { url: `${baseUrl}/artikel` },
+    { url: `${baseUrl}/syarat-ketentuan` },
+    { url: `${baseUrl}/kebijakan-privasi` },
+    { url: `${baseUrl}/kontak` },
+    { url: `${baseUrl}/faq` },
   ];
 
-  // Fetch all active services
-  const services = await prisma.serviceContent.findMany({
-    where: { isActive: true },
-    select: { slug: true, updatedAt: true }
-  });
+  try {
+  const [services, promos, articles, spareparts, products, portfolioCount, testimonialCount] = await Promise.all([
+    prisma.serviceContent.findMany({
+      where: { isActive: true },
+      select: { slug: true, updatedAt: true }
+    }),
+    prisma.promo.findMany({
+      where: { isActive: true, validUntil: { gte: new Date() } },
+      select: { slug: true, updatedAt: true }
+    }),
+    prisma.article.findMany({
+      where: { publishedAt: { lte: new Date() } },
+      select: { slug: true, updatedAt: true }
+    }),
+    prisma.sparepart.findMany({
+      select: { id: true, updatedAt: true }
+    }),
+    prisma.product.findMany({
+      where: { isActive: true },
+      select: { id: true, updatedAt: true }
+    }),
+    prisma.portfolio.count(),
+    prisma.testimonial.count(),
+  ]);
 
-  // Fetch active promos
-  const promos = await prisma.promo.findMany({
-    where: { isActive: true },
-    select: { slug: true, updatedAt: true }
-  });
-
-  // Fetch articles
-  const articles = await prisma.article.findMany({
-    select: { slug: true, updatedAt: true }
-  });
-
-  // Fetch all spareparts
-  const spareparts = await prisma.sparepart.findMany({
-    select: { id: true, updatedAt: true }
-  });
-
-  // Fetch active products
-  const products = await prisma.product.findMany({
-    where: { isActive: true },
-    select: { id: true, updatedAt: true }
-  });
+  if (promos.length > 0) staticPages.push({ url: `${baseUrl}/promo` });
+  if (portfolioCount > 0) staticPages.push({ url: `${baseUrl}/portofolio` });
+  if (testimonialCount > 0) staticPages.push({ url: `${baseUrl}/testimoni` });
+  if (spareparts.length > 0) staticPages.push({ url: `${baseUrl}/sparepart` });
+  if (products.length > 0) staticPages.push({ url: `${baseUrl}/jual-beli` });
 
   const dynamicPages: MetadataRoute.Sitemap = [];
 
   for (const service of services) {
+    if (isLocationServiceSlug(service.slug) || !isPublicReviewedServiceSlug(service.slug)) continue;
     dynamicPages.push({
       url: `${baseUrl}/layanan/${service.slug}`,
       lastModified: service.updatedAt,
@@ -72,6 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   for (const article of articles) {
+    if (!isPublicReviewedArticleSlug(article.slug)) continue;
     dynamicPages.push({
       url: `${baseUrl}/artikel/${article.slug}`,
       lastModified: article.updatedAt,
@@ -93,4 +92,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return [...staticPages, ...dynamicPages];
+  } catch (error) {
+    console.error("Sitemap dynamic data unavailable; serving reviewed static URLs", error);
+    const reviewedFallbackPages: MetadataRoute.Sitemap = [
+      ...Array.from(PUBLIC_REVIEWED_SERVICE_SLUGS, (slug) => ({ url: `${baseUrl}/layanan/${slug}` })),
+      ...Array.from(PUBLIC_REVIEWED_ARTICLE_SLUGS, (slug) => ({ url: `${baseUrl}/artikel/${slug}` })),
+    ];
+    return [...staticPages, ...reviewedFallbackPages];
+  }
 }

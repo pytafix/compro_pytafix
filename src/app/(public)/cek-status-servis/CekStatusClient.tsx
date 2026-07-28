@@ -8,39 +8,48 @@ interface ServiceStatusData {
   status: string;
   deviceType: string;
   serviceType: string;
-  problemDesc: string;
   createdAt: string | null;
   diagnosedAt: string | null;
   workingAt: string | null;
   completedAt: string | null;
   scheduleDate: string | null;
-  technicianName: string | null;
-  technicianNotes: string | null;
 }
 
 export default function CekStatusClient() {
   const [resi, setResi] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [statusData, setStatusData] = useState<ServiceStatusData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSearch = async () => {
-    if (resi.trim()) {
+    if (resi.trim() && whatsapp.trim()) {
       setIsLoading(true);
+      setErrorMessage(null);
       try {
-        const res = await fetch(`/api/status?trackingId=${resi}`);
+        const params = new URLSearchParams({
+          trackingId: resi.trim().toUpperCase(),
+          whatsapp: whatsapp.trim(),
+        });
+        const res = await fetch(`/api/status?${params}`, { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           setStatusData(data);
           setHasSearched(true);
           toast.success("Data servis ditemukan.");
         } else {
-          toast.error("Resi tidak ditemukan.");
+          const message = res.status === 400
+            ? "Masukkan ID servis dan nomor WhatsApp yang valid."
+            : "ID servis dan nomor WhatsApp tidak cocok.";
+          setErrorMessage(message);
+          toast.error(message);
           setHasSearched(false);
           setStatusData(null);
         }
       } catch (err) {
         console.error(err);
+        setErrorMessage("Terjadi kesalahan koneksi. Coba lagi beberapa saat.");
         toast.error("Terjadi kesalahan koneksi.");
       } finally {
         setIsLoading(false);
@@ -56,14 +65,14 @@ export default function CekStatusClient() {
           Cek Status <span className="text-primary">Servis</span>
         </h1>
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
-          Masukkan Nomor Servis atau Resi Anda untuk melacak perkembangan perbaikan perangkat Anda secara real-time.
+          Masukkan ID servis dan nomor WhatsApp saat booking untuk melihat status terbaru yang tercatat.
         </p>
       </section>
 
       {/* Input Section */}
       <div className="max-w-2xl mx-auto mb-16 bg-surface border border-outline-variant/50 rounded-2xl p-4 md:p-6 shadow-xl shadow-primary/5 transition-all hover:shadow-primary/10">
         <label className="block font-label-bold text-label-bold text-on-background mb-4" htmlFor="resi-input">
-          Masukkan Nomor Servis/Resi
+          Masukkan ID servis
         </label>
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-grow">
@@ -80,10 +89,25 @@ export default function CekStatusClient() {
               }}
             />
           </div>
+          <div className="relative flex-grow">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">phone</span>
+            <input
+              className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 pl-12 pr-4 py-4 outline-none transition-all font-body-lg text-body-lg"
+              id="whatsapp-input"
+              aria-label="Nomor WhatsApp saat booking"
+              placeholder="WhatsApp saat booking"
+              type="tel"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
+            />
+          </div>
           <button
             className="bg-primary text-on-primary font-label-lg text-label-lg px-8 py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSearch}
-            disabled={isLoading}
+            disabled={isLoading || !resi.trim() || !whatsapp.trim()}
           >
             {isLoading ? (
               <span className="material-symbols-outlined animate-spin" style={{ fontVariationSettings: "'FILL' 1" }}>progress_activity</span>
@@ -95,12 +119,28 @@ export default function CekStatusClient() {
         </div>
       </div>
 
+      {errorMessage && (
+        <p role="alert" className="max-w-2xl mx-auto mb-10 px-4 text-center font-body-md text-error">
+          {errorMessage}
+        </p>
+      )}
+
       {/* Results Section (Visible after search) */}
       {hasSearched && statusData && (
         <div className="max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter">
           {/* Tracker Column */}
           <div className="lg:col-span-8 space-y-8">
             <div className="bg-surface border border-outline-variant/50 rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+              {statusData.status === "MENUNGGU_SPAREPART" && (
+                <div className="mb-6 rounded-xl border border-secondary/30 bg-secondary-container p-4 text-on-secondary-container">
+                  Pengerjaan sedang menunggu ketersediaan atau konfirmasi komponen.
+                </div>
+              )}
+              {statusData.status === "DIBATALKAN" && (
+                <div className="mb-6 rounded-xl border border-error/30 bg-error-container p-4 text-on-error-container">
+                  Permintaan servis ini telah dibatalkan. Hubungi Pytafix jika Anda memerlukan penjelasan.
+                </div>
+              )}
               <h2 className="font-headline-md text-headline-md text-primary mb-8 border-b border-outline-variant pb-4">
                 Status Perbaikan
               </h2>
@@ -145,7 +185,10 @@ export default function CekStatusClient() {
                   }
                 ].map((step, idx) => {
                   const statuses = ["DITERIMA", "DIAGNOSA", "DIKERJAKAN", "SELESAI"];
-                  const currentIdx = statuses.indexOf(statusData.status);
+                  const currentIdx =
+                    statusData.status === "MENUNGGU_SPAREPART"
+                      ? 2
+                      : statuses.indexOf(statusData.status);
                   
                   const isDone = idx < currentIdx;
                   const isActive = idx === currentIdx;
@@ -206,11 +249,11 @@ export default function CekStatusClient() {
                   <span className="font-body-md text-body-md text-on-background font-medium">{statusData.deviceType}</span>
                 </div>
                 <div>
-                  <span className="font-label-sm text-label-sm text-outline block">Keluhan Utama</span>
-                  <span className="font-body-md text-body-md text-on-background">{statusData.problemDesc}</span>
+                  <span className="font-label-sm text-label-sm text-outline block">Jenis Layanan</span>
+                  <span className="font-body-md text-body-md text-on-background">{statusData.serviceType}</span>
                 </div>
                 <div>
-                  <span className="font-label-sm text-label-sm text-outline block">Nomor Resi</span>
+                <span className="font-label-sm text-label-sm text-outline block">ID servis</span>
                   <span className="font-body-md text-body-md text-on-background font-mono bg-surface-container px-2 py-1 rounded inline-block mt-1">
                     {statusData.trackingId}
                   </span>
@@ -218,31 +261,6 @@ export default function CekStatusClient() {
               </div>
             </div>
 
-            {/* Technician Notes */}
-            {statusData.technicianNotes && (
-            <div className="bg-surface-container-low border border-primary/20 rounded-xl p-6 shadow-sm">
-              <h3 className="font-label-bold text-label-bold text-on-background mb-3 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  assignment
-                </span>
-                Catatan Teknisi
-              </h3>
-              <p className="font-body-md text-body-md text-on-surface-variant italic">
-                &quot;{statusData.technicianNotes}&quot;
-              </p>
-              {statusData.technicianName && (
-              <div className="mt-4 pt-4 border-t border-outline-variant flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-bold text-label-bold">
-                  {statusData.technicianName.charAt(0)}
-                </div>
-                <div>
-                  <span className="font-label-bold text-label-bold text-on-background block">{statusData.technicianName}</span>
-                  <span className="font-label-sm text-label-sm text-outline">Technician</span>
-                </div>
-              </div>
-              )}
-            </div>
-            )}
           </div>
         </div>
       )}

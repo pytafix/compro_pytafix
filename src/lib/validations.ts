@@ -1,21 +1,52 @@
 import { z } from 'zod';
 import { indonesianWhatsAppSchema } from './whatsapp';
 
+const trimmedText = (min: number, max: number, message: string) =>
+  z.string().trim().min(min, message).max(max, `Maximum ${max} characters`);
+const slugSchema = z
+  .string()
+  .trim()
+  .min(2, 'Slug is required')
+  .max(100, 'Slug is too long')
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must use lowercase kebab-case');
+const ALLOWED_IMAGE_HOSTS = new Set([
+  'images.unsplash.com',
+  'plus.unsplash.com',
+  'lh3.googleusercontent.com',
+  'cdn.simpleicons.org',
+  'www.pytafix.web.id',
+  'pytafix.web.id',
+]);
+const imageUrlSchema = z.string().trim().max(2048).refine((value) => {
+  if (value === '' || value.startsWith('/')) return true;
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      (ALLOWED_IMAGE_HOSTS.has(url.hostname) ||
+        url.hostname.endsWith('.public.blob.vercel-storage.com'))
+    );
+  } catch {
+    return false;
+  }
+}, 'Image URL is not from an allowed source');
+
 // Service Request Schema (public booking)
 export const serviceRequestSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: trimmedText(2, 100, 'Name is required'),
   whatsapp: indonesianWhatsAppSchema,
-  address: z.string().min(1, 'Address is required'),
-  deviceType: z.string().min(1, 'Device type is required'),
-  serviceType: z.string().min(1, 'Service type is required'),
-  problemDesc: z.string().min(1, 'Problem description is required'),
-  scheduleDate: z.string().or(z.date()),
-});
+  address: trimmedText(5, 500, 'Address is required'),
+  deviceType: z.enum(['smartphone', 'laptop', 'tablet', 'console', 'other']),
+  deviceBrand: trimmedText(2, 100, 'Device brand is required').optional(),
+  serviceType: z.enum(['screen', 'battery', 'water', 'software', 'diagnostic', 'other']),
+  problemDesc: trimmedText(10, 2000, 'Problem description is required'),
+  scheduleDate: z.coerce.date(),
+}).strict();
 
 // Admin Auth Schema
 export const loginSchema = z.object({
-  password: z.string().min(1, 'Password is required'),
-});
+  password: z.string().min(1, 'Password is required').max(256),
+}).strict();
 
 // ─── Shared enums ──────────────────────────────────────────────────────────────
 const productCategoryEnum = z.enum(['LAPTOP', 'HP', 'TABLET']);
@@ -33,16 +64,37 @@ const warrantyStatusEnum = z.enum(['MENUNGGU', 'DIPROSES', 'SELESAI', 'DITOLAK']
 
 const marketplaceLinkSchema = z.object({
   marketplace: marketplaceEnum,
-  url: z.string().min(1, 'Marketplace URL is required'),
-});
+  url: z.string().url('Marketplace URL must be valid').refine(
+    (value) => value.startsWith('https://'),
+    'Marketplace URL must use HTTPS'
+  ),
+}).strict().refine(({ marketplace, url }) => {
+  const hostname = new URL(url).hostname.toLowerCase();
+  const allowedHosts: Record<string, string[]> = {
+    SHOPEE: ['shopee.co.id', 'shopee.id'],
+    TOKOPEDIA: ['tokopedia.com'],
+    BLIBLI: ['blibli.com'],
+    LAZADA: ['lazada.co.id'],
+  };
+  return allowedHosts[marketplace].some(
+    (host) => hostname === host || hostname.endsWith(`.${host}`)
+  );
+}, 'Marketplace URL host does not match the selected marketplace');
+const marketplaceLinksSchema = z
+  .array(marketplaceLinkSchema)
+  .max(4, 'Maximum 4 marketplace links')
+  .refine(
+    (links) => new Set(links.map(({ marketplace }) => marketplace)).size === links.length,
+    'Each marketplace may only be listed once'
+  );
 
 // ─── Article ───────────────────────────────────────────────────────────────────
 export const articleSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
-  title: z.string().min(1, 'Title is required'),
-  excerpt: z.string().min(1, 'Excerpt is required'),
-  content: z.string().min(1, 'Content is required'),
-  imageUrl: z.string().min(1, 'Image URL is required'),
+  slug: slugSchema,
+  title: trimmedText(5, 120, 'Title is required'),
+  excerpt: trimmedText(20, 320, 'Excerpt is required'),
+  content: trimmedText(50, 100000, 'Content is required'),
+  imageUrl: imageUrlSchema.refine((value) => value.length > 0, 'Image URL is required'),
   author: z.string().min(1, 'Author is required'),
   publishedAt: z.string().optional(),
 });
@@ -55,20 +107,20 @@ export const productSchema = z.object({
   description: z.string().optional(),
   price: z.coerce.number().int().nonnegative('Price must be a positive integer'),
   stock: z.coerce.number().int().nonnegative('Stock must be a positive integer'),
-  imageUrl: z.string().optional(),
+  imageUrl: imageUrlSchema.optional(),
   isFeatured: z.boolean().optional(),
   isActive: z.boolean().optional(),
-  marketplaceLinks: z.array(marketplaceLinkSchema).optional(),
+  marketplaceLinks: marketplaceLinksSchema.optional(),
 });
 
 // ─── Service Content ───────────────────────────────────────────────────────────
 export const serviceContentSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
+  slug: slugSchema,
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   content: z.string().optional(),
   icon: z.string().optional(),
-  imageUrl: z.string().optional(),
+  imageUrl: imageUrlSchema.optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -79,10 +131,10 @@ export const sparepartSchema = z.object({
   description: z.string().optional(),
   price: z.coerce.number().int().nonnegative('Price must be a positive integer'),
   stock: z.coerce.number().int().nonnegative('Stock must be a positive integer'),
-  imageUrl: z.string().optional(),
+  imageUrl: imageUrlSchema.optional(),
   isFeatured: z.boolean().optional(),
   condition: z.string().optional(),
-  marketplaceLinks: z.array(marketplaceLinkSchema).optional(),
+  marketplaceLinks: marketplaceLinksSchema.optional(),
 });
 
 // ─── Service Request (admin create/update) ─────────────────────────────────────
@@ -101,7 +153,7 @@ export const serviceRequestAdminSchema = z.object({
 
 // ─── Promo ─────────────────────────────────────────────────────────────────────
 export const promoSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
+  slug: slugSchema,
   badge: z.string().min(1, 'Badge is required'),
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
@@ -118,8 +170,8 @@ export const portfolioSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   deviceType: z.string().min(1, 'Device type is required'),
   problemType: z.string().min(1, 'Problem type is required'),
-  beforeImage: z.string().min(1, 'Before image is required'),
-  afterImage: z.string().min(1, 'After image is required'),
+  beforeImage: imageUrlSchema.refine((value) => value.length > 0, 'Before image is required'),
+  afterImage: imageUrlSchema.refine((value) => value.length > 0, 'After image is required'),
   completionDate: z.string().optional(),
 });
 
@@ -140,10 +192,13 @@ export const faqSchema = z.object({
 
 // ─── Warranty Claim (public) ───────────────────────────────────────────────────
 export const warrantyClaimSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: trimmedText(2, 100, 'Name is required'),
   whatsapp: indonesianWhatsAppSchema,
-  trackingId: z.string().min(1, 'Tracking ID is required'),
-  description: z.string().min(1, 'Description is required'),
-});
+  trackingId: z.string().trim().toUpperCase().regex(
+    /^PYT-\d{4}-[A-Z0-9]{6,32}$/,
+    'Tracking ID is invalid'
+  ),
+  description: trimmedText(10, 2000, 'Description is required'),
+}).strict();
 
 export { serviceStatusEnum, warrantyStatusEnum };

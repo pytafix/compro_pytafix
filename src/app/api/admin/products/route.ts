@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { productSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if (auth) return auth;
   try {
     const products = await prisma.product.findMany({
       include: { marketplaceLinks: true },
@@ -17,6 +20,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const body = await request.json();
     const data = productSchema.parse(body);

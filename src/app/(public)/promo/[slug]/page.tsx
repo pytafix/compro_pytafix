@@ -3,22 +3,24 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import PromoDetailClient from "./PromoDetailClient";
 import type { Metadata } from "next";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const promo = await prisma.promo.findUnique({
-    where: { slug },
+  const promo = await prisma.promo.findFirst({
+    where: { slug, isActive: true, validUntil: { gte: new Date() } },
   });
 
   if (!promo) {
     return {
       title: "Promo Tidak Ditemukan",
       alternates: { canonical: `/promo/${slug}` },
+      robots: { index: false, follow: false },
     };
   }
 
   return {
-    title: `${promo.title} | Promo Pytafix`,
+    title: `${promo.title} - Promo`,
     description: promo.description,
     alternates: {
       canonical: `/promo/${slug}`,
@@ -36,11 +38,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function PromoDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const promoRecord = await prisma.promo.findUnique({
-    where: { slug },
+  const promoRecord = await prisma.promo.findFirst({
+    where: { slug, isActive: true, validUntil: { gte: new Date() } },
   });
 
-  if (!promoRecord || !promoRecord.isActive) {
+  if (!promoRecord) {
     notFound();
   }
 
@@ -69,19 +71,19 @@ export default async function PromoDetailPage({ params }: { params: Promise<{ sl
         ]
       },
       {
-        "@type": "PromotionEngineSpecification",
+        "@type": "Offer",
         "name": promo.title,
         "description": promo.description,
         "url": `https://www.pytafix.web.id/promo/${promo.slug}`,
-        "validUntil": promoRecord.validUntil.toISOString(),
-        "termsOfService": promo.terms,
+        "validThrough": promoRecord.validUntil.toISOString(),
+        "seller": { "@id": "https://www.pytafix.web.id/#organization" },
       }
     ]
   };
 
   return (
     <main className="min-h-screen bg-surface">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <PromoDetailClient promo={promo} />
     </main>
   );

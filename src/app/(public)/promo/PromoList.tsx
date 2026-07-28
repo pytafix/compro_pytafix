@@ -11,7 +11,7 @@ export default function PromoList({ promos }: { promos: Promo[] }) {
       {/* Hero Section */}
       <section className="bg-surface-container py-16 px-4 md:px-8 text-center border-b border-surface-container-highest">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="max-w-3xl mx-auto"
@@ -20,7 +20,7 @@ export default function PromoList({ promos }: { promos: Promo[] }) {
             Promo & Penawaran Spesial
           </h1>
           <p className="font-body-md text-lg text-on-surface-variant">
-            Nikmati berbagai promo menarik dan penawaran spesial dari Pytafix. Solusi perbaikan gadget yang hemat dan berkualitas untuk kebutuhan Anda.
+            Lihat promo dan penawaran yang sedang aktif. Masa berlaku, syarat, dan ketersediaan perlu dikonfirmasi untuk kebutuhan Anda.
           </p>
         </motion.div>
       </section>
@@ -40,7 +40,7 @@ export default function PromoList({ promos }: { promos: Promo[] }) {
           ) : promos.map((promo, index) => (
             <motion.div
               key={promo.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}

@@ -27,7 +27,7 @@ export default function PromoDetailClient({ promo }: { promo: PromoDetail }) {
           </Link>
           
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
@@ -51,7 +51,7 @@ export default function PromoDetailClient({ promo }: { promo: PromoDetail }) {
           {/* Main Info */}
           <div className="lg:col-span-2">
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
@@ -77,7 +77,7 @@ export default function PromoDetailClient({ promo }: { promo: PromoDetail }) {
           {/* Sticky Sidebar CTA */}
           <div className="lg:col-span-1">
             <motion.div 
-              initial={{ opacity: 0, x: 20 }}
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
               className="sticky top-28 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 shadow-xl"

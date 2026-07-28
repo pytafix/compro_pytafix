@@ -71,6 +71,15 @@ export function TopNavBar() {
     closeMenu();
   }, [pathname]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMenu();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
+
   // Helper to check if a nav item is active (including its children)
   const isActive = (item: NavItem) => {
     if (item.href && pathname === item.href) return true;
@@ -89,9 +98,14 @@ export function TopNavBar() {
           </Link>
           
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-8 h-full">
+          <div className="hidden lg:flex items-center gap-4 lg:gap-8 h-full">
             {navItems.map((item) => (
-              <div key={item.name} className="relative group h-full flex items-center">
+              <div
+                key={item.name}
+                className="relative group h-full flex items-center"
+                onMouseEnter={() => item.children && setOpenAccordion(item.name)}
+                onMouseLeave={() => item.children && setOpenAccordion(null)}
+              >
                 {item.href ? (
                   <Link 
                     href={item.href} 
@@ -107,6 +121,8 @@ export function TopNavBar() {
                   <button
                     aria-haspopup="true"
                     aria-expanded={openAccordion === item.name}
+                    onClick={() => toggleAccordion(item.name)}
+                    onFocus={() => setOpenAccordion(item.name)}
                     className={`flex items-center gap-1 font-label-bold text-label-bold transition-colors duration-200 h-full border-b-2 ${
                       isActive(item)
                         ? "text-primary border-primary"
@@ -140,7 +156,7 @@ export function TopNavBar() {
             ))}
           </div>
           
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <Link 
               href="/booking-servis" 
               className="bg-primary text-on-primary font-label-bold text-label-bold px-4 lg:px-6 py-2.5 lg:py-3 rounded hover:opacity-90 hover:shadow-md transition-all items-center justify-center cursor-pointer"
@@ -150,7 +166,7 @@ export function TopNavBar() {
           </div>
 
           {/* Mobile Toggle */}
-          <div className="flex items-center md:hidden gap-2">
+          <div className="flex items-center lg:hidden gap-2">
             <button 
               className="text-primary p-2 focus:outline-none" 
               onClick={() => setIsOpen(!isOpen)}
@@ -166,7 +182,13 @@ export function TopNavBar() {
 
       {/* Mobile Menu Fullscreen Overlay */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 z-[60] bg-surface flex flex-col animate-in slide-in-from-bottom-4">
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu navigasi"
+          className="lg:hidden fixed inset-0 z-[60] bg-surface flex flex-col animate-in slide-in-from-bottom-4"
+        >
           <div className="flex justify-between items-center h-20 px-4 border-b border-outline-variant/30">
             <Link href="/" className="flex items-center gap-3" onClick={closeMenu}>
               <span className="font-headline-md text-xl font-bold text-primary">
@@ -176,6 +198,7 @@ export function TopNavBar() {
             <button 
               className="text-primary p-2 focus:outline-none" 
               onClick={closeMenu}
+              aria-label="Tutup menu"
             >
               <X className="w-8 h-8" />
             </button>

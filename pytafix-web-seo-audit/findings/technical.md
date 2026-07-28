@@ -1,39 +1,22 @@
 # Technical SEO Findings
 
-## CRITICAL
+Audit state: 28 July 2026. Findings below reflect the current local source and build, not the deployed production site.
 
-### No Critical items in Technical SEO
+## Resolved locally
 
-## HIGH
+- Sitemap no longer emits the old hard-coded 2024 fallback date. Dynamic records use their `updatedAt` value, and database failure serves a reviewed static URL fallback.
+- Location/service permutations are filtered from public service routes and the sitemap unless the slug is explicitly reviewed. This removes the previous doorway-page expansion risk.
+- Public location data no longer publishes unverified hard-coded coordinates. The supplied Google Maps short link is retained for navigation, but its text names Malang while the current preview exposes a conflicting Sidoarjo-area center; the exact pin and NAP remain pending owner verification.
+- The root `ProfessionalService` schema emits `hasMap` and service-area facts but withholds `PostalAddress` and `GeoCoordinates` while that conflict is unresolved; the visible contact page labels the address as listing text and asks visitors to confirm the pin.
+- AI-search access is explicit in `robots.txt`; `/admin/` and `/api/` remain disallowed while `/llms.txt` is allowed.
+- FAQ answers are server-rendered in semantic `<details>` elements, and reviewed service pages render sanitized semantic content rather than raw stored markup.
+- Missing dynamic commerce/article/service records return `noindex` metadata instead of creating indexable error URLs.
 
-### 1. Sitemap uses stale fallback date 2024-06-01
-- **File**: `src/app/sitemap.ts` line 7
-- **Issue**: `const fallbackDate = new Date('2024-06-01')` — all static pages report outdated lastModified to Google
-- **Fix**: Use `new Date()` as fallbackDate for static pages
-- **Impact**: Google may deprioritize "stale" pages in crawl budget
+## Remaining before release
 
-### 2. Sparepart detail URL uses numeric ID (/sparepart/123)
-- **File**: `src/app/(public)/sparepart/[id]/page.tsx` lines 41-43
-- **File**: `src/app/sitemap.ts` lines 82-87
-- **Issue**: Prisma Sparepart `@id` is auto-increment integer. URLs expose DB internals, provide zero keyword value
-- **Fix**: Add `slug String @unique` to Sparepart model. Route → `/sparepart/[slug]`. Update sitemap
-
-### 3. Location permutation sitemap — near-duplicate content risk
-- **File**: `src/app/sitemap.ts` lines 59-65
-- **Issue**: Each service × 15 locations = N×15 URLs. All identical content with just location name swapped. Google may penalize as doorway pages
-- **Fix**: Remove location permutation generation. Keep only base `/layanan/[slug]` URLs
-
-## MEDIUM
-
-### 4. Google Maps embed uses generic 'Malang' query
-- **File**: `src/app/(public)/kontak/page.tsx` line 109
-- **Issue**: `q=Malang` does not pin to actual address
-- **Fix**: Use `q=-7.983908,112.621391` (from LocalBusiness geo in homepage schema)
-
-### 5. No Vercel Analytics or GSC integration
-- **Issue**: Zero performance monitoring
-- **Fix**: Install `@vercel/analytics`. Add GSC HTML verification tag in layout metadata
-
-### 6. No Content-Language HTTP header
-- **Issue**: Only `lang="id"` in HTML, no server-side Content-Language header
-- **Fix**: Add to Vercel headers config: `Content-Language: id-ID`
+1. **Production deployment and live verification** — the current public site still serves the previous metadata, coordinates, sitemap, robots policy, and API headers. A preview deploy, smoke crawl, and post-deploy fetch are required after an authorized release.
+2. **Google Maps NAP confirmation** — the owner must confirm the exact listing pin/address before coordinates or `GeoCoordinates` are published.
+3. **Field performance evidence** — run PageSpeed/CrUX after deployment; local build checks cannot establish real-user CWV.
+4. **Indexing evidence** — verify sitemap processing and representative URLs in Search Console; a 200 response is not proof of indexing.
+5. **URL architecture** — commerce detail routes still use database IDs. A slug migration would improve keyword context but requires a redirect/data migration plan and is not safe to do implicitly.
+6. **Content depth and original evidence** — reviewed service and article pages remain short and need first-hand repair evidence, named reviewer credentials, and unique media before aggressive SEO expansion.

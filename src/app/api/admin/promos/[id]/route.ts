@@ -3,11 +3,14 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { promoSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
     const body = await request.json();
@@ -45,6 +48,8 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
 

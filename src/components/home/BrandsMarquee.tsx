@@ -23,7 +23,7 @@ export function BrandsMarquee() {
   return (
     <section className="bg-surface-container-low py-10 border-y border-outline-variant overflow-hidden">
       <div className="max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop mb-6 text-center">
-        <p className="font-label-bold text-on-surface-variant uppercase tracking-wider text-sm">Dipercaya untuk Memperbaiki Berbagai Merk</p>
+        <p className="font-label-bold text-on-surface-variant uppercase tracking-wider text-sm">Merek yang dapat dibahas untuk pemeriksaan</p>
       </div>
       <div className="flex gap-8 items-center w-max relative">
         <motion.div 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { deletePendingAdminUpload } from "@/lib/admin-media-client";
 
 interface Service {
   id: string;
@@ -35,6 +36,7 @@ export default function AdminServices() {
     isActive: true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingUploadUrl, setPendingUploadUrl] = useState<string | null>(null);
 
   const fetchServices = async (isRefresh = false) => {
     if (isRefresh) setIsLoading(true);
@@ -90,7 +92,13 @@ export default function AdminServices() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if (pendingUploadUrl) {
+      void deletePendingAdminUpload(pendingUploadUrl);
+      setPendingUploadUrl(null);
+    }
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -108,6 +116,10 @@ export default function AdminServices() {
 
       if (res.ok) {
         const { url } = await res.json();
+        if (pendingUploadUrl && pendingUploadUrl !== url) {
+          void deletePendingAdminUpload(pendingUploadUrl);
+        }
+        setPendingUploadUrl(url);
         setFormData(prev => ({ ...prev, imageUrl: url }));
         toast.success("Gambar berhasil diunggah", { id: "upload" });
       } else {
@@ -134,7 +146,13 @@ export default function AdminServices() {
 
       if (res.ok) {
         toast.success(`Layanan berhasil ${editingId ? "diperbarui" : "ditambahkan"}`);
-        closeModal();
+        const unusedUpload =
+          pendingUploadUrl && pendingUploadUrl !== formData.imageUrl
+            ? pendingUploadUrl
+            : null;
+        setPendingUploadUrl(null);
+        setIsModalOpen(false);
+        if (unusedUpload) void deletePendingAdminUpload(unusedUpload);
         fetchServices();
       } else {
         toast.error("Gagal menyimpan data");

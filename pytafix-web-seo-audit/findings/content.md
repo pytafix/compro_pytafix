@@ -1,32 +1,22 @@
 # Content Quality Findings
 
-## CRITICAL
+Audit state: 28 July 2026. This file describes the current local source/build; production still serves the older content.
 
-### 1. Article content uses dangerouslySetInnerHTML — XSS vector
-- **File**: `src/app/(public)/artikel/[slug]/page.tsx` lines 89-92
-- **Issue**: Raw HTML from database rendered without sanitization. Malicious article content executes in browser
-- **Fix**: Install `isomorphic-dompurify`. Sanitize: `import DOMPurify from 'isomorphic-dompurify'; dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}`
+## Resolved locally
 
-## HIGH
+- Article content is rendered through the shared sanitizer and semantic Markdown renderer; raw stored HTML is not emitted directly.
+- Public services and articles are limited to reviewed slugs. Legacy database copy cannot silently become an indexable page.
+- Reviewed service copy and FAQ answers remove unsupported certifications, warranty, inventory, turnaround, and success-rate claims.
+- Empty testimonials and portfolio collections use honest empty states instead of fabricated proof. Public pages do not emit aggregate ratings without a verified dataset.
+- Service and article pages link to relevant FAQ, contact, booking, and related service journeys. Reviewed articles include official Microsoft, Apple, and Intel references.
 
-### 2. Testimonials hardcoded in client — not from database
-- **File**: `src/app/(public)/HomeClient.tsx` lines 605-647
-- **Issue**: 4 testimonials hardcoded in JSX. Prisma has Testimonial model with `isFeatured`. Hardcoded duplicates (Budi/Siti/Andi/Ratna × 2 for marquee loop)
-- **Fix**: Fetch `prisma.testimonial.findMany({ where: { isFeatured: true }, take: 10 })` in server page component. Pass to HomeClient. Add AggregateRating JSON-LD
+## Remaining evidence gaps
 
-## MEDIUM
+1. **Content depth** — reviewed service bodies are approximately 110–118 words and reviewed articles approximately 167–197 words. Expand only with first-hand repair evidence, diagnostic boundaries, examples, and genuinely useful detail.
+2. **E-E-A-T attribution** — the current editorial label is a generic team attribution. Add a named human reviewer, role/credentials, review date, and a verifiable author profile before making expertise claims.
+3. **Original proof** — add consented, case-specific repair media and unique article visuals; do not reuse one generic OG image as evidence.
+4. **Legal freshness** — keep the reviewed static legal copy gated by freshness and have the data controller/counsel approve retention, consent, and warranty language.
 
-### 3. Stats on homepage (5000+ devices, 99% satisfied) are unverified claims
-- **File**: `src/app/(public)/HomeClient.tsx` lines 497-519
-- **Issue**: Hardcoded stats with no source. Google E-E-A-T guidelines penalize unsubstantiated claims
-- **Fix**: Make dynamic from database or remove specific numbers. Add `AggregateRating` if ratings are real
+## Release check
 
-### 4. Service page content stored as plain text — no semantic structure
-- **File**: `src/app/(public)/layanan/[slug]/page.tsx` lines 159-169
-- **Issue**: `whitespace-pre-wrap` renders all text as a single paragraph. No h2/h3/list structure from CMS
-- **Fix**: If CMS supports Markdown, use remark/rehype. If plain text, add preprocessing to detect bullet patterns (lines starting with - or *)
-
-### 5. About page hardcodes social links to other group companies
-- **File**: `src/app/(public)/tentang-kami/page.tsx` lines 47-48
-- **Issue**: Links to pytabelajar.web.id and pytagotech.com are not verified, not 301 redirected, and link equity bleeds out
-- **Fix**: Add `rel="noopener noreferrer"` (already correct). Consider if these links should be followed or nofollow
+Do not broaden city/service programmatic pages or add testimonials/ratings until the evidence exists in the source database and has been reviewed by the owner.

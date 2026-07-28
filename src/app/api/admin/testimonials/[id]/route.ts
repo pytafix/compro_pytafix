@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { testimonialSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
     const body = await request.json();
@@ -21,6 +24,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     });
 
     revalidatePath('/');
+    revalidatePath('/testimoni');
     return NextResponse.json(testimonial);
   } catch (error) {
     if (error instanceof ZodError) {
@@ -32,6 +36,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
 
@@ -45,6 +51,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     });
 
     revalidatePath('/');
+    revalidatePath('/testimoni');
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting testimonial:', error);

@@ -9,7 +9,7 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="flex min-h-full flex-col pt-20">
       <TopNavBar />
       <div className="flex-1">
         {children}
@@ -17,6 +17,6 @@ export default function PublicLayout({
       <GlobalCTA />
       <Footer />
       <FloatingWA />
-    </>
+    </div>
   );
 }

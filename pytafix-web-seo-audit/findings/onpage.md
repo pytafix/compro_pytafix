@@ -1,33 +1,18 @@
 # On-Page SEO Findings
 
-## CRITICAL
+Audit state: 28 July 2026. Findings describe the current local source/build.
 
-### 1. OG image /logo.png used universally — wrong dimensions
-- **File**: `src/app/layout.tsx` line 27 + all page metadata files
-- **Issue**: Logo PNG (square favicon-style) used as OpenGraph image. Facebook recommends 1200×630px, Twitter 1200×627px. Current renders cropped/poor quality
-- **Fix**: Create dedicated 1200×630 OG banner. Store at `/public/images/og-banner.png`. Update all `images` arrays in OpenGraph metadata
+## Resolved locally
 
-## HIGH
+- A dedicated 1200×630 OG banner is used instead of the square logo; favicon and Apple touch icon are separate square assets.
+- Canonical URLs, page titles, descriptions, Open Graph data, and Indonesian language metadata are centralized and no longer carry the old unsupported claims.
+- Root Organization/ProfessionalService entities, WebSite/FAQ graphs, Article/Service/Product/Offer graphs, and detail breadcrumbs are present where the page type supports them.
+- Empty archives and invalid/expired dynamic records receive `noindex`; the sitemap contains only reviewed candidates.
+- Utility pages, admin routes, and API responses carry noindex boundaries without entering the public sitemap.
 
-*(none)*
+## Remaining architecture decisions
 
-## MEDIUM
-
-### 2. Homepage title loses geographic modifier on inner pages
-- **File**: Multiple page files
-- **Issue**: `/faq` title "Pertanyaan yang Sering Diajukan (FAQ) | Pytafix" — no "Malang" signal. `/layanan` has it, `/tentang-kami` has it, but many don't
-- **Fix**: Add "Malang" or "Jawa Timur" to meta descriptions on all inner pages
-
-### 3. Homepage missing Organization + WebSite + BreadcrumbList schema
-- **File**: `src/app/(public)/HomeClient.tsx`
-- **Issue**: Only LocalBusiness JSON-LD injected. Missing: Organization (parent entity), WebSite with SearchAction, BreadcrumbList, FAQPage for homepage FAQ section
-- **Fix**: Add Organization schema. Add WebSite schema with SearchBox. Add FAQPage schema. Add BreadcrumbList
-
-### 4. No Schema on /booking-servis and /cek-status-servis
-- **Issue**: High-value transactional pages with no structured data
-- **Fix**: Add WebApplication schema on booking. Add Thing/Service schema on status page
-
-### 5. Material Symbols font loaded via raw link tag
-- **File**: `src/app/layout.tsx` lines 55-58
-- **Issue**: Not using next/font, no preconnect, no swap
-- **Fix**: Use next/font for Manrope covers this. Add preconnect for fonts.googleapis.com. Consider replacing with lucide-react icons (already installed)
+1. **Commerce IDs** — `/jual-beli/[id]` and `/sparepart/[id]` still expose database IDs. A slug migration needs a data/redirect plan and must not be introduced implicitly.
+2. **Location facts** — visible contact copy keeps the user-supplied Maps listing text, but verified local-business address data is withheld until the pin/NAP conflict is resolved.
+3. **Dynamic inventory freshness** — product/sparepart pages show `dateModified` and a price/stock confirmation note; production data still needs operational review.
+4. **Post-deploy validation** — fetch representative pages, inspect rendered JSON-LD, validate OG images, and verify canonical/sitemap behavior in the deployed environment.

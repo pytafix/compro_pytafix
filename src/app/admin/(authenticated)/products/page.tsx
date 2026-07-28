@@ -1,5 +1,6 @@
 "use client";
 import { TableSkeleton } from "@/components/admin/TableSkeleton";
+import { deletePendingAdminUpload } from "@/lib/admin-media-client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -57,6 +58,7 @@ export default function AdminProducts() {
   });
   const [marketplaceLinks, setMarketplaceLinks] = useState<MarketplaceLink[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingUploadUrl, setPendingUploadUrl] = useState<string | null>(null);
 
   const fetchProducts = async (isRefresh = false) => {
     if (isRefresh) setIsLoading(true);
@@ -111,7 +113,13 @@ export default function AdminProducts() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if (pendingUploadUrl) {
+      void deletePendingAdminUpload(pendingUploadUrl);
+      setPendingUploadUrl(null);
+    }
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -123,6 +131,10 @@ export default function AdminProducts() {
       const res = await fetch("/api/admin/upload", { method: "POST", body: data });
       if (res.ok) {
         const { url } = await res.json();
+        if (pendingUploadUrl && pendingUploadUrl !== url) {
+          void deletePendingAdminUpload(pendingUploadUrl);
+        }
+        setPendingUploadUrl(url);
         setFormData(prev => ({ ...prev, imageUrl: url }));
         toast.success("Gambar berhasil diunggah", { id: "upload" });
       } else toast.error("Gagal mengunggah gambar", { id: "upload" });
@@ -141,7 +153,13 @@ export default function AdminProducts() {
       });
       if (res.ok) {
         toast.success(`Produk berhasil ${editingId ? "diperbarui" : "ditambahkan"}`);
-        closeModal();
+        const unusedUpload =
+          pendingUploadUrl && pendingUploadUrl !== formData.imageUrl
+            ? pendingUploadUrl
+            : null;
+        setPendingUploadUrl(null);
+        setIsModalOpen(false);
+        if (unusedUpload) void deletePendingAdminUpload(unusedUpload);
         fetchProducts();
       } else toast.error("Gagal menyimpan data");
     } catch { toast.error("Terjadi kesalahan"); }

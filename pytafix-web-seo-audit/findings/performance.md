@@ -1,35 +1,18 @@
 # Performance Findings
 
-## HIGH
+Audit state: 28 July 2026. Measurements are local lab evidence unless explicitly marked otherwise.
 
-### 1. Brand marquee uses raw <img> from external CDN — no Next.js optimization
-- **File**: `src/app/(public)/HomeClient.tsx` line 136
-- **Issue**: `<img src="https://cdn.simpleicons.org/${brand}">` for 20 brand logos. Bypasses Next.js image pipeline. No lazy loading. No format conversion. No width/height = CLS risk
-- **Fix**: Download SVGs to `/public/brand-icons/`. Use Next/Image. Configure `cdn.simpleicons.org` as remotePattern in next.config.ts with `formats: ['webp', 'svg']`
+## Resolved locally
 
-### 2. No Core Web Vitals measurement
-- **Issue**: No @vercel/web-vitals, no CrUX pipeline, no Lighthouse CI
-- **Fix**: Install `@vercel/web-vitals`. Add Lighthouse CI to Vercel deployment. Target: LCP < 2.5s, INP < 200ms, CLS < 0.1
+- Public image components use `next/image` with meaningful alt text and responsive `sizes`; local brand SVGs avoid the old repeated external-logo pattern.
+- Hero and critical promotional/portfolio copy no longer starts at opacity zero before hydration.
+- Homepage output and motion work were reduced, and responsive checks at 375, 768, and 1440 px found no horizontal overflow.
+- Vercel Analytics and Speed Insights load only on Vercel, preventing local/preview script errors.
+- Local Lighthouse rerun recorded mobile performance 89, desktop performance 72, accessibility 99, best practices 96, and SEO 100. Lab variance remains.
 
-## MEDIUM
+## Remaining evidence gaps
 
-### 3. Material Symbols icon font blocks rendering
-- **File**: `src/app/layout.tsx` lines 55-58
-- **Issue**: Icon font loaded via raw link tag — no preconnect, no font-display control, render-blocking
-- **Fix**: Add `rel="preconnect"` for fonts.googleapis.com. Or replace with lucide-react icons (already installed, tree-shakeable)
-
-### 4. No bundle analysis setup
-- **Issue**: Can't verify framer-motion tree-shaking, sonner bundle size, or client bundle bloat
-- **Fix**: Add `@next/bundle-analyzer`. Run `ANALYZE=true npm run build` weekly to monitor
-
-### 5. Booking and Sparepart client components — unknown data fetching pattern
-- **Files**: `src/components/SparepartClient.tsx`, `src/app/(public)/booking-servis/BookingClient.tsx`
-- **Issue**: Not reviewed. If these do client-side fetch-on-mount, they bypass ISR and hit Neon on every user page load — performance disaster
-- **Fix**: Verify both use server-fetched data passed as props, not client-side fetches
-
-## LOW
-
-### 6. Hero image uses Unsplash URL with no cache headers from source
-- **File**: `src/app/(public)/HomeClient.tsx` line 107-114
-- **Issue**: `priority` prop is correct. But Unsplash CDN should be configured as a remotePattern with caching headers
-- **Fix**: Already has `remotePatterns` for unsplash — verify Vercel edge cache headers are set for these images
+1. **Field CWV** — no current production CrUX/PageSpeed field evidence is available. Verify LCP, INP, and CLS after deployment.
+2. **Font delivery** — Material Symbols still uses a Google-hosted stylesheet; test its render-blocking impact in production and consider a self-hosted/icon-component strategy if material.
+3. **Bundle trend** — no bundle-analyzer baseline is committed. Add one if client payload growth becomes a problem; it is not a release blocker by itself.
+4. **External media cache** — confirm deployed image cache headers and remote-host behavior after the first preview/production fetch.

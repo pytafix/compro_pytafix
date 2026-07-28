@@ -2,11 +2,23 @@ import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { serviceRequestAdminSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
+
+const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  DITERIMA: ['DIAGNOSA', 'DIBATALKAN'],
+  DIAGNOSA: ['DIKERJAKAN', 'MENUNGGU_SPAREPART', 'DIBATALKAN'],
+  DIKERJAKAN: ['MENUNGGU_SPAREPART', 'SELESAI', 'DIBATALKAN'],
+  MENUNGGU_SPAREPART: ['DIKERJAKAN', 'DIBATALKAN'],
+  SELESAI: [],
+  DIBATALKAN: [],
+};
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
     const body = await request.json();
@@ -27,6 +39,16 @@ export async function PATCH(
 
     if (!existingRequest) {
       return NextResponse.json({ error: 'Request not found' }, { status: 404 });
+    }
+    if (
+      status &&
+      status !== existingRequest.status &&
+      !ALLOWED_TRANSITIONS[existingRequest.status]?.includes(status)
+    ) {
+      return NextResponse.json(
+        { error: `Transisi ${existingRequest.status} ke ${status} tidak diizinkan` },
+        { status: 409 }
+      );
     }
 
     const updateData: Record<string, unknown> = {
@@ -61,12 +83,27 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
 
-    const existing = await prisma.serviceRequest.findUnique({ where: { id } });
+    const existing = await prisma.serviceRequest.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        _count: { select: { warrantyClaims: true } },
+      },
+    });
     if (!existing) {
       return NextResponse.json({ error: 'Request not found' }, { status: 404 });
+    }
+    if (existing.status !== 'DITERIMA' || existing._count.warrantyClaims > 0) {
+      return NextResponse.json(
+        { error: 'Riwayat servis yang sudah diproses atau memiliki klaim tidak dapat dihapus' },
+        { status: 409 }
+      );
     }
 
     await prisma.serviceRequest.delete({ where: { id } });

@@ -8,11 +8,13 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null);
 
     try {
       const res = await fetch("/api/auth/login", {
@@ -26,9 +28,12 @@ export default function AdminLogin() {
         router.push("/admin/dashboard");
       } else {
         const data = await res.json();
-        toast.error(data.error || "Password salah.");
+        const message = data.error || "Password salah.";
+        setErrorMessage(message);
+        toast.error(message);
       }
     } catch (err) {
+      setErrorMessage("Terjadi kesalahan koneksi. Coba lagi beberapa saat.");
       toast.error("Terjadi kesalahan koneksi.");
     } finally {
       setIsLoading(false);
@@ -36,7 +41,7 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-container-low flex flex-col items-center justify-center p-4">
+    <main className="min-h-screen bg-surface-container-low flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md bg-surface border border-outline-variant rounded-xl shadow-lg p-8">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-on-primary-container mb-4">
@@ -78,6 +83,12 @@ export default function AdminLogin() {
             </div>
           </div>
 
+          {errorMessage && (
+            <p role="alert" className="rounded-lg bg-error-container px-4 py-3 text-center font-body-sm text-on-error-container">
+              {errorMessage}
+            </p>
+          )}
+
           <button
             type="submit"
             disabled={isLoading}
@@ -88,6 +99,6 @@ export default function AdminLogin() {
           </button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }

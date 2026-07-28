@@ -24,7 +24,7 @@ export function HowItWorks() {
               1
             </div>
             <span className="material-symbols-outlined text-primary text-[32px] mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">edit_calendar</span>
-            <h4 className="font-label-bold text-label-bold text-on-surface mb-2">Booking</h4>
+            <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Booking</h3>
             <p className="font-label-sm text-label-sm text-on-surface-variant">
               Jadwalkan servis via web atau WA.
             </p>
@@ -35,9 +35,9 @@ export function HowItWorks() {
               2
             </div>
             <span className="material-symbols-outlined text-primary text-[32px] mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">troubleshoot</span>
-            <h4 className="font-label-bold text-label-bold text-on-surface mb-2">Diagnosis</h4>
+            <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Pemeriksaan</h3>
             <p className="font-label-sm text-label-sm text-on-surface-variant">
-              Pengecekan teknis & estimasi biaya.
+              Pemeriksaan teknis dan estimasi biaya.
             </p>
           </motion.div>
           {/* Step 3 */}
@@ -46,9 +46,9 @@ export function HowItWorks() {
               3
             </div>
             <span className="material-symbols-outlined text-primary text-[32px] mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">build</span>
-            <h4 className="font-label-bold text-label-bold text-on-surface mb-2">Repair</h4>
+            <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Pengerjaan</h3>
             <p className="font-label-sm text-label-sm text-on-surface-variant">
-              Pengerjaan dengan standar operasional.
+              Pengerjaan setelah estimasi disetujui.
             </p>
           </motion.div>
           {/* Step 4 */}
@@ -57,9 +57,9 @@ export function HowItWorks() {
               4
             </div>
             <span className="material-symbols-outlined text-primary text-[32px] mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">verified</span>
-            <h4 className="font-label-bold text-label-bold text-on-surface mb-2">Warranty</h4>
+            <h3 className="font-label-bold text-label-bold text-on-surface mb-2">Uji & Serah Terima</h3>
             <p className="font-label-sm text-label-sm text-on-surface-variant">
-              Pengujian akhir & penyerahan garansi.
+              Pengujian akhir dan penjelasan garansi.
             </p>
           </motion.div>
         </div>

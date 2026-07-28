@@ -8,7 +8,7 @@ import { CONTACT } from '@/lib/config';
 export function Hero() {
   return (
     <motion.header 
-      initial="hidden"
+      initial={false}
       whileInView="visible"
       viewport={{ once: true }}
       variants={fadeUpVariant}
@@ -20,11 +20,11 @@ export function Hero() {
             Laptop Mati Total? Layar HP Retak? Kami Solusinya.
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
-            Jangan biarkan perangkat rusak menghentikan aktivitas Anda. Pytafix hadir di Malang dengan teknisi bersertifikat, pengerjaan cepat, dan jaminan keamanan data 100%. Servis jujur tanpa biaya tersembunyi.
+            Ceritakan gejalanya, pilih jadwal, lalu terima hasil pemeriksaan dan estimasi biaya sebelum pengerjaan dimulai. Status servis dapat dipantau dengan ID yang diberikan setelah booking.
           </p>
           <div className="flex flex-wrap gap-4 mt-4">
             <a href="/booking-servis" className="bg-primary text-on-primary font-label-bold text-label-bold px-8 py-3 rounded hover:bg-on-primary-fixed-variant hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer inline-flex items-center justify-center">
-              Perbaiki Sekarang
+              Booking Pemeriksaan
             </a>
             <a href={`https://wa.me/${CONTACT.whatsapp}?text=Halo%20Pytafix,%20saya%20butuh%20bantuan.`} target="_blank" rel="noopener noreferrer" className="border border-outline text-primary font-label-bold text-label-bold px-8 py-3 rounded hover:bg-surface-container hover:shadow transition-all flex items-center gap-2 cursor-pointer">
               <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }} aria-hidden="true">
@@ -39,7 +39,7 @@ export function Hero() {
           <div className="relative w-full h-full max-w-[400px] md:max-w-[500px] lg:max-w-[600px]">
             <Image
               src="/images/hero-model.png"
-              alt="Pytafix Customer Service"
+              alt="Ilustrasi layanan pelanggan Pytafix"
               fill
               priority
               className="object-contain object-bottom drop-shadow-2xl hover:scale-105 transition-transform duration-700"

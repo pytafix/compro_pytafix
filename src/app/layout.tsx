@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { CONTACT, LEGAL_ENTITY_NAME, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIAL } from "@/lib/config";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 
 const manrope = Manrope({
@@ -11,19 +13,36 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+const enableVercelTelemetry = process.env.VERCEL === "1";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.pytafix.web.id"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Pytafix - Pusat Servis Laptop, HP, dan Komputer di Malang",
-    template: "%s | Pytafix",
+    default: "Servis Laptop, HP & Komputer di Malang | Pytafix",
+    template: `%s | ${SITE_NAME}`,
   },
-  description: "Pytafix adalah pusat perbaikan elektronik terpercaya di Malang. Menyediakan servis laptop, smartphone, dan komputer dengan teknisi bersertifikat, jujur, dan bergaransi resmi.",
-  keywords: ["Service Laptop Malang", "Service HP Malang", "Reparasi Komputer", "Ganti LCD", "Service Apple Malang", "Service MacBook Malang", "Pytafix Malang"],
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  category: "electronics repair",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
   openGraph: {
-    title: "Pytafix - Pusat Servis Laptop, HP & Komputer Malang",
-    description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat elektronik Anda sekarang dengan teknisi handal di Malang!",
-    url: "https://www.pytafix.web.id",
-    siteName: "Pytafix",
+    title: "Servis Laptop, HP & Komputer di Malang | Pytafix",
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
         url: "/images/og-banner.png",
@@ -37,12 +56,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pytafix - Pusat Servis Laptop, HP & Komputer Malang",
-    description: "Servis jujur, garansi pasti. Konsultasi kerusakan perangkat elektronik Anda sekarang!",
     images: ["/images/og-banner.png"],
   },
   alternates: {
-    canonical: "https://www.pytafix.web.id",
+    canonical: SITE_URL,
+  },
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
   },
 };
 
@@ -54,9 +75,6 @@ export default function RootLayout({
   return (
     <html lang="id" className="h-full" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/logo.png" sizes="40x40" type="image/png" />
-        <link rel="icon" href="/logo.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/logo.png" sizes="40x40" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -64,14 +82,81 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${manrope.variable} antialiased h-full flex flex-col pt-20`}
+        className={`${manrope.variable} antialiased min-h-full flex flex-col`}
       >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: serializeJsonLd({
+                "@context": "https://schema.org",
+                "@graph": [
+                  {
+                    "@type": "Organization",
+                    "@id": `${SITE_URL}/#organization`,
+                    "name": SITE_NAME,
+                    "legalName": LEGAL_ENTITY_NAME,
+                    "url": SITE_URL,
+                    "description": SITE_DESCRIPTION,
+                    "logo": {
+                      "@type": "ImageObject",
+                      "url": `${SITE_URL}/logo.png`,
+                    },
+                    "sameAs": Object.values(SOCIAL),
+                  },
+                  {
+                    "@type": "ProfessionalService",
+                    "@id": `${SITE_URL}/#localbusiness`,
+                    "name": SITE_NAME,
+                    "image": `${SITE_URL}/images/og-banner.png`,
+                    "url": SITE_URL,
+                    "telephone": `+${CONTACT.whatsapp}`,
+                    "email": CONTACT.email,
+                    "parentOrganization": { "@id": `${SITE_URL}/#organization` },
+                    "areaServed": {
+                      "@type": "AdministrativeArea",
+                      "name": CONTACT.serviceArea,
+                    },
+                    ...(CONTACT.locationVerified
+                      ? {
+                          "address": {
+                            "@type": "PostalAddress",
+                            ...CONTACT.postalAddress,
+                          },
+                        }
+                      : {}),
+                    ...(CONTACT.geo
+                      ? {
+                          "geo": {
+                            "@type": "GeoCoordinates",
+                            "latitude": CONTACT.geo.latitude,
+                            "longitude": CONTACT.geo.longitude,
+                          },
+                        }
+                      : {}),
+                    "hasMap": CONTACT.mapsUrl,
+                    "description": SITE_DESCRIPTION,
+                    "openingHoursSpecification": [
+                      {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                        "opens": CONTACT.hours.opens,
+                        "closes": CONTACT.hours.closes,
+                      },
+                    ],
+                  },
+                ],
+              }),
+            }}
+          />
           {children}
-          <Analytics />
-          <SpeedInsights />
+          {enableVercelTelemetry ? (
+            <>
+              <Analytics />
+              <SpeedInsights />
+            </>
+          ) : null}
           <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );
 }
-

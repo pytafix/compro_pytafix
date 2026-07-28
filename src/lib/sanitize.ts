@@ -13,7 +13,6 @@ const allowedTags = [
 const allowedAttributes = {
   a: ["href", "title", "target", "rel"],
   img: ["src", "alt", "width", "height", "loading"],
-  "*": ["class", "id", "style"],
   blockquote: ["cite"],
 };
 
@@ -28,6 +27,15 @@ export function sanitizeContent(content: string): string {
     disallowedTagsMode: "discard",
     enforceHtmlBoundary: true,
     selfClosing: ["img", "br", "hr"],
+    transformTags: {
+      a: (_tagName, attributes) => ({
+        tagName: "a",
+        attribs: {
+          ...attributes,
+          ...(attributes.target === "_blank" ? { rel: "noopener noreferrer" } : {}),
+        },
+      }),
+    },
   });
 }
 

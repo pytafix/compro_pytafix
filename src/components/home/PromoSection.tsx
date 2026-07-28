@@ -16,7 +16,9 @@ export function PromoSection({ promos }: { promos: Promo[] }) {
               Promo & Penawaran Spesial
             </h2>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
-              Jangan lewatkan diskon menarik bulan ini. Klaim sekarang sebelum kehabisan!
+              {promos.length > 0
+                ? "Lihat promo yang sedang aktif beserta masa berlaku dan syaratnya sebelum menghubungi kami."
+                : "Belum ada promo aktif. Informasi baru akan ditampilkan setelah periode dan syaratnya dikonfirmasi."}
             </p>
           </div>
           <Link href="/promo" className="hidden md:inline-flex items-center gap-2 text-primary font-label-bold hover:underline mt-4 md:mt-0">

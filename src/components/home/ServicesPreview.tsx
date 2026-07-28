@@ -40,8 +40,9 @@ export function ServicesPreview({ services }: ServicesPreviewProps) {
           variants={staggerContainer}
           className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-gutter"
         >
-          {services.map((service, index) => (
-            <motion.div key={service.id} variants={fadeUpVariant} className="bg-surface-container-lowest border border-outline-variant p-8 rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-300 cursor-pointer group relative z-10">
+          {services.map((service) => (
+            <motion.article key={service.id} variants={fadeUpVariant} className="bg-surface-container-lowest border border-outline-variant rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-300 group relative z-10">
+              <Link href={`/layanan/${service.slug}`} className="block p-8 rounded-[2rem]" aria-label={`Lihat detail ${service.title}`}>
               <div className="bg-primary/10 p-6 rounded-[1.5rem] shrink-0 group-hover:bg-primary transition-colors duration-300">
                 <span className="material-symbols-outlined text-primary group-hover:text-on-primary text-[48px] transition-colors duration-300" aria-hidden="true">
                   {service.icon || "build"}
@@ -52,11 +53,12 @@ export function ServicesPreview({ services }: ServicesPreviewProps) {
                 <p className="font-body-md text-body-md text-on-surface-variant">
                   {service.description}
                 </p>
-                <div className="mt-6 flex items-center gap-2 text-primary font-label-bold opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300">
+                <div className="mt-6 flex items-center gap-2 text-primary font-label-bold">
                   Selengkapnya <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </div>
               </div>
-            </motion.div>
+              </Link>
+            </motion.article>
           ))}
         </motion.div>
       </div>

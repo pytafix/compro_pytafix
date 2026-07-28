@@ -1,149 +1,167 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import KontakFormClient from "./KontakFormClient";
 import { SocialIcons } from "@/components/SocialIcons";
-import { CONTACT } from "@/lib/config";
+import { CONTACT, SITE_URL } from "@/lib/config";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Kontak Kami",
-  description: "Hubungi Pytafix untuk layanan perbaikan HP, Tablet, Laptop, dan PC. Kami siap membantu menyelesaikan masalah perangkat elektronik Anda di Malang.",
+  title: "Lokasi & Kontak Pytafix Malang",
+  description:
+    "Lihat listing Google Maps Pytafix dan konfirmasi pin, area layanan, jadwal, atau kebutuhan servis perangkat.",
   alternates: { canonical: "/kontak" },
   openGraph: {
-    title: "Hubungi Pytafix | Servis Laptop, HP & Komputer Malang",
-    description: "Hubungi tim teknisi profesional Pytafix untuk konsultasi dan booking servis perbaikan perangkat elektronik di Malang.",
-    url: "https://www.pytafix.web.id/kontak",
-    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Kontak" }],
+    title: "Hubungi Pytafix",
+    description: "Konfirmasi kebutuhan servis, area layanan, dan jadwal melalui kontak resmi Pytafix.",
+    url: `${SITE_URL}/kontak`,
+    images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Kontak Pytafix" }],
     locale: "id_ID",
     type: "website",
   },
 };
 
 export default function KontakPage() {
-  const waLink = `https://wa.me/${CONTACT.whatsapp}?text=Halo%20Pytafix,%20saya%20ingin%20berkonsultasi%20tentang%20perbaikan%20perangkat%20saya.`;
-
+  const waLink = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
+    "Halo Pytafix, saya ingin berkonsultasi tentang pemeriksaan perangkat."
+  )}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    "name": "Hubungi Pytafix",
-    "description": "Hubungi Pytafix untuk layanan perbaikan HP, Tablet, Laptop, dan PC di Malang.",
-    "url": "https://www.pytafix.web.id/kontak",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Pytafix",
-      "telephone": `+${CONTACT.whatsapp}`,
-      "email": CONTACT.email,
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Jl. Elektronik No. 123",
-        "addressLocality": "Malang",
-        "addressRegion": "Jawa Timur",
-        "addressCountry": "ID"
-      }
-    }
+    name: "Hubungi Pytafix",
+    description: "Kontak resmi Pytafix untuk layanan perangkat di Malang Raya.",
+    url: `${SITE_URL}/kontak`,
+    mainEntity: { "@id": `${SITE_URL}/#localbusiness` },
   };
 
   return (
     <main className="min-h-screen bg-surface-container-lowest">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      {/* Hero Section */}
-      <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop text-center border-b border-outline-variant mb-16">
-        <div className="max-w-container-max mx-auto">
-          <h1 className="font-headline-xl text-headline-xl text-primary mb-4 md:font-headline-xl md:text-headline-xl font-headline-lg-mobile text-headline-lg-mobile">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+
+      <section className="mb-16 border-b border-outline-variant bg-surface-container-low px-4 py-16 text-center md:px-8 md:py-20 lg:px-margin-desktop">
+        <div className="mx-auto max-w-container-max">
+          <h1 className="mb-4 font-headline-lg-mobile text-headline-lg-mobile text-primary md:font-headline-xl md:text-headline-xl">
             Hubungi Pytafix
           </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Tim teknisi profesional kami siap mendengarkan dan mengatasi masalah perangkat elektronik Anda dengan cepat dan transparan.
+          <p className="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
+            Ceritakan perangkat dan kendalanya. Tim akan meninjau informasi awal, lalu
+            mengonfirmasi jadwal, area layanan, dan langkah pemeriksaan.
           </p>
         </div>
       </section>
 
-      {/* Contact Info & Form Section */}
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Left: Contact Info */}
+      <section className="mx-auto max-w-7xl px-6 py-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           <div>
-            <h2 className="font-headline-md text-primary mb-6">Informasi Kontak</h2>
-            <p className="font-body-lg text-on-surface-variant mb-8">
-              Kunjungi pusat perbaikan kami atau hubungi kami melalui saluran berikut untuk konsultasi gratis.
+            <h2 className="mb-6 font-headline-md text-primary">Informasi kontak resmi</h2>
+            <p className="mb-8 font-body-lg text-on-surface-variant">
+            Teks listing Google Maps yang dibagikan mencantumkan Polehan, Blimbing, Kota Malang.
+            Konfirmasi pin dan jadwal melalui WhatsApp sebelum datang atau mengatur penjemputan perangkat.
             </p>
 
             <div className="space-y-6">
-              <div className="flex items-start gap-4 p-4 bg-surface rounded-xl border border-outline-variant shadow-sm">
-                <div className="bg-primary text-on-primary p-3 rounded-lg flex-shrink-0">
-                  <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
-                </div>
-                <div>
-                  <h3 className="font-label-bold text-on-surface mb-1">Alamat Bengkel</h3>
-                  <p className="font-body-md text-on-surface-variant">Jl. Elektronik No. 123<br/>Kec. Lowokwaru, Malang Raya<br/>Jawa Timur 65141</p>
-                </div>
-              </div>
+              <ContactCard icon="location_on" title="Alamat pada listing Google Maps">
+                <a
+                  className="text-primary underline underline-offset-4"
+                  href={CONTACT.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {CONTACT.address}
+                </a>
+                <span className="mt-1 block text-sm">{CONTACT.locationNote}</span>
+              </ContactCard>
+              <ContactCard icon="call" title="Telepon dan WhatsApp">
+                <a className="text-primary underline underline-offset-4" href={waLink} target="_blank" rel="noopener noreferrer">
+                  {CONTACT.whatsappDisplay}
+                </a>
+              </ContactCard>
+              <ContactCard icon="mail" title="Email">
+                <a className="text-primary underline underline-offset-4" href={`mailto:${CONTACT.email}`}>
+                  {CONTACT.email}
+                </a>
+              </ContactCard>
+              <ContactCard icon="schedule" title="Jam operasional">
+                {CONTACT.hours.days}: {CONTACT.hours.opens}–{CONTACT.hours.closes}
+                <br />
+                Minggu: {CONTACT.hours.sunday}
+                <br />
+                <span className="text-sm">{CONTACT.hours.note}</span>
+              </ContactCard>
 
-              <div className="flex items-start gap-4 p-4 bg-surface rounded-xl border border-outline-variant shadow-sm">
-                <div className="bg-primary text-on-primary p-3 rounded-lg flex-shrink-0">
-                  <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>call</span>
-                </div>
-                <div>
-                  <h3 className="font-label-bold text-on-surface mb-1">Telepon & WhatsApp</h3>
-                  <p className="font-body-md text-on-surface-variant">+62 881-4081-894</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-4 bg-surface rounded-xl border border-outline-variant shadow-sm">
-                <div className="bg-primary text-on-primary p-3 rounded-lg flex-shrink-0">
-                  <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>schedule</span>
-                </div>
-                <div>
-                  <h3 className="font-label-bold text-on-surface mb-1">Jam Operasional</h3>
-                  <p className="font-body-md text-on-surface-variant">Senin - Sabtu: 09:00 - 18:00<br/>Minggu: Tutup</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center justify-center gap-4 p-6 bg-surface rounded-xl border border-outline-variant shadow-sm text-center">
-                <h3 className="font-label-bold text-on-surface">Ikuti Sosial Media Kami</h3>
-                <SocialIcons className="flex items-center justify-center gap-4 mt-2" />
+              <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-outline-variant bg-surface p-6 text-center shadow-sm">
+                <h3 className="font-label-bold text-on-surface">Kanal sosial Pytafix</h3>
+                <SocialIcons className="mt-2 flex items-center justify-center gap-4" />
               </div>
             </div>
           </div>
 
-          {/* Right: Form, Map, Action */}
           <div className="flex flex-col gap-8">
-            <div className="bg-surface border border-outline-variant rounded-xl p-6">
-              <h2 className="font-headline-md text-primary mb-4">Kirim Pesan</h2>
+            <div className="rounded-xl border border-outline-variant bg-surface p-6">
+              <h2 className="mb-4 font-headline-md text-primary">Kirim pesan</h2>
               <KontakFormClient />
             </div>
-
-            <div className="bg-surface-container border border-outline-variant rounded-xl overflow-hidden min-h-[250px] relative">
+            <div className="rounded-xl border border-outline-variant bg-surface-container-low p-6">
+              <h2 className="font-headline-md text-on-surface">Perlu konfirmasi lebih cepat?</h2>
+              <p className="mb-4 mt-2 text-on-surface-variant">
+                Kirim ringkasan kendala melalui WhatsApp. Waktu balasan mengikuti antrean dan jam operasional.
+              </p>
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 font-label-bold text-white"
+              >
+                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">chat</span>
+                Buka WhatsApp
+              </a>
+            </div>
+            <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-sm">
               <iframe
-                src="https://maps.google.com/maps?q=-7.983908,112.621391&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
+                src={CONTACT.mapEmbedUrl}
+                title="Peta berdasarkan alamat pada listing Google Maps Pytafix"
+                className="h-[360px] w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0"
-                title="Lokasi Pytafix di Mapa"
-              ></iframe>
-            </div>
-
-            <div className="text-center bg-surface p-6 rounded-xl border border-outline-variant shadow-sm">
-               <h3 className="font-headline-sm text-on-surface mb-2">Butuh Respon Cepat?</h3>
-               <p className="font-body-sm text-on-surface-variant mb-4">Chat langsung via WhatsApp untuk jawaban instan.</p>
-               <a
-                  href={waLink}
+                allowFullScreen
+              />
+              <div className="p-4">
+                <a
+                  href={CONTACT.mapsUrl}
                   target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-label-bold text-label-bold transition-all bg-[#25D366] hover:bg-[#1DA851] text-white shadow-md hover:shadow-lg cursor-pointer"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 font-label-bold text-primary underline underline-offset-4"
                 >
-                  <span className="material-symbols-outlined text-[20px]">chat</span>
-                  Chat WhatsApp
-               </a>
+                  <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+                    directions
+                  </span>
+                  Buka rute di Google Maps
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+function ContactCard({
+  icon,
+  title,
+  children,
+}: {
+  icon: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-4 rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+      <div className="shrink-0 rounded-lg bg-primary p-3 text-on-primary">
+        <span className="material-symbols-outlined text-[28px]" aria-hidden="true">{icon}</span>
+      </div>
+      <div>
+        <h3 className="mb-1 font-label-bold text-on-surface">{title}</h3>
+        <p className="font-body-md text-on-surface-variant">{children}</p>
+      </div>
+    </div>
   );
 }

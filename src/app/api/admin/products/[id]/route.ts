@@ -3,19 +3,25 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { productSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
+import { cleanupManagedBlobs } from '@/lib/media-cleanup';
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
     const body = await request.json();
     const data = productSchema.partial().parse(body);
-
-    // Delete existing marketplace links and recreate
-    if (data.marketplaceLinks !== undefined) {
-      await prisma.marketplaceLink.deleteMany({ where: { productId: id } });
+    const existing = await prisma.product.findUnique({
+      where: { id },
+      select: { imageUrl: true },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     const updateData: Record<string, unknown> = {
@@ -31,12 +37,13 @@ export async function PUT(
     };
 
     if (data.marketplaceLinks !== undefined) {
-      updateData.marketplaceLinks = data.marketplaceLinks.length > 0 ? {
+      updateData.marketplaceLinks = {
+        deleteMany: {},
         create: data.marketplaceLinks.map((link) => ({
           marketplace: link.marketplace,
           url: link.url,
         })),
-      } : { create: [] };
+      };
     }
 
     const product = await prisma.product.update({
@@ -45,8 +52,13 @@ export async function PUT(
       include: { marketplaceLinks: true },
     });
 
+    if (data.imageUrl !== undefined && data.imageUrl !== existing.imageUrl) {
+      await cleanupManagedBlobs([existing.imageUrl]);
+    }
+
     revalidatePath('/');
     revalidatePath('/jual-beli');
+    revalidatePath(`/jual-beli/${id}`);
     return NextResponse.json(product);
   } catch (error) {
     if (error instanceof ZodError) {
@@ -60,6 +72,8 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const { id } = await params;
 
@@ -69,9 +83,11 @@ export async function DELETE(
     }
 
     await prisma.product.delete({ where: { id } });
+    await cleanupManagedBlobs([existing.imageUrl]);
 
     revalidatePath('/');
     revalidatePath('/jual-beli');
+    revalidatePath(`/jual-beli/${id}`);
     return NextResponse.json({ message: 'Product deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 });

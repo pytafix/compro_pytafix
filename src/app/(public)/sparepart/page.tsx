@@ -2,19 +2,27 @@ import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { SparepartClient } from "@/components/SparepartClient";
 
-export const metadata: Metadata = {
+const sparepartMetadata: Metadata = {
   title: "Jual Sparepart & Aksesoris Laptop di Malang",
-  description: "Beli berbagai macam suku cadang (sparepart) original untuk komputer dan laptop Anda. Tersedia RAM, SSD, baterai, dan lainnya.",
+  description: "Lihat katalog suku cadang perangkat, kondisi, stok, harga, dan pilihan pemasangan di Pytafix Malang.",
   alternates: { canonical: "/sparepart" },
   openGraph: {
-    title: "Sparepart & Aksesoris Laptop Original",
-    description: "Beli sparepart laptop original di Pytafix Malang. Tersedia RAM, SSD, baterai, keyboard dengan garansi pemasangan resmi.",
+    title: "Sparepart & Aksesoris Perangkat",
+    description: "Lihat katalog, kondisi, stok, harga, dan pilihan pemasangan suku cadang.",
     url: "https://www.pytafix.web.id/sparepart",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Sparepart" }],
     locale: "id_ID",
     type: "website",
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const count = await prisma.sparepart.count();
+  return {
+    ...sparepartMetadata,
+    robots: count > 0 ? { index: true, follow: true } : { index: false, follow: true },
+  };
+}
 
 export default async function SparepartPage() {
   const spareparts = await prisma.sparepart.findMany({
@@ -32,7 +40,8 @@ export default async function SparepartPage() {
             Katalog Sparepart & Aksesoris
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Tingkatkan performa perangkat Anda dengan suku cadang original. Dilengkapi garansi pemasangan untuk setiap pembelian.
+            Lihat stok dan detail komponen yang tersedia. Kompatibilitas, kondisi, pemasangan,
+            serta cakupan garansi dikonfirmasi untuk setiap item.
           </p>
         </div>
       </section>

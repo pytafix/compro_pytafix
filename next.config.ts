@@ -1,18 +1,21 @@
 import type { NextConfig } from "next";
 
+const developmentEval = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://va.vercel-scripts.com;
+  script-src 'self' 'unsafe-inline'${developmentEval} https://vercel.live https://va.vercel-scripts.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' data: https://fonts.gstatic.com;
-  img-src 'self' data: https: blob:;
+  img-src 'self' data: blob: https://images.unsplash.com https://plus.unsplash.com https://lh3.googleusercontent.com https://cdn.simpleicons.org https://*.public.blob.vercel-storage.com;
   connect-src 'self' https://vitals.vercel-insights.com https://vercel.live wss://vercel.live;
+  frame-src https://www.google.com;
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';
 `.replace(/\s{2,}/g, " ").trim();
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -36,10 +39,42 @@ const nextConfig: NextConfig = {
         hostname: "pytafix.web.id",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.pytafix.web.id",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
     return [
+      {
+        source: "/admin/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet",
+          },
+        ],
+      },
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-store",
+          },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [
@@ -60,12 +95,21 @@ const nextConfig: NextConfig = {
             value: "strict-origin-when-cross-origin",
           },
           {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-origin",
+          },
+          {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains; preload",
           },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            value:
+              "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
           },
         ],
       },

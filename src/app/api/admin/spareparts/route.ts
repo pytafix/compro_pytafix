@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import prisma from '@/lib/prisma';
 import { sparepartSchema } from '@/lib/validations';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if (auth) return auth;
   try {
     const spareparts = await prisma.sparepart.findMany({
       include: { marketplaceLinks: true },
@@ -17,6 +20,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireAdmin(request);
+  if (auth) return auth;
   try {
     const body = await request.json();
     const data = sparepartSchema.parse(body);

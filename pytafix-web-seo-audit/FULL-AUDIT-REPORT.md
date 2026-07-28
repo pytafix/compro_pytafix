@@ -1,455 +1,189 @@
-# PYTAFIX.WEB.ID — FULL SEO AUDIT REPORT
+# Pytafix Full-System, SEO, AEO/GEO, and Content Audit
 
-**Domain**: https://www.pytafix.web.id
-**Business Type**: Local Service Business — Electronics Repair (Malang, Indonesia)
-**Stack**: Next.js 16 (App Router), Prisma + Neon PostgreSQL, Tailwind CSS v4, Framer Motion, Vercel deployment
-**Audit Date**: 2026-07-12
-**Auditor**: Claude Code (Full codebase analysis)
+Audit date: 28 July 2026
+Repository baseline: `3c37fb1`
+Production audited: `https://www.pytafix.web.id`
+Local implementation: uncommitted and not deployed
 
----
+## Executive summary
 
-## EXECUTIVE SUMMARY
+The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired local build scores **84/100 overall readiness**. The gap to a production-ready 100 is not cosmetic: it requires confirmation of the remaining business facts, production environment configuration for the implemented distributed limiter and media store, removal/deactivation of legacy geo rows in the database, preview validation, and deployment.
 
-### SEO Health Score: 58 / 100
+The most serious baseline issues were:
 
-| Category | Score |
+1. Forty near-identical location/service records with average normalized similarity of 0.969 and an inferred route system capable of resolving hundreds of unapproved variants.
+2. Placeholder street address and coordinates published as business truth.
+3. Fabricated or unsupported review counts, success rates, certifications, experience, warranty durations, turnaround times, and “original” component claims.
+4. Admin Route Handlers protected only by Proxy, with incomplete JWT verification.
+5. Public status lookup exposing internal technician data using a low-entropy tracking ID.
+6. Warranty claims lacking ownership, completion-status, and duplicate-claim checks.
+7. Runtime uploads written to an ephemeral Vercel filesystem.
+8. Draft articles and inactive products directly accessible.
+9. Broken booking confirmation/WhatsApp handoff and raw Markdown displayed to users.
+10. Thin, empty, or duplicate pages being submitted as index candidates.
+
+The local remediation removes or mitigates each of these issues. It does not silently claim production delivery.
+
+## Evidence boundaries
+
+| Layer | Evidence | Current truth |
+|---|---|---|
+| Source | Full repository and 56 application routes inspected | Local fixes present |
+| Local validation | ESLint, 43 tests, Prisma validation, TypeScript, Next production build | Pass |
+| Local rendering | Playwright at 375, 768, and 1440 px; representative public/admin routes | No horizontal overflow |
+| Local crawl | 18 sitemap URLs fetched from the built server | All returned HTTP 200 with no redirect chain |
+| Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
+| Production crawl | 65 sitemap URLs | All 200 with title, description, canonical, H1, and valid JSON-LD syntax |
+| Production quality | 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Still live until deployment |
+| Google Search Console | 25 Apr–23 Jul 2026, domain property | 0 clicks, 1 impression; `/artikel` only |
+| Deployment | No push or Vercel deployment performed | Production unchanged |
+
+## Local scorecard
+
+| Category | Score | Assessment |
+|---|---:|---|
+| Crawlability and indexability | 88 | Curated sitemap; drafts/inactive/expired records filtered; utilities noindex |
+| Technical SEO | 86 | Canonicals, metadata, admin noindex, one-hop legacy redirects, stable sitemap dates |
+| Structured data | 91 | Valid types, safe serializer, honest organization/service facts, article references |
+| Content and E-E-A-T | 82 | Unsupported claims removed and five articles replaced by reviewed editorial overrides; raw evidence depth is still limited (content-evidence subscore 62, E-E-A-T evidence subscore 48) |
+| AEO/GEO readiness | 82 | Useful `llms.txt`, SSR FAQ/passages, and sources; the Maps text/pin conflict and broader local proof still require owner verification (citation-readiness subscore 65) |
+| Security and privacy | 84 | Handler-level auth, strict JWT, safer public DTOs, distributed limiter, and temporary Blob cleanup; production credentials/MFA pending |
+| UX, accessibility, responsive | 92 | No overflow; booking repaired; Lighthouse accessibility 99 |
+| Performance | 78 | Homepage payload/height reduced; local lab variance remains |
+| Overall readiness | **84** | Suitable for preview after required environment/database work |
+
+## Remediation completed locally
+
+### Backend and security
+
+- Added handler-level authorization to every `/api/admin/**` route.
+- JWT verification now pins HS256, issuer, audience, role, and minimum secret length.
+- Added same-origin checks for authenticated mutations.
+- Bounded and cleaned the local limiter map and stopped trusting arbitrary `x-forwarded-for`.
+- Added Upstash Redis sliding-window rate limiting for login, booking, contact, status, and warranty across serverless instances.
+- Production now fails closed with `503` when distributed limiter credentials are absent or time out; local fallback requires development mode or an explicit emergency flag.
+- Increased new tracking IDs from about 30 bits to about 130 bits of suffix entropy.
+- Status lookup now requires the booking WhatsApp number and returns only approved public fields.
+- Warranty submission verifies WhatsApp ownership, completed status, and absence of an active claim.
+- Warranty creation now uses a serializable transaction with bounded retries to prevent concurrent duplicate active claims.
+- Warranty status changes follow a forward-only transition matrix, and claim history can no longer be hard-deleted.
+- Added a paginated, searchable admin contact inbox with unread/read state and direct WhatsApp/email handoff.
+- Added bounded pagination, status filtering, and search to service-ticket and warranty admin APIs and interfaces; the dashboard now requests only the latest 20 tickets.
+- Normalized WhatsApp numbers before storing new contact submissions and connected the form success copy to the API response.
+- Corrected the admin mutation-origin check to use browser origin, proxy/host, protocol, and Fetch Metadata consistently; same-origin admin mutations work while missing/cross-site origins remain denied.
+- Admin upload now uses Vercel Blob with MIME, extension, magic-byte, and 5 MB checks.
+- Added authenticated cleanup for abandoned/replaced admin uploads. Deletion is restricted to HTTPS Vercel Blob URLs under the managed `admin/media/` prefix.
+- Disabled the framework disclosure header and added COOP, CORP, and a stricter Permissions Policy; the built server emitted the expected headers.
+- Marketplace replacement is atomic within the owner update.
+- Marketplace links require HTTPS and a hostname matching the selected marketplace.
+- Processed service history and used spareparts can no longer be destructively deleted.
+- Added a server-side service-status transition matrix.
+- Restricted setting keys and sizes and made settings writes transactional.
+- Removed unused Vercel CLI and Google API development dependencies.
+- Upgraded Next.js and `eslint-config-next` to 16.2.12.
+- Production dependency audit now reports zero known vulnerabilities.
+- Replaced the destructive database seed with idempotent slug-based upserts. It no longer clears operational tables or embeds the superseded unsupported marketing copy.
+- Added a public service-copy guardrail so legacy database descriptions cannot expose unsupported credentials, “official warranty,” or “original” claims before a database seed/update is run.
+- Public FAQ rendering now uses the reviewed fallback set, holds unreviewed database answers out of public pages, and renders answers in server HTML for AEO/GEO.
+- Public services and articles use reviewed-slug allowlists so legacy active records cannot become indexable without editorial review.
+- Public service detail copy now has reviewed semantic sections and sanitized Markdown rendering; article details include reviewed-author/update context and related service/FAQ/contact links.
+- Public booking, contact, warranty, status, login, and logout handlers now require trusted request controls where applicable, reject oversized or malformed JSON with 4xx responses, and keep all success/error responses no-store.
+- The proxy adds an early request-size ceiling for admin JSON (512 KB) and media uploads (6 MB envelope; the file itself remains capped at 5 MB), with oversized requests rejected before the handler runs.
+- Proxy and `next.config.ts` apply `X-Robots-Tag: noindex` and `Cache-Control: no-store` to every `/api/**` response, including unauthorized admin responses.
+- Sitemap failures fall back to the reviewed static URL set; local status/login failures now also expose inline accessible alerts.
+- Vercel Analytics and Speed Insights now load only on Vercel, eliminating local/preview script 404 and MIME errors on self-hosted builds.
+
+### Frontend, responsive UX, and accessibility
+
+- Reduced homepage service output from 44 records to four curated base services.
+- Service preview cards are real links.
+- Moved the public navigation offset out of the root layout so admin/login no longer overflows.
+- Repaired booking device-brand loss, camel/snake-case mismatch, confirmation tracking ID, WhatsApp message, Jakarta date, privacy notice, and operating-hour copy.
+- Added WhatsApp verification to status lookup and states for waiting/cancelled service.
+- Replaced the fake contact map and placeholder coordinates with the user-supplied Pytafix Google Maps listing and address query at Jl. Werkudoro No. 2, Polehan, Blimbing, Kota Malang. The listing text says Malang but the current Maps preview exposes a conflicting Sidoarjo-area center, so coordinates and exact NAP are intentionally omitted from verified facts until the owner confirms the pin.
+- Added a linked address, accessible embedded map, and route action while retaining Malang Raya as the service area.
+- Added accessible labels to product/sparepart search and sort controls.
+- Improved mobile menu semantics, Escape handling, desktop dropdown state, social-list semantics, heading order, and inline-link affordance.
+- Verified no horizontal overflow at mobile, tablet, or desktop widths.
+- Removed opacity-zero initial states from promo and portfolio motion components so critical copy remains visible before hydration.
+- Replaced the non-square wordmark favicon with a preserved square brand mark and added a dedicated 180 px Apple touch icon.
+
+### SEO, AEO/GEO, schema, and information architecture
+
+- Removed geo variants from homepage, service archive, sitemap, and `llms.txt`.
+- Legacy inferred geo variants redirect directly to the canonical base service.
+- Removed utility/status/claim and empty collection pages from sitemap.
+- Empty promo, portfolio, testimonial, product, and sparepart collections are noindex until populated.
+- Draft/future articles, expired promos, inactive products, and geo variants cannot become index candidates.
+- Article and service archives now switch to `noindex` when no reviewed records are available; expired promo detail URLs also return `noindex` metadata.
+- Removed duplicate brand suffixes in page titles.
+- Added an admin metadata boundary and `X-Robots-Tag`.
+- Replaced invalid promotion schema with `Offer`.
+- Removed false product brands, fake ratings, fake NAP/geo, fake logo dimensions, and Sunday pseudo-hours.
+- Added `hasMap` and service-area data to the local-business schema; `PostalAddress` and `GeoCoordinates` are withheld while the listing text/pin conflict is unresolved.
+- Promoted the reviewed Organization and ProfessionalService entities to the root layout so article, service, product, and commerce schemas resolve their `#organization`/`#localbusiness` references on every public route without duplicating the homepage graph.
+- Replaced duplicate inline publisher/author and contact-service payloads with stable entity references to the root graph.
+- Escaped `<` in every updated JSON-LD payload to prevent script breakout.
+- Rebuilt `llms.txt` with canonical URLs, reviewed service/article content, FAQ answers, references, update dates when available, an honest service-area description, and a reviewed static article fallback when the database is unavailable.
+- Reduced the local sitemap from 65 baseline URLs to 18 reviewed candidates.
+
+### Copywriting, E-E-A-T, and content connections
+
+- Removed placeholder testimonials and unverified counts, success rates, certifications, warranty durations, turnaround claims, free pickup, and “original” guarantees.
+- Centralized service principles, FAQ answers, legal entity, contact facts, and operating hours.
+- Rewrote About, Contact, Services, Booking, warranty, marketplace, portfolio, and legal fallback copy.
+- Added honest empty states instead of fabricated proof.
+- Converted stored Markdown to sanitized semantic HTML.
+- Replaced all five live article presentations with safer titles, excerpts, and reviewed editorial content.
+- Added official Microsoft, Apple, and Intel references, an editorial disclaimer, update metadata, and links to relevant service/booking journeys.
+
+## Verification results
+
+| Check | Result |
 |---|---|
-| Technical SEO | 55 |
-| Content Quality | 65 |
-| On-Page SEO | 62 |
-| Schema / Structured Data | 58 |
-| Performance (CWV) | 50 |
-| Backend / API / Security | 42 |
-| Images & Media | 52 |
-| AI Search Readiness (GEO) | 48 |
-| **Overall** | **58** |
-
----
-
-### Top 5 Critical Issues
-
-1. **[SECURITY] GCP service account JSON committed to repository** — credentials exposed publicly
-2. **[SECURITY] ADMIN_PASSWORD='admin' + weak JWT_SECRET in committed .env** — trivially brute-forced
-3. **[ON-PAGE] OG image /logo.png used universally — wrong dimensions** — all social shares render poorly
-4. **[CONTENT] Article pages use dangerouslySetInnerHTML without sanitization** — XSS vulnerability
-5. **[PERFORMANCE] Brand marquee uses raw `<img>` from external CDN** — bypasses Next.js optimization, CLS risk
-
-### Top 5 Quick Wins
-
-1. Create 1200×630 OG banner and update all OG image URLs
-2. Revoke GCP credentials, move all secrets to Vercel Environment Variables
-3. Replace ADMIN_PASSWORD and JWT_SECRET with strong random values
-4. Sanitize article content with DOMPurify before rendering
-5. Add Organization + WebSite + SearchAction schema
-
----
-
-## CATEGORY BREAKDOWN
-
-### 1. Technical SEO — Score: 55
-
-#### What's Working
-- robots.txt correctly blocks /admin/ and /api/ from crawlers
-- sitemap.xml generates dynamically (static + dynamic URLs from Prisma)
-- Canonical tags present on all public pages via alternates
-- Security headers (X-Frame-Options, HSTS, Referrer-Policy) configured
-- Clean URL structure, no query strings in public URLs
-- Next.js 16 App Router with ISR (revalidate tags)
-
-#### Findings
-
-**[HIGH] Sitemap uses stale fallback date 2024-06-01**
-- `src/app/sitemap.ts` line 7: all static pages report same outdated lastModified
-- Impact: Google deprioritizes "stale" pages in crawl budget
-- Fix: `const fallbackDate = new Date()`
-
-**[HIGH] Sparepart detail URL uses numeric ID — not SEO-friendly**
-- `src/app/(public)/sparepart/[id]/page.tsx` + `src/app/sitemap.ts`
-- URLs like `/sparepart/123` expose DB internals, zero keyword value
-- Fix: Add `slug String @unique` to Sparepart model → `/sparepart/[slug]`
-
-**[HIGH] Location permutation sitemap — doorway page risk**
-- `src/app/sitemap.ts` lines 59-65: each service × 15 locations = N×15 URLs
-- All identical content with just location name swapped — classic doorway page penalty
-- Fix: Remove location permutation generation. Keep only base `/layanan/[slug]`
-
-**[MEDIUM] Google Maps uses generic 'Malang' query**
-- `src/app/(public)/kontak/page.tsx` line 109: `q=Malang` — not pinned to actual address
-- Fix: `q=-7.983908,112.621391` (from LocalBusiness geo schema)
-
-**[MEDIUM] No GSC verification meta tag**
-- No Google Search Console HTML verification
-- No Vercel Analytics or performance monitoring
-- Fix: Add GSC verification tag in layout.tsx metadata
-
-**[LOW] No Content-Language HTTP header**
-- Only `lang="id"` in HTML root
-- Fix: Add `Content-Language: id-ID` to Vercel headers config
-
----
-
-### 2. On-Page SEO — Score: 62
-
-#### What's Working
-- All pages have unique title tags with consistent Pytafix branding
-- All pages have meta descriptions, canonical alternates
-- All pages have OpenGraph (locale: id_ID) + Twitter Card metadata
-- Strong internal linking via Footer, TopNavBar, CTAs
-- All pages have proper lang="id" declaration
-
-#### Findings
-
-**[CRITICAL] OG image /logo.png wrong dimensions everywhere**
-- `src/app/layout.tsx` line 27 + every page metadata
-- Logo PNG (square) used as OpenGraph. Facebook wants 1200×630, Twitter 1200×627
-- All social shares render cropped, low-quality, or get rejected by Twitter
-- Fix: Create `/public/images/og-banner.png` (1200×630px). Update all OG image arrays
-
-**[MEDIUM] Geographic modifier lost on inner pages**
-- `/faq`: "Pertanyaan yang Sering Diajukan (FAQ) | Pytafix" — no "Malang"
-- Other inner pages inconsistently include location signal
-- Fix: Add "Malang" or "Jawa Timur" to all meta descriptions
-
-**[MEDIUM] Homepage missing Organization + WebSite + BreadcrumbList schema**
-- Only LocalBusiness injected. Missing: Organization, WebSite/SearchBox, BreadcrumbList, FAQPage
-- Fix: Add all three schemas to HomeClient.tsx
-
-**[MEDIUM] Booking + Status pages have no schema**
-- High-value transactional pages with no structured data
-- Fix: WebApplication schema on booking. Hidden Thing schema on status page
-
-**[LOW] Material Symbols loaded via raw link tag**
-- `src/app/layout.tsx` lines 55-58 — not using next/font, no preconnect
-- Fix: Add `preconnect` for fonts.googleapis.com, or replace with lucide-react
-
----
-
-### 3. Content Quality — Score: 65
-
-#### What's Working
-- Service pages have good-length descriptions from CMS
-- About page has company story, values, area coverage — good E-E-A-T signals
-- tentang-kami mentions CV. Pyta Cipta Karya — establishes business legitimacy
-- Contact page has full NAP (Name, Address, Phone) — critical for local SEO
-- FAQ answers are adequate quality
-
-#### Findings
-
-**[CRITICAL] dangerouslySetInnerHTML on article pages — XSS risk**
-- `src/app/(public)/artikel/[slug]/page.tsx` line 91: raw HTML from DB, no sanitization
-- Malicious article content executes in user's browser
-- Fix: `npm install isomorphic-dompurify` + `DOMPurify.sanitize(article.content)`
-
-**[HIGH] Testimonials hardcoded in client component, not from database**
-- `src/app/(public)/HomeClient.tsx` lines 605-647: 4 testimonials hardcoded in JSX
-- Prisma has Testimonial model — data exists but unused on homepage
-- Fix: Fetch `prisma.testimonial.findMany({ where: { isFeatured: true } })` in server page. Pass to HomeClient
-
-**[MEDIUM] Homepage stats (5,000+ devices, 99% satisfied) unverified**
-- `HomeClient.tsx` lines 497-519: hardcoded stats with no source
-- Google E-E-A-T guidelines penalize unsubstantiated quantitative claims
-- Fix: Make dynamic or remove numbers. Add AggregateRating if real
-
-**[MEDIUM] Service page content plain text — no semantic HTML**
-- `src/app/(public)/layanan/[slug]/page.tsx` lines 159-169: `whitespace-pre-wrap` renders all text as one block
-- No heading hierarchy, no lists, poor readability
-- Fix: Use remark/rehype if CMS supports Markdown. Preprocess plain text for bullet patterns
-
-**[LOW] Portfolio page no schema, no OG metadata on listing**
-- `src/app/(public)/portofolio/page.tsx` — no JSON-LD, no OpenGraph
-- Fix: Add CreativeWork or ItemList schema. Add metadata export
-
----
-
-### 4. Schema / Structured Data — Score: 58
-
-#### What's Working
-- LocalBusiness JSON-LD on homepage (geo, hours, contact, social)
-- Service schema on layanan/[slug] pages
-- Article schema on artikel/[slug] pages
-- FAQPage schema on /faq
-- All injected as `<script type="application/ld+json">` — correct approach
-
-#### Findings
-
-**[HIGH] No Organization schema — LocalBusiness orphaned**
-- HomeClient.tsx LocalBusiness stands alone with no parent entity
-- No link to CV. Pyta Cipta Karya, no link between pytafix and sister sites
-- Fix: Add Organization schema as parent entity
-
-**[HIGH] WebSite + SearchAction missing — no search rich result**
-- No WebSite schema anywhere — Google's Sitelinks search box won't fire
-- Fix: Add WebSite with SearchAction pointing to internal search
-
-**[MEDIUM] No Product/Offer schema for sparepart pages**
-- Price, stock, category displayed but no JSON-LD
-- No Shopping tab / Product rich results eligibility
-- Fix: Add Product schema with offers array
-
-**[MEDIUM] BreadcrumbList missing from all detail pages**
-- sparepart/[id] has visual breadcrumbs but no JSON-LD
-- Fix: Add BreadcrumbList on detail pages (sparepart, layanan, artikel, promo)
-
-**[MEDIUM] Service schema missing priceSpecification**
-- layanan/[slug] Service schema lacks hasOfferCatalog, priceRange
-- Fix: Add `priceRange: "$$"` and hasOfferCatalog
-
-**[MEDIUM] FAQPage schema only on /faq — homepage FAQ section undeclared**
-- 4 FAQ items on homepage visible to users but invisible to crawlers
-- Fix: Add FAQPage JSON-LD in HomeClient.tsx
-
-**[LOW] Author schema lacks depth on article pages**
-- Only `name` field — no jobTitle, no sameAs social links
-- Fix: Add `"jobTitle": "Tim Teknisi Pytafix"` and social sameAs
-
----
-
-### 5. Performance (CWV) — Score: 50
-
-#### What's Working
-- Next/Image used for hero, Unsplash, sparepart thumbnails with sizes attributes
-- Hero image has `priority` prop — correct LCP optimization
-- ISR revalidate on homepage (60s) and dynamic pages (3600s)
-- No render-blocking CSS (Tailwind is utility-first)
-- Framer Motion animations trigger on viewport intersection
-
-#### Findings
-
-**[HIGH] Brand marquee uses raw `<img>` from external CDN**
-- `src/app/(public)/HomeClient.tsx` line 136: 20 brand icons via `<img src="cdn.simpleicons.org">`
-- Bypasses Next.js image optimization pipeline entirely
-- No lazy loading, no format conversion, CLS risk from missing dimensions
-- Fix: Download SVGs to `/public/brand-icons/`. Use Next/Image with `unoptimized` for SVG
-
-**[HIGH] No Core Web Vitals measurement**
-- Zero LCP/CLS/INP data. No @vercel/web-vitals, no Lighthouse CI
-- Performance state unknown
-- Fix: Install `@vercel/web-vitals`. Set up Lighthouse CI. Target: LCP < 2.5s, INP < 200ms, CLS < 0.1
-
-**[MEDIUM] Material Symbols icon font blocks rendering**
-- `src/app/layout.tsx` lines 55-58 — no preconnect, render-blocking
-- Fix: Add `rel="preconnect"`. Or replace with lucide-react (already installed, tree-shakeable)
-
-**[MEDIUM] No bundle analysis setup**
-- Can't verify framer-motion tree-shaking or client bundle bloat
-- Fix: Add `@next/bundle-analyzer`. Run weekly to monitor
-
-**[LOW] SparepartClient + BookingClient data fetching unknown**
-- Not reviewed — if client-side fetch-on-mount, bypasses ISR and hammers Neon DB
-- Fix: Verify both use server-props data, not client-side fetches
-
----
-
-### 6. Backend / API / Security — Score: 42
-
-#### What's Working
-- Admin routes protected by middleware with JWT verification
-- JWT uses httpOnly, secure, sameSite=strict cookies
-- jose library for JWT — standard HS256
-- Prisma singleton pattern prevents connection pool exhaustion
-- Neon PostgreSQL uses SSL mode
-
-#### Findings
-
-**[CRITICAL] google-service-account.json committed to repository**
-- `pytafix-web/google-service-account.json` — GCP credentials exposed publicly
-- IMMEDIATE: (1) Revoke key in GCP Console (2) Remove file (3) Add to .gitignore (4) Use Vercel Env Vars (5) Scrub from git history with BFG
-
-**[CRITICAL] ADMIN_PASSWORD='admin' + weak JWT_SECRET in committed .env**
-- `.env` lines 5-6: predictable credentials
-- IMMEDIATE: (1) `openssl rand -base64 24` for ADMIN_PASSWORD (2) `openssl rand -base64 32` for JWT_SECRET (3) Move to Vercel Env Vars
-
-**[HIGH] No rate limiting on public API endpoints**
-- `/api/booking`, `/api/warranty`, `/api/status` — floodable
-- No CAPTCHA on forms
-- Fix: @upstash/ratelimit or Vercel Edge rate limiting. Add honeypot + hCaptcha to booking
-
-**[HIGH] Status API exposes full PII without authentication**
-- `src/app/api/status/route.ts`: GET returns name, address, whatsapp, problem without auth
-- Tracking IDs are guessable — full booking record enumeration possible
-- Fix: Return only `{ status, updatedAt }` publicly. Rate limit per IP. Full record needs session
-
-**[HIGH] Database credentials in committed .env**
-- `.env` lines 3-4: Neon PostgreSQL connection strings visible
-- Fix: Rotate Neon credentials. Use Vercel Environment Variables only
-
-**[HIGH] .gitignore incomplete**
-- Evidence: google-service-account.json + .env both committed
-- Fix: Audit .gitignore. Block all `*.json` in root except package.json. Block all `.env*`
-
-**[MEDIUM] No CORS configuration**
-- API routes don't set explicit allowed origins
-- Fix: next.config.ts CORS headers restricting to pytafix.web.id
-
-**[MEDIUM] Booking API validates only presence, not format**
-- No Zod validation, no phone regex, no length limits
-- Fix: Apply `serviceRequestSchema` from `lib/validations.ts` in API route
-
-**[MEDIUM] Logout has no CSRF protection**
-- POST /api/auth/logout callable from any origin
-- Fix: Add SameSite=Strict (already has) + ensure Referer validation
-
----
-
-### 7. Images & Media — Score: 52
-
-#### What's Working
-- Next/Image used for most images with fill + sizes attributes
-- Hero has priority prop
-- alt text present on all images
-- Unsplash images have format/quality params
-
-#### Findings
-
-**[HIGH] Brand icon images use raw `<img>` tags — no optimization**
-- `src/app/(public)/HomeClient.tsx` line 136: external CDN images bypass Next.js pipeline
-- Fix: Download SVGs locally → `/public/brand-icons/`. Use Next/Image with remotePatterns for CDN
-
-**[MEDIUM] OG image /logo.png not optimized for web**
-- Logo PNG likely large, uncompressed
-- Fix: Export 1200×630 WebP OG banner, < 1MB
-
-**[MEDIUM] Sparepart images — unknown aspect ratio containers**
-- SparepartClient.tsx (not reviewed) — potential CLS from missing dimensions
-- Fix: Ensure all sparepart image containers have `aspect-ratio` CSS
-
----
-
-### 8. AI Search Readiness (GEO) — Score: 48
-
-#### What's Working
-- LocalBusiness schema provides entity signals for AI crawlers
-- Clear NAP consistency across pages
-- FAQPage schema for Q&A retrieval
-- About page mentions CV. Pyta Cipta Karya
-
-#### Findings
-
-**[HIGH] No llms.txt or AI-accessible content endpoint**
-- Google AI Overviews, ChatGPT, Perplexity cannot easily parse site content
-- Fix: Create `src/app/llms.txt/route.ts` returning plain-text site summary. Add `Allow: /llms.txt` in robots.txt
-
-**[MEDIUM] Business hours inconsistently stated**
-- kontak/page.tsx, HomeClient LocalBusiness, tentang-kami — three different sources
-- Fix: Single source of truth. Update LocalBusiness openingHoursSpecification
-
-**[MEDIUM] HowTo schema missing for service process**
-- "How it Works" section (4 steps) has no HowTo structured data
-- Fix: Add HowTo JSON-LD with 4 HowToStep items
-
-**[LOW] Article author lacks authority depth**
-- Only name field — no jobTitle, no sameAs social links
-- Fix: Add jobTitle + social sameAs to Person schema
-
----
-
-## FRONTEND-BACKEND INTEGRATION MAP
-
-```
-Next.js 16 App Router (SSR/ISR)
-│
-├── Root Layout (layout.tsx)
-│   ├── metadata: title, OG, Twitter, canonical ✅
-│   ├── lang="id" ✅
-│   ├── Material Symbols font link ⚠️ raw tag
-│   └── Toaster (sonner) ✅
-│
-├── Public Layout (layout.tsx in (public)/)
-│   ├── TopNavBar.tsx (client, usePathname) ✅
-│   ├── Footer.tsx (server) ✅
-│   ├── GlobalCTA.tsx (client, usePathname) ✅
-│   └── FloatingWA.tsx (client, usePathname) ✅
-│
-├── Static Public Pages (SSR via Prisma)
-│   ├── /page.tsx → HomeClient (client) → revalidate:60 ✅
-│   ├── /layanan → service grid ✅
-│   ├── /layanan/[slug] → service detail + Service schema ✅
-│   ├── /tentang-kami → company info ✅
-│   ├── /kontak → contact + Google Maps ⚠️ generic query
-│   ├── /faq → FAQPage schema ✅
-│   ├── /portofolio → revalidate:3600 ✅
-│   ├── /testimoni → from DB ✅
-│   ├── /syarat-ketentuan → from DB Setting ✅
-│   └── /kebijakan-privasi → from DB Setting ✅
-│
-├── Dynamic Public Pages
-│   ├── /artikel/page.tsx → revalidate:3600 ✅
-│   ├── /artikel/[slug] → Article schema ⚠️ dangerouslySetInnerHTML XSS
-│   ├── /promo/page.tsx ✅
-│   ├── /promo/[slug] ✅
-│   ├── /sparepart/page.tsx → SparepartClient ⚠️ unknown data fetch
-│   ├── /sparepart/[id] → ⚠️ integer ID, needs slug
-│   ├── /booking-servis → BookingClient ⚠️ unknown data fetch
-│   ├── /cek-status-servis → CekStatusClient ⚠️ unknown data fetch
-│   └── /klaim-garansi → KlaimGaransiPage ✅
-│
-├── Public API Routes
-│   ├── POST /api/booking → ⚠️ no Zod validation, no rate limit
-│   ├── GET /api/status → ⚠️ PII leak, no auth, no rate limit
-│   ├── POST /api/warranty → ⚠️ no rate limit
-│   ├── POST /api/auth/login → ⚠️ weak fallback JWT secret
-│   └── POST /api/auth/logout → ⚠️ no CSRF protection
-│
-├── Admin Routes (JWT protected)
-│   ├── /admin/login → ⚠️ hardcoded ADMIN_PASSWORD='admin'
-│   └── /admin/(authenticated)/* → 8 admin pages (dashboard, services,
-│       promos, articles, portfolios, spareparts, faqs, testimonials,
-│       requests, warranty, settings)
-│
-├── Database (Prisma + Neon PostgreSQL)
-│   ├── ServiceContent ✅ (isActive, slug, title, description, content)
-│   ├── Sparepart ⚠️ (integer @id, needs slug)
-│   ├── Promo ✅ (isActive, isFeatured, slug)
-│   ├── Article ✅ (slug, author)
-│   ├── Portfolio ✅
-│   ├── Faq ✅ (isActive)
-│   ├── Testimonial ⚠️ (not used on homepage)
-│   ├── ServiceRequest ✅
-│   ├── WarrantyClaim ✅
-│   └── Setting ✅
-│
-├── Sitemap (sitemap.ts) ⚠️ stale fallbackDate ⚠️ location permutations
-├── Robots (robots.ts) ✅
-├── next.config.ts ✅ security headers ✅ image remotePatterns ✅
-└── middleware.ts ✅ JWT auth on admin routes ✅
-```
-
----
-
-## URL INVENTORY
-
-| URL | Type | Has Metadata | Has Schema | ISR Revalidate |
-|---|---|---|---|---|
-| `/` | Homepage | ✅ | ✅ LocalBusiness | 60s ✅ |
-| `/layanan` | Listing | ✅ | ❌ | SSR |
-| `/layanan/[slug]` | Detail | ✅ | ✅ Service | SSR |
-| `/layanan/[slug]-[location]` | Detail | ✅ | ✅ Service | SSR ⚠️ dup |
-| `/booking-servis` | Form | ✅ | ❌ | — |
-| `/cek-status-servis` | Form | ✅ | ❌ | — |
-| `/promo` | Listing | ✅ | ❌ | SSR |
-| `/promo/[slug]` | Detail | ✅ | ❌ | SSR |
-| `/portofolio` | Listing | ✅ | ❌ | 3600s |
-| `/artikel` | Listing | ✅ | ❌ | 3600s |
-| `/artikel/[slug]` | Detail | ✅ | ✅ Article ⚠️ XSS | 3600s |
-| `/sparepart` | Listing | ✅ | ❌ | SSR |
-| `/sparepart/[id]` | Detail | ✅ | ❌ ⚠️ int ID | SSR |
-| `/faq` | Listing | ✅ | ✅ FAQPage | SSR |
-| `/tentang-kami` | Static | ✅ | ❌ | — |
-| `/kontak` | Static | ✅ | ❌ | — |
-| `/testimoni` | Listing | ✅ | ❌ | SSR |
-| `/syarat-ketentuan` | Static | ✅ | ❌ | SSR |
-| `/kebijakan-privasi` | Static | ✅ | ❌ | SSR |
-| `/klaim-garansi` | Form | ✅ | ❌ | — |
-
----
-
-## SCORING RATIONALE
-
-- **Technical SEO (55)**: Good foundation — robots, sitemap, headers, canonical. Deducted for sitemap date, location permutations, sparepart URL, no GSC
-- **Content Quality (65)**: CMS-driven content is decent. Deducted for XSS vector, hardcoded testimonials, unverified stats
-- **On-Page SEO (62)**: Titles and meta consistent. Deducted for OG image, missing homepage schema, booking/status schema
-- **Schema (58)**: LocalBusiness + Article + FAQ good. Deducted for missing Organization, SearchAction, Product, BreadcrumbList
-- **Performance (50)**: Hero image optimized. Deducted for brand marquee, no CWV measurement, unknown client data fetching
-- **Backend/Security (42)**: Auth is well-structured. Deducted heavily for committed credentials, weak passwords, no rate limiting, PII leak
-- **Images (52)**: Next/Image mostly used. Deducted for raw img tags on brand icons, OG image quality
-- **GEO (48)**: LocalBusiness + FAQ good for AI. Deducted for no llms.txt, inconsistent hours, no HowTo
+| `npm run lint` | Pass |
+| `npm run test:run` | 43/43 pass |
+| `prisma validate` | Pass with `prisma.config.ts` |
+| `npm run build` | Pass, Next.js 16.2.12, 56 routes |
+| `npm audit --omit=dev` | 0 vulnerabilities |
+| Full `npm audit` | 9 high advisories in ESLint-only development dependency chain |
+| Unauthorized `/api/admin/articles` | 401 |
+| Unauthorized `/api/admin/contacts` and contact mutation | 401 |
+| Authenticated admin contact inbox | Loads successfully; search/filter/empty state present; no mobile overflow |
+| Ticket/warranty pagination | Bounded API envelopes; search/filter/pagination rendered without mobile overflow |
+| Admin mutation origin | Legitimate local same-origin PATCH/DELETE accepted by origin guard |
+| Warranty history deletion | 405 with `Allow: GET, PATCH` |
+| Distributed limiter without production credentials | Login and public status fail closed with 503 |
+| Icon metadata | 512 px square favicon and 180 px Apple icon emitted correctly |
+| Runtime security headers | CSP, COOP, CORP, HSTS, Referrer Policy, and restrictive Permissions Policy emitted; no `X-Powered-By` |
+| Public service copy | Legacy service claims absent from homepage and detail HTML after rendering against the existing local database |
+| Browser console | 0 errors after Vercel telemetry gating on local production server |
+| Status request without WhatsApp | 400 |
+| Nested geo variant | Direct 308 to canonical base service |
+| Local sitemap | 18 reviewed URLs; no utilities/empty collections/geo clones |
+| Local article | Semantic H2s, no literal Markdown, valid Article JSON-LD, official reference |
+| Local contact location | Google Maps address-query iframe loaded; route links correct; listing text retained for navigation; business-schema address/coordinates withheld pending owner pin verification; no overflow at 375 or 1440 px |
+| Local commerce freshness | Product and sparepart detail pages expose `dateModified` in Product JSON-LD and a visible last-updated/price-stock confirmation note |
+| Lighthouse local | Mobile performance 89, desktop 72, best practices 96, SEO 100 |
+| Lighthouse accessibility rerun | 99 |
+
+Lighthouse performance is lab evidence and showed cold/warm variance. It is not CrUX or production field truth.
+
+## Remaining blockers and limitations
+
+1. **Rotate the exposed GitHub token.** It was removed from the current remote URL, but revocation must happen in GitHub.
+2. **Configure `BLOB_READ_WRITE_TOKEN`** in preview/production before testing admin upload.
+3. **Confirm ownership and completeness of the Google Business Profile.** The provided Maps link text names Malang, but the current preview exposes a conflicting Sidoarjo-area center. Profile ownership, categories, hours, exact pin, and NAP consistency must be confirmed before the address is treated as verified local-business data.
+4. **Deactivate/delete the 40 legacy geo rows** in the production database after exporting a backup; keep their direct redirects.
+5. **Configure and verify Upstash Redis in preview/production.** Distributed enforcement is implemented, but `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` must be set before login or public form/status smoke tests can pass.
+6. **Adopt individual admin accounts, slow password hashing, MFA, and audit logs.** The current shared password is hardened but remains a single identity.
+7. **Decide retention periods and public/internal note fields** before a schema migration.
+8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
+9. **Verify generated favicon/Apple icons and all remote image hosts after deployment.** Source assets and local metadata are now correct.
+10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
+11. **Preview, deploy, and rerun production/GSC checks.** Local readiness is not production delivery or Google indexing.
+12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.
+
+## Conclusion
+
+The repository has moved from a high-risk marketing prototype toward an evidence-led service site. The local code now has a much stronger trust model, index boundary, privacy boundary, content contract, and conversion flow. Production should not be updated until the action plan’s deployment prerequisites are completed.

@@ -82,6 +82,7 @@ export function SparepartClient({ initialSpareparts }: Props) {
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
             <input
               id="sparepart-search"
+              aria-label="Cari sparepart"
               type="text"
               placeholder="Cari sparepart (Contoh: RAM 8GB, SSD 512GB...)"
               value={searchQuery}
@@ -134,6 +135,7 @@ export function SparepartClient({ initialSpareparts }: Props) {
             {/* Sort */}
             <div className="ml-auto">
               <select id="sparepart-sort"
+                aria-label="Urutkan sparepart"
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
                 className="px-4 py-2 bg-surface-container-high border border-outline rounded-full font-label-bold text-label-sm text-on-surface focus:border-primary outline-none cursor-pointer"
@@ -173,7 +175,7 @@ export function SparepartClient({ initialSpareparts }: Props) {
                 <div key={item.id} className="bg-surface rounded-2xl shadow-sm border border-outline-variant overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group">
                   <Link href={`/sparepart/${item.id}`} className="aspect-[4/3] bg-surface-container-low w-full relative overflow-hidden block">
                     {item.imageUrl ? (
-                      <Image src={item.imageUrl} alt={item.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" />
+                      <Image src={item.imageUrl} alt={item.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant/50 group-hover:scale-110 transition-transform duration-500 ease-in-out">
                         <span className="material-symbols-outlined text-[48px] mb-2">inventory_2</span>

@@ -20,25 +20,25 @@ export function WhyUs() {
               Mengapa Memilih Pytafix?
             </motion.h2>
             <motion.p variants={fadeUpVariant} className="font-body-lg text-body-lg text-on-surface-variant mb-8">
-              Kami memahami betapa pentingnya perangkat elektronik bagi produktivitas Anda. Pytafix hadir dengan komitmen layanan prima, pengerjaan rapi, dan keamanan data 100%.
+              Perbaikan yang baik dimulai dari diagnosis yang dapat dijelaskan. Karena itu, keputusan biaya, komponen, akses data, dan kelanjutan pengerjaan tetap berada di tangan Anda.
             </motion.p>
             
             <div className="flex flex-col gap-6">
               {[
                 {
                   icon: "speed",
-                  title: "Pengerjaan Cepat & Tepat",
-                  desc: "Kami berusaha menyelesaikan setiap kasus perbaikan dalam waktu kurang dari 24 jam dengan hasil yang maksimal."
+                  title: "Estimasi Waktu Berdasarkan Diagnosis",
+                  desc: "Waktu pengerjaan disampaikan setelah jenis kerusakan dan ketersediaan komponen diketahui."
                 },
                 {
                   icon: "admin_panel_settings",
-                  title: "Keamanan Data Terjamin",
-                  desc: "Privasi dan dokumen Anda sangat aman. Kami tidak pernah membongkar atau menyalin data privasi pelanggan tanpa izin."
+                  title: "Akses Data Harus Disetujui",
+                  desc: "Pelanggan dianjurkan membuat cadangan. Akses sistem hanya dilakukan jika dibutuhkan untuk diagnosis dan telah disetujui."
                 },
                 {
                   icon: "payments",
-                  title: "Harga Transparan & Masuk Akal",
-                  desc: "Konsultasikan keluhan Anda secara gratis. Anda akan mendapatkan estimasi rincian biaya sebelum kami mulai memperbaiki perangkat."
+                  title: "Biaya Dibahas Sebelum Pengerjaan",
+                  desc: "Hasil pemeriksaan, pilihan tindakan, dan estimasi biaya dikonfirmasi sebelum pekerjaan dilanjutkan."
                 }
               ].map((item, idx) => (
                 <motion.div key={idx} variants={fadeUpVariant} className="flex items-start gap-4">
@@ -64,7 +64,7 @@ export function WhyUs() {
             <div className="relative rounded-[2rem] overflow-hidden border border-outline-variant aspect-[4/3] lg:aspect-auto lg:h-[600px] shadow-2xl">
               <Image
                 src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=800&q=80"
-                alt="Teknisi Pytafix sedang bekerja secara profesional"
+                alt="Ilustrasi meja kerja untuk pemeriksaan perangkat elektronik"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover hover:scale-105 transition-transform duration-700"
@@ -77,8 +77,8 @@ export function WhyUs() {
                       <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                     </div>
                     <div>
-                      <div className="font-headline-sm text-headline-sm text-on-surface font-bold">4.9/5 Rating</div>
-                      <div className="font-label-sm text-label-sm text-on-surface-variant">Dari 1000+ Pelanggan Puas</div>
+                      <div className="font-headline-sm text-headline-sm text-on-surface font-bold">Proses dapat dipantau</div>
+                      <div className="font-label-sm text-label-sm text-on-surface-variant">Gunakan ID servis untuk melihat status</div>
                     </div>
                   </div>
                 </div>

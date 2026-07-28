@@ -111,6 +111,7 @@ export default function JualBeliClient({ initialProducts }: Props) {
           <div className="relative">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
             <input id="jualbeli-search"
+              aria-label="Cari perangkat"
               type="text"
               placeholder="Cari laptop atau HP (Contoh: MacBook Pro, iPhone 13...)"
               value={searchQuery}
@@ -160,6 +161,7 @@ export default function JualBeliClient({ initialProducts }: Props) {
             {/* Sort dropdown */}
             <div className="ml-auto">
               <select id="jualbeli-sort"
+                aria-label="Urutkan perangkat"
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
                 className="px-4 py-2 bg-surface-container-high border border-outline rounded-full font-label-bold text-label-sm text-on-surface focus:border-primary outline-none cursor-pointer"
@@ -194,7 +196,7 @@ export default function JualBeliClient({ initialProducts }: Props) {
               <div key={item.id} className="bg-surface rounded-2xl shadow-sm border border-outline-variant overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group">
                 <Link href={`/jual-beli/${item.id}`} className="aspect-[4/3] bg-surface-container-low w-full relative overflow-hidden block">
                   {item.imageUrl ? (
-                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <Image src={item.imageUrl} alt={item.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant/50 group-hover:scale-110 transition-transform duration-500">
                       <span className="material-symbols-outlined text-[48px] mb-2">devices</span>

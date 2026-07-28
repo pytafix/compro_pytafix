@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { generateUniqueTrackingId } from '@/lib/tracking';
 
 describe('Tracking ID Generation', () => {
-  it('should generate valid format PYT-YYYY-XXXXXX', async () => {
+  it('should generate a high-entropy PYT tracking ID', async () => {
     const id = await generateUniqueTrackingId();
     const year = new Date().getFullYear();
-    expect(id).toMatch(new RegExp(`^PYT-${year}-[A-Z0-9]{6,8}$`));
+    expect(id).toMatch(new RegExp(`^PYT-${year}-[A-Z0-9]{26,32}$`));
   });
 
   it('should generate unique IDs on multiple calls', async () => {

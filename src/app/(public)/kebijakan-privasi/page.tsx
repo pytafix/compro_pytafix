@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { sanitizeContent } from '@/lib/sanitize';
 
 export const metadata: Metadata = {
-  title: "Kebijakan Privasi | Pytafix",
+  title: "Kebijakan Privasi",
   description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
   alternates: { canonical: "/kebijakan-privasi" },
   openGraph: {
@@ -19,6 +19,9 @@ export const metadata: Metadata = {
 
 export default async function PrivacyPolicyPage() {
   const setting = await prisma.setting.findUnique({ where: { id: "privacy" } });
+  const reviewedSetting = setting?.content && setting.updatedAt >= new Date("2026-07-26T00:00:00+07:00")
+    ? setting
+    : null;
 
   return (
     <main className="min-h-screen bg-surface">
@@ -35,35 +38,40 @@ export default async function PrivacyPolicyPage() {
       {/* Content */}
       <section className="max-w-3xl mx-auto px-4 py-12">
         <div className="prose">
-          {setting?.content ? (
-            <div dangerouslySetInnerHTML={{ __html: sanitizeContent(setting.content) }} />
+          {reviewedSetting ? (
+            <div dangerouslySetInnerHTML={{ __html: sanitizeContent(reviewedSetting.content) }} />
           ) : (
             <>
-              <h2 className="font-headline-md text-on-surface mb-6 mt-8">1. Pengumpulan Data Selama Pemesanan</h2>
+              <p className="font-body-md text-on-surface-variant mb-4">Terakhir diperbarui: 26 Juli 2026.</p>
+              <h2 className="font-headline-md text-on-surface mb-6 mt-8">1. Data yang diproses</h2>
               <p className="font-body-md text-on-surface-variant mb-4">
-                Saat Anda melakukan pemesanan (booking) layanan perbaikan Pytafix, kami akan mengumpulkan beberapa informasi pribadi untuk keperluan administrasi dan layanan pelanggan. Data yang dikumpulkan antara lain:
+                Pytafix memproses data yang Anda kirim melalui booking, kontak, pelacakan, dan klaim: nama, WhatsApp, alamat, detail perangkat, keluhan, jadwal, ID servis, komunikasi, serta riwayat proses servis. Email hanya dikumpulkan pada formulir yang memintanya.
               </p>
               <ul className="list-disc pl-5 font-body-md text-on-surface-variant mb-4">
                 <li>Nama lengkap</li>
                 <li>Nomor telepon (WhatsApp)</li>
-                <li>Alamat email</li>
                 <li>Alamat rumah atau lokasi perbaikan</li>
                 <li>Informasi detail perangkat (merk, model, dan masalah)</li>
               </ul>
 
-              <h2 className="font-headline-md text-on-surface mb-6 mt-8">2. Keamanan Data</h2>
+              <h2 className="font-headline-md text-on-surface mb-6 mt-8">2. Tujuan dan akses</h2>
               <p className="font-body-md text-on-surface-variant mb-4">
-                Kami mengimplementasikan standar keamanan yang ketat untuk melindungi data pribadi yang Anda berikan. Seluruh informasi disimpan di server yang aman dan hanya dapat diakses oleh staf internal Pytafix yang berwenang, secara eksklusif untuk kepentingan komunikasi dan penyelesaian layanan perbaikan.
+                Data digunakan untuk meninjau permintaan, menghubungi pelanggan, menjadwalkan dan mengelola pekerjaan, menampilkan status, menangani klaim, menjaga catatan transaksi, serta memenuhi kewajiban hukum. Akses dibatasi sesuai kebutuhan operasional.
               </p>
 
-              <h2 className="font-headline-md text-on-surface mb-6 mt-8">3. Tidak Ada Pembagian kepada Pihak Ketiga</h2>
+              <h2 className="font-headline-md text-on-surface mb-6 mt-8">3. Penyedia layanan dan pengungkapan</h2>
               <p className="font-body-md text-on-surface-variant mb-4">
-                Privasi Anda adalah prioritas kami. Pytafix <strong>tidak akan pernah</strong> menjual, menyewakan, atau membagikan informasi pribadi Anda kepada pihak ketiga mana pun untuk tujuan pemasaran atau komersial. Data Anda mungkin hanya akan dibagikan jika diwajibkan oleh hukum atau atas permintaan otoritas yang berwenang.
+                Pytafix tidak menjual data pribadi. Data dapat diproses oleh penyedia hosting, basis data, penyimpanan media, analitik, dan komunikasi yang diperlukan untuk menjalankan layanan, atau diungkap bila diwajibkan oleh hukum. Penyedia tersebut memiliki kebijakan dan wilayah pemrosesan masing-masing.
               </p>
 
-              <h2 className="font-headline-md text-on-surface mb-6 mt-8">4. Akses ke Perangkat Anda</h2>
+              <h2 className="font-headline-md text-on-surface mb-6 mt-8">4. Perangkat, keamanan, dan masa simpan</h2>
               <p className="font-body-md text-on-surface-variant mb-4">
-                Teknisi kami mungkin perlu mengakses menu utama perangkat Anda untuk menguji fungsi dasar setelah perbaikan (misalnya kamera, layar sentuh, atau speaker). Namun, teknisi kami dilarang keras membuka file pribadi, foto, aplikasi pesan, atau data sensitif lainnya tanpa izin spesifik dari Anda.
+                Jika akses perangkat diperlukan, pelanggan akan diminta menyetujui kebutuhan pengujian. Buat cadangan dan keluar dari akun penting sebelum servis. Data administrasi disimpan selama diperlukan untuk layanan, garansi, pembukuan, keamanan, dan kewajiban hukum, lalu dihapus atau dianonimkan ketika tidak lagi diperlukan.
+              </p>
+
+              <h2 className="font-headline-md text-on-surface mb-6 mt-8">5. Hak dan kontak privasi</h2>
+              <p className="font-body-md text-on-surface-variant mb-4">
+                Anda dapat meminta informasi, koreksi, atau penghapusan data yang tidak lagi diperlukan dengan menghubungi info@pytafix.web.id. Permintaan dapat memerlukan verifikasi identitas dan dapat dibatasi oleh kewajiban penyimpanan yang berlaku.
               </p>
             </>
           )}

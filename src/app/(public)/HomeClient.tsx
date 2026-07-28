@@ -1,6 +1,4 @@
-"use client";
-
-import { Promo, Sparepart, Testimonial, Faq, ServiceContent } from '@prisma/client';
+import { Promo, Sparepart, Testimonial, ServiceContent } from '@prisma/client';
 import { Hero } from '@/components/home/Hero';
 import { BrandsMarquee } from '@/components/home/BrandsMarquee';
 import { TrustBadges } from '@/components/home/TrustBadges';
@@ -12,7 +10,9 @@ import { StatsSection } from '@/components/home/StatsSection';
 import { SparepartsCatalog } from '@/components/home/SparepartsCatalog';
 import { Testimonials } from '@/components/home/Testimonials';
 import { FaqSection } from '@/components/home/FaqSection';
-import { CONTACT } from '@/lib/config';
+import { SITE_URL } from '@/lib/config';
+import type { PublicFaq } from '@/lib/site-content';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export default function HomeClient({ 
   promos, 
@@ -24,95 +24,30 @@ export default function HomeClient({
   promos: Promo[], 
   spareparts: Sparepart[], 
   testimonials: Testimonial[], 
-  faqs: Faq[],
+  faqs: PublicFaq[],
   services: ServiceContent[]
 }) {
+  const publicFaqs = faqs;
+
   return (
     <main className="relative overflow-hidden">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: serializeJsonLd({
             "@context": "https://schema.org",
             "@graph": [
               {
-                "@type": "Organization",
-                "@id": "https://www.pytafix.web.id/#organization",
-                "name": "Pytafix",
-                "url": "https://www.pytafix.web.id",
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": "https://www.pytafix.web.id/logo.png",
-                  "width": 800,
-                  "height": 800
-                },
-                "sameAs": [
-                  "https://www.instagram.com/pytafix",
-                  "https://www.facebook.com/share/18g8dMfLV3/",
-                  "https://www.tiktok.com/@pytafix",
-                  "https://www.youtube.com/@pytafix",
-                  "https://www.threads.net/@pytafix"
-                ]
-              },
-              {
                 "@type": "WebSite",
-                "@id": "https://www.pytafix.web.id/#website",
-                "url": "https://www.pytafix.web.id",
+                "@id": `${SITE_URL}/#website`,
+                "url": SITE_URL,
                 "name": "Pytafix",
-                "publisher": { "@id": "https://www.pytafix.web.id/#organization" },
-                "potentialAction": {
-                  "@type": "SearchAction",
-                  "target": "https://www.pytafix.web.id/layanan?q={search_term_string}",
-                  "query-input": "required name=search_term_string"
-                }
+                "inLanguage": "id-ID",
+                "publisher": { "@id": `${SITE_URL}/#organization` }
               },
-              {
-                "@type": "LocalBusiness",
-                "@id": "https://www.pytafix.web.id/#localbusiness",
-                "name": "Pytafix",
-                "image": "https://www.pytafix.web.id/logo.png",
-                "url": "https://www.pytafix.web.id",
-                "telephone": `+${CONTACT.whatsapp}`,
-                "address": {
-                  "@type": "PostalAddress",
-                  "streetAddress": "Jl. Elektronik No. 123",
-                  "addressLocality": "Malang",
-                  "addressRegion": "Jawa Timur",
-                  "postalCode": "65141",
-                  "addressCountry": "ID"
-                },
-                "geo": {
-                  "@type": "GeoCoordinates",
-                  "latitude": -7.983908,
-                  "longitude": 112.621391
-                },
-                "priceRange": "$$",
-                "description": "Pusat perbaikan elektronik terpercaya di Malang. Melayani servis laptop, smartphone, dan komputer bergaransi.",
-                "openingHoursSpecification": [
-                  {
-                    "@type": "OpeningHoursSpecification",
-                    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                    "opens": "09:00",
-                    "closes": "18:00"
-                  },
-                  {
-                    "@type": "OpeningHoursSpecification",
-                    "dayOfWeek": "Sunday",
-                    "opens": "00:00",
-                    "closes": "00:01"
-                  }
-                ],
-                "aggregateRating": testimonials.length > 0 ? {
-                  "@type": "AggregateRating",
-                  "ratingValue": (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1),
-                  "reviewCount": testimonials.length.toString(),
-                  "bestRating": "5",
-                  "worstRating": "1"
-                } : undefined
-              },
-              ...(faqs.length > 0 ? [{
+              ...(publicFaqs.length > 0 ? [{
                 "@type": "FAQPage",
-                "mainEntity": faqs.map(faq => ({
+                "mainEntity": publicFaqs.map(faq => ({
                   "@type": "Question",
                   "name": faq.question,
                   "acceptedAnswer": {
@@ -141,7 +76,7 @@ export default function HomeClient({
       <StatsSection />
       <SparepartsCatalog spareparts={spareparts} />
       <Testimonials testimonials={testimonials} />
-      <FaqSection faqs={faqs} />
+      <FaqSection faqs={publicFaqs} />
     </main>
   );
 }

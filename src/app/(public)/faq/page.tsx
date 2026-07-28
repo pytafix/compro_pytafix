@@ -1,6 +1,7 @@
 
-import prisma from "@/lib/prisma";
 import FaqAccordion from "./FaqAccordion";
+import { getPublicFaqs, type PublicFaq } from "@/lib/site-content";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata = {
   title: "Pertanyaan yang Sering Diajukan (FAQ)",
@@ -17,15 +18,12 @@ export const metadata = {
 };
 
 export default async function FaqPage() {
-  const faqs = await prisma.faq.findMany({
-    where: { isActive: true },
-    orderBy: { createdAt: 'asc' }
-  });
+  const displayFaqs: PublicFaq[] = getPublicFaqs();
 
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": faqs.map(faq => ({
+    "mainEntity": displayFaqs.map(faq => ({
       "@type": "Question",
       "name": faq.question,
       "acceptedAnswer": {
@@ -39,7 +37,7 @@ export default async function FaqPage() {
     <main className="min-h-screen bg-surface">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 px-4 md:px-8 text-center border-b border-surface-container-highest">
@@ -55,7 +53,7 @@ export default async function FaqPage() {
 
       {/* Faqs Grid/Accordion */}
       <section className="py-16 px-4 md:px-8 max-w-4xl mx-auto">
-        <FaqAccordion faqs={faqs} />
+        <FaqAccordion faqs={displayFaqs} />
       </section>
     </main>
   );

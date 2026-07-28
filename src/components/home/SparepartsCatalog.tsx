@@ -12,10 +12,10 @@ export function SparepartsCatalog({ spareparts }: { spareparts: Sparepart[] }) {
       <div className="max-w-container-max mx-auto px-4 md:px-8 lg:px-margin-desktop">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface mb-4">
-            Sparepart & Komponen Original
+            Sparepart & Komponen
           </h2>
           <p className="font-body-lg text-body-lg text-on-surface-variant">
-            Tersedia berbagai suku cadang berkualitas dengan garansi resmi. Kami pastikan gadget Anda mendapatkan yang terbaik.
+            Katalog menampilkan item yang tersedia. Kompatibilitas, kondisi, pemasangan, dan ketentuan garansi dikonfirmasi per item.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export function SparepartsCatalog({ spareparts }: { spareparts: Sparepart[] }) {
                 </div>
                 <div className="p-4 md:p-5 flex flex-col flex-grow">
                   <h3 className="font-label-bold text-label-bold text-on-surface mb-1 line-clamp-2">{sparepart.name}</h3>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-1">{sparepart.description || "Garansi Resmi"}</p>
+                  <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-1">{sparepart.description || "Detail tersedia setelah dikonfirmasi"}</p>
                   <div className="mt-auto flex flex-col gap-3">
                     <p className="font-headline-sm text-headline-sm text-primary">
                       Rp {new Intl.NumberFormat('id-ID').format(sparepart.price)}

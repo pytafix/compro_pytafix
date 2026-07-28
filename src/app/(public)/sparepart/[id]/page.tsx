@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import Image from "next/image";
 import { CONTACT } from '@/lib/config';
+import { serializeJsonLd } from "@/lib/json-ld";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -19,16 +20,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: "Sparepart Tidak Ditemukan",
       alternates: { canonical: `/sparepart/${id}` },
+      robots: { index: false, follow: false },
     };
   }
 
   return {
     title: `${sparepart.name} - ${sparepart.category}`,
-    description: sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang.`,
+    description: sparepart.description || `Lihat detail, kondisi, stok, dan harga ${sparepart.name} di Pytafix Malang.`,
     alternates: { canonical: `/sparepart/${id}` },
     openGraph: {
-      title: `${sparepart.name} | Pytafix`,
-      description: sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang.`,
+      title: sparepart.name,
+      description: sparepart.description || `Lihat detail dan stok ${sparepart.name} di Pytafix Malang.`,
       url: `https://www.pytafix.web.id/sparepart/${id}`,
       images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: sparepart.name }],
       locale: "id_ID",
@@ -55,7 +57,7 @@ export default async function SparepartDetailPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: serializeJsonLd({
             "@context": "https://schema.org",
             "@graph": [
               {
@@ -69,15 +71,16 @@ export default async function SparepartDetailPage({ params }: Props) {
               {
                 "@type": "Product",
                 "name": sparepart.name,
-                "description": sparepart.description || `Beli ${sparepart.name} original di Pytafix Malang`,
+                "description": sparepart.description || `Detail ${sparepart.name} di Pytafix Malang`,
                 "image": sparepart.imageUrl || undefined,
-                "brand": { "@type": "Brand", "name": "Pytafix" },
                 "sku": sparepart.id.toString(),
+                "dateModified": sparepart.updatedAt.toISOString(),
                 "offers": {
                   "@type": "Offer",
                   "price": sparepart.price,
                   "priceCurrency": "IDR",
                   "availability": sparepart.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                  "url": `https://www.pytafix.web.id/sparepart/${sparepart.id}`,
                   "seller": { "@id": "https://www.pytafix.web.id/#organization" }
                 }
               }
@@ -102,7 +105,7 @@ export default async function SparepartDetailPage({ params }: Props) {
           <div className="w-full md:w-1/2">
             <div className="bg-surface-container rounded-2xl aspect-square relative overflow-hidden border border-outline-variant shadow-sm flex items-center justify-center">
                {sparepart.imageUrl ? (
-                  <Image src={sparepart.imageUrl} alt={sparepart.name} fill className="object-cover" />
+                  <Image src={sparepart.imageUrl} alt={sparepart.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
                 ) : (
                   <span className="material-symbols-outlined text-[120px] text-on-surface-variant/30">inventory_2</span>
                 )}
@@ -134,10 +137,10 @@ export default async function SparepartDetailPage({ params }: Props) {
                  </span>
                </div>
                <div className="flex flex-col border-l border-outline-variant pl-4">
-                 <span className="font-label-sm text-on-surface-variant">Garansi</span>
+                 <span className="font-label-sm text-on-surface-variant">Ketentuan</span>
                  <span className="font-label-bold text-sm text-on-surface mt-1 flex items-center gap-1">
                    <span className="material-symbols-outlined text-[16px] text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                   Garansi Pemasangan
+                   Detail pembelian dikonfirmasi saat pemesanan
                  </span>
                </div>
             </div>
@@ -149,6 +152,9 @@ export default async function SparepartDetailPage({ params }: Props) {
                   {sparepart.description || "Belum ada deskripsi detail untuk produk ini."}
                 </p>
               </div>
+              <p className="font-body-sm text-on-surface-variant mt-4">
+                Terakhir diperbarui {sparepart.updatedAt.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}. Harga dan stok dapat berubah; konfirmasi kembali sebelum membeli.
+              </p>
             </div>
 
             <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant mb-6">
@@ -157,7 +163,7 @@ export default async function SparepartDetailPage({ params }: Props) {
                  Layanan Pemasangan Tersedia
                </h4>
                <p className="font-body-sm text-on-surface-variant">
-                 Beli sparepart ini sekalian dipasangkan oleh teknisi profesional kami? Jadwalkan servis sekarang dan dapatkan garansi penuh.
+                 Pemasangan dapat dijadwalkan setelah stok, kompatibilitas, biaya, dan cakupan garansi dikonfirmasi.
                </p>
             </div>
 

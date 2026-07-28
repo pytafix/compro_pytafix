@@ -1,19 +1,34 @@
 import { Metadata } from "next";
 import prisma from "@/lib/prisma";
+import { serializeJsonLd } from "@/lib/json-ld";
 
-export const metadata: Metadata = {
-  title: "Testimoni & Ulasan Pelanggan | Pytafix",
-  description: "Lihat apa kata pelanggan kami tentang layanan perbaikan dan service dari Pytafix Malang.",
+const testimonialMetadata: Metadata = {
+  title: "Testimoni & Ulasan Pelanggan",
+  description: "Ulasan pelanggan yang telah disetujui untuk dipublikasikan oleh Pytafix Malang.",
   alternates: { canonical: "/testimoni" },
   openGraph: {
   title: "Testimoni & Ulasan Pelanggan",
-    description: "Lihat apa kata pelanggan kami tentang layanan perbaikan dan service dari Pytafix Malang.",
+    description: "Ulasan pelanggan yang telah disetujui untuk dipublikasikan oleh Pytafix Malang.",
     url: "https://www.pytafix.web.id/testimoni",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Testimoni" }],
     locale: "id_ID",
     type: "website",
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const count = await prisma.testimonial.count();
+  return {
+    ...testimonialMetadata,
+    openGraph: {
+      ...testimonialMetadata.openGraph,
+      description: count > 0
+        ? "Ulasan pelanggan yang telah disetujui untuk dipublikasikan oleh Pytafix Malang."
+        : "Halaman ulasan akan menampilkan catatan pelanggan setelah tersedia dan disetujui.",
+    },
+    robots: count > 0 ? { index: true, follow: true } : { index: false, follow: true },
+  };
+}
 
 export default async function TestimoniPage() {
   const testimonials = await prisma.testimonial.findMany({
@@ -48,7 +63,7 @@ export default async function TestimoniPage() {
     <main className="flex-grow bg-background">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop text-center border-b border-outline-variant mb-12">
@@ -60,7 +75,9 @@ export default async function TestimoniPage() {
             Kata Pelanggan Kami
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Kepercayaan Anda adalah motivasi terbesar kami. Berikut adalah pengalaman mereka yang telah mempercayakan perbaikan perangkatnya di Pytafix.
+            {testimonials.length > 0
+              ? "Berikut catatan pelanggan yang telah disetujui untuk dipublikasikan."
+              : "Belum ada catatan pelanggan yang disetujui untuk dipublikasikan."}
           </p>
         </div>
       </section>

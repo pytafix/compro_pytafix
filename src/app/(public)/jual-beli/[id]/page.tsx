@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { CONTACT, MARKETPLACES } from "@/lib/config";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -11,18 +12,18 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const product = await prisma.product.findUnique({
-    where: { id },
+  const product = await prisma.product.findFirst({
+    where: { id, isActive: true },
     include: { marketplaceLinks: true },
   });
-  if (!product) return { title: "Produk Tidak Ditemukan" };
+  if (!product) return { title: "Produk Tidak Ditemukan", robots: { index: false, follow: false } };
 
   return {
     title: product.name,
-    description: product.description || `Beli ${product.name} berkualitas di Pytafix Malang. Kondisi ${product.condition}, harga Rp ${product.price.toLocaleString("id-ID")}.`,
+    description: product.description || `${product.name} di Pytafix Malang. Kondisi ${product.condition}, harga Rp ${product.price.toLocaleString("id-ID")}.`,
     alternates: { canonical: `/jual-beli/${id}` },
     openGraph: {
-      title: `${product.name} | Pytafix`,
+      title: product.name,
       description: product.description || "",
       url: `https://www.pytafix.web.id/jual-beli/${id}`,
       images: product.imageUrl ? [{ url: product.imageUrl, width: 800, height: 600 }] : [],
@@ -51,8 +52,8 @@ const categoryLabels: Record<string, string> = {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
-  const product = await prisma.product.findUnique({
-    where: { id },
+  const product = await prisma.product.findFirst({
+    where: { id, isActive: true },
     include: { marketplaceLinks: true },
   });
 
@@ -74,13 +75,15 @@ export default async function ProductDetailPage({ params }: Props) {
         name: product.name,
         description: product.description || "",
         image: product.imageUrl || undefined,
-        brand: { "@type": "Brand", "name": "Pytafix" },
         sku: product.id.toString(),
+        dateModified: product.updatedAt.toISOString(),
         offers: {
           "@type": "Offer",
           price: product.price,
           priceCurrency: "IDR",
           availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          url: `https://www.pytafix.web.id/jual-beli/${product.id}`,
+          itemCondition: `https://schema.org/${product.condition === "BARU" ? "NewCondition" : product.condition === "REFURBISHED" ? "RefurbishedCondition" : "UsedCondition"}`,
           seller: { "@id": "https://www.pytafix.web.id/#organization" },
         },
       }
@@ -91,7 +94,7 @@ export default async function ProductDetailPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
 
       <main className="min-h-screen bg-surface-container-lowest">
@@ -118,6 +121,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   src={product.imageUrl}
                   alt={product.name}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                   priority
                 />
@@ -166,6 +170,9 @@ export default async function ProductDetailPage({ params }: Props) {
                   {product.stock > 0 ? `${product.stock} unit tersedia` : "Stok habis"}
                 </span>
               </div>
+              <p className="font-body-sm text-on-surface-variant">
+                Terakhir diperbarui {product.updatedAt.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}. Harga dan stok dapat berubah; konfirmasi kembali sebelum membeli.
+              </p>
 
               {/* Marketplace CTAs */}
               {product.marketplaceLinks.length > 0 && (

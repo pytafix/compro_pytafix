@@ -17,7 +17,7 @@ export async function generateUniqueTrackingId(): Promise<string> {
   const prefix = `PYT-${year}-`;
 
   for (let i = 0; i < 10; i++) {
-    const candidate = prefix + randomSuffix(6);
+    const candidate = prefix + randomSuffix(26);
     const existing = await prisma.serviceRequest.findUnique({
       where: { trackingId: candidate },
       select: { id: true },
@@ -25,6 +25,6 @@ export async function generateUniqueTrackingId(): Promise<string> {
     if (!existing) return candidate;
   }
 
-  const uuid = randomBytes(16).toString("hex").toUpperCase().slice(0, 8);
+  const uuid = randomBytes(16).toString("hex").toUpperCase();
   return prefix + uuid;
 }

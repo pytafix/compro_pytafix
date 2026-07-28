@@ -12,7 +12,7 @@ export default function PortofolioClient({ cases }: { cases: Portfolio[] }) {
       {/* Hero Section */}
       <section className="bg-surface-container py-16 px-4 md:px-8 text-center border-b border-surface-container-highest">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="max-w-3xl mx-auto"
@@ -21,7 +21,9 @@ export default function PortofolioClient({ cases }: { cases: Portfolio[] }) {
             Portofolio Servis
           </h1>
           <p className="font-body-md text-lg text-on-surface-variant">
-            Lihat hasil kerja nyata dari teknisi ahli Pytafix. Kami menangani berbagai kerusakan gadget dengan tingkat keberhasilan yang tinggi, menggunakan sparepart berkualitas, dan memberikan garansi untuk setiap perbaikan.
+            {cases.length > 0
+              ? "Dokumentasi kasus yang benar-benar dicatat oleh tim. Detail perangkat, kendala, dan tindakan ditampilkan hanya ketika data kasus tersedia."
+              : "Belum ada dokumentasi kasus yang dipublikasikan. Contoh pekerjaan akan ditampilkan setelah data dan izin publikasinya tersedia."}
           </p>
         </motion.div>
       </section>
@@ -29,10 +31,14 @@ export default function PortofolioClient({ cases }: { cases: Portfolio[] }) {
       {/* Case Studies Grid */}
       <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cases.map((item, index) => (
+          {cases.length === 0 ? (
+            <p className="col-span-full rounded-2xl border border-outline-variant bg-surface-container-low p-8 text-center text-on-surface-variant">
+              Belum ada dokumentasi kasus yang dapat ditampilkan.
+            </p>
+          ) : cases.map((item, index) => (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
