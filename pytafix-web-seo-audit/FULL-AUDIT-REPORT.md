@@ -11,7 +11,7 @@ Local implementation: committed as `1565654` and deployed to the linked Vercel p
 
 The owner supplied a direct Google Maps place URL and screenshot for Pytafix at Jl. Werkudoro No.2, RT.2/RW.2, Polehan, Kec. Blimbing, Kota Malang, Jawa Timur 65121. The confirmed place coordinates are `-7.9854846, 112.6422118`; the source now publishes the matching address, `GeoCoordinates`, direct place URL, and coordinate-based map embed.
 
-The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired build scores **84/100 overall readiness** and is now deployed to the linked Vercel production project. The 40 legacy geo rows have since been backed up and reversibly deactivated in production; the remaining gap to a production-ready 100 is confirmation of the remaining business facts, production environment/runtime verification for the distributed limiter and media store, and a complete post-deploy crawl.
+The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired build scores **84/100 overall readiness** and is now deployed to the linked Vercel production project. The 40 legacy geo rows have since been backed up and reversibly deactivated in production, and the required JWT, Upstash, and Blob variables are present in Vercel Production/Preview. The remaining gap is targeted Blob/limiter smoke evidence, confirmation of the remaining business facts, GSC recrawl, and ongoing first-party proof work.
 
 The most serious baseline issues were:
 
@@ -37,8 +37,8 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Local rendering | Playwright at 375, 768, and 1440 px; representative public/admin routes | No horizontal overflow |
 | Local crawl | 18 sitemap URLs fetched from the built server | All returned HTTP 200 with no redirect chain |
 | Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
-| Production crawl | 65 sitemap URLs | All 200 with title, description, canonical, H1, and valid JSON-LD syntax |
-| Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Post-deploy smoke shows the new title, robots policy, schema, and reviewed copy; full crawl still pending |
+| Production crawl | 18 current sitemap URLs (2 Aug 2026) | All 200 with title, description, canonical, H1, and valid JSON-LD syntax; no duplicate titles/descriptions or legacy geo URLs |
+| Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Current crawl confirms the curated 18-URL boundary; image dimension review remains a low-priority performance follow-up |
 | Google Search Console | 2 Aug 2026 service-account recheck for `sc-domain:pytafix.web.id` | Sitemap resubmitted and pending with 0 errors/0 warnings; 18 URLs submitted; homepage, Kontak, layanan archive, and artikel archive are `Submitted and indexed`; two base service detail URLs are discovered but not yet indexed |
 | Deployment | GitHub commit `81cc503`; Vercel deployment `dpl_Gdz9saxUw9hfnh9YZF7t7wEVf1iA` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the owner-confirmed location build |
 
@@ -51,7 +51,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Structured data | 91 | Valid types, safe serializer, honest organization/service facts, article references |
 | Content and E-E-A-T | 82 | Unsupported claims removed and five articles replaced by reviewed editorial overrides; raw evidence depth is still limited (content-evidence subscore 62, E-E-A-T evidence subscore 48) |
 | AEO/GEO readiness | 82 | Useful `llms.txt`, SSR FAQ/passages, and owner-confirmed location facts; broader first-party proof and external citation consistency still need work (citation-readiness subscore 65) |
-| Security and privacy | 84 | Handler-level auth, strict JWT, safer public DTOs, distributed limiter, and temporary Blob cleanup; production credentials/MFA pending |
+| Security and privacy | 84 | Handler-level auth, strict JWT, safer public DTOs, distributed limiter, and temporary Blob cleanup; production variables are configured, while MFA and cross-instance evidence remain pending |
 | UX, accessibility, responsive | 92 | No overflow; booking repaired; Lighthouse accessibility 99 |
 | Performance | 78 | Homepage payload/height reduced; local lab variance remains |
 | Overall readiness | **84** | Suitable for preview after required environment/database work |
@@ -178,16 +178,16 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 ## Remaining blockers and limitations
 
 1. **Rotate historical exposed credentials.** The current GitHub token was used only through in-memory environment authentication and was not committed; revoke/rotate any token that was previously exposed and refresh the local secret afterward.
-2. **Configure `BLOB_READ_WRITE_TOKEN`** in preview/production before testing admin upload.
+2. **Exercise the configured Blob store.** `BLOB_READ_WRITE_TOKEN` is present in Vercel Production/Preview; complete an authenticated preview upload, replacement, and rollback smoke test.
 3. **Maintain Google Business Profile consistency.** The owner confirms Pytafix ownership, pin, address, hours, and service options; keep categories and external NAP citations synchronized before expanding local SEO.
 4. **Keep the 40 deactivated legacy geo rows under review.** Their production backup is retained outside version control; restore only if a verified business need emerges, while keeping the direct redirects.
-5. **Configure and verify `JWT_SECRET` and Upstash Redis in preview/production.** The current Vercel environment inventory contains database credentials and `ADMIN_PASSWORD`, but no `JWT_SECRET`, `UPSTASH_REDIS_REST_URL`, or `UPSTASH_REDIS_REST_TOKEN`; the live `GET /api/status` probe correctly fails closed with HTTP 503 until the distributed limiter is configured.
+5. **Complete distributed-limiter evidence.** `JWT_SECRET`, `UPSTASH_REDIS_REST_URL`, and `UPSTASH_REDIS_REST_TOKEN` are present in Vercel Production/Preview; a valid production status probe reaches the database and returns the expected 404 for an unknown ticket. Cross-instance 429 and fail-closed tests remain open.
 6. **Adopt individual admin accounts, slow password hashing, MFA, and audit logs.** The current shared password is hardened but remains a single identity.
 7. **Decide retention periods and public/internal note fields** before a schema migration.
 8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
 9. **Run a post-deploy fetch of generated favicon/Apple icons and remote image hosts.** Source assets and local metadata are correct; this remains a runtime verification item.
 10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
-11. **Complete remaining production evidence.** The linked deployment, 18-URL crawl, schema checks, form/runtime probes, and homepage/Kontak inspections pass; the resubmitted sitemap is still processing, and CrUX/field data plus broader citation checks remain open.
+11. **Complete remaining production evidence.** The latest production deployment is Ready, the 18-URL crawl and schema checks pass, and the valid status probe reaches the database; the sitemap/URL recrawl, CrUX/field data, Blob upload, and broader citation checks remain open.
 12. **Allow Google to recrawl the canonical service details.** `/layanan/service-hp` and `/layanan/service-laptop` are live, sitemap-listed, and discovered but not yet indexed; the historical `/layanan/service-hp-batu` URL returns a correct 308 redirect, while its GSC record is stale.
 13. **Configure GitHub branch protection and required checks.** The public `main` branch currently has no visible protection or required CI checks; enforce review/CI gates before broader team changes.
 12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.

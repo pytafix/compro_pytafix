@@ -7,7 +7,7 @@ Updated: 28 July 2026
 | Owner | Action | Acceptance evidence |
 |---|---|---|
 | Repository owner | Revoke and replace the exposed GitHub token | Old token disabled; remote remains credential-free |
-| Platform owner | Set `JWT_SECRET` (32+ chars), strong `ADMIN_PASSWORD`, `BLOB_READ_WRITE_TOKEN`, and Upstash Redis REST credentials | Preview login/upload/form/status smoke tests pass |
+| Platform owner | `JWT_SECRET`, `BLOB_READ_WRITE_TOKEN`, and Upstash Redis REST credentials are present in Vercel Production/Preview; the valid production status probe reaches the database | Complete preview Blob upload smoke test and cross-instance limiter evidence |
 | Business owner | Maintain legal entity, WhatsApp, email, service area, and Google Business Profile facts; ownership, address, hours, and service options are now owner-confirmed | One signed source-of-truth sheet and synchronized external citations |
 | Database owner | Exported a production backup and reversibly deactivated 40 legacy geo service rows on 2026-08-02 | Only four approved base services active; restore is available from the ignored backup |
 | Platform/security | Verify the implemented Upstash limiter across preview instances; keep local fallback disabled | Cross-instance 429 test, fail-closed test, and Upstash dashboard evidence |
