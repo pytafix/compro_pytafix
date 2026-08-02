@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_FAQS, getPublicFaqs, getPublicServiceCopy, isPublicReviewedArticleSlug, isPublicReviewedServiceSlug, PUBLIC_SERVICE_COPY } from "./site-content";
+import { ARTICLE_EDITORIAL_OVERRIDES, DEFAULT_FAQS, getPublicFaqs, getPublicServiceCopy, isPublicReviewedArticleSlug, isPublicReviewedServiceSlug, PUBLIC_SERVICE_COPY } from "./site-content";
 
 describe("public service copy guardrails", () => {
   it("replaces legacy service claims on public rendering", () => {
@@ -36,5 +36,14 @@ describe("public service copy guardrails", () => {
     expect(getPublicFaqs()).toEqual(DEFAULT_FAQS);
     expect(getPublicFaqs().map((faq) => `${faq.question} ${faq.answer}`).join(" "))
       .not.toMatch(/catatan internal|listing Google Maps|pin pada preview/i);
+  });
+
+  it("keeps reviewed public content free from internal QA terminology", () => {
+    const reviewedCopy = [
+      ...Object.values(PUBLIC_SERVICE_COPY).flatMap((copy) => [copy.title, copy.description, copy.content]),
+      ...Object.values(ARTICLE_EDITORIAL_OVERRIDES).flatMap((article) => [article.title, article.excerpt, article.content]),
+    ].join(" ");
+
+    expect(reviewedCopy).not.toMatch(/listing Google Maps|pin pada preview|catatan internal|\bpreview\b|\binternal\b/i);
   });
 });

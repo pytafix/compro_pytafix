@@ -314,7 +314,7 @@ Laptop dapat terasa hangat saat bekerja berat. Masalah perlu dicurigai bila perf
 5. Pasang pembaruan sistem, firmware, dan driver dari sumber resmi.
 6. Gunakan adaptor dengan spesifikasi yang sesuai.
 
-Jangan menyemprotkan cairan, memasukkan benda ke kipas, atau membongkar baterai. Penggantian pasta termal dan pembersihan internal memerlukan prosedur yang sesuai dengan model perangkat.
+Jangan menyemprotkan cairan, memasukkan benda ke kipas, atau membongkar baterai. Penggantian pasta termal dan pembersihan bagian dalam perangkat memerlukan prosedur yang sesuai dengan modelnya.
 
 ## Kapan perlu berhenti menggunakan perangkat
 
