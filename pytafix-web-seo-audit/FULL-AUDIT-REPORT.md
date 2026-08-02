@@ -11,7 +11,7 @@ Local implementation: committed as `1565654` and deployed to the linked Vercel p
 
 The owner supplied a direct Google Maps place URL and screenshot for Pytafix at Jl. Werkudoro No.2, RT.2/RW.2, Polehan, Kec. Blimbing, Kota Malang, Jawa Timur 65121. The confirmed place coordinates are `-7.9854846, 112.6422118`; the source now publishes the matching address, `GeoCoordinates`, direct place URL, and coordinate-based map embed.
 
-The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired build scores **84/100 overall readiness** and is now deployed to the linked Vercel production project. The gap to a production-ready 100 is not cosmetic: it requires confirmation of the remaining business facts, production environment/runtime verification for the distributed limiter and media store, removal/deactivation of legacy geo rows in the database, and a complete post-deploy crawl.
+The deployed baseline scored **57/100 for technical SEO** and contained material trust, privacy, and index-quality risks. The repaired build scores **84/100 overall readiness** and is now deployed to the linked Vercel production project. The 40 legacy geo rows have since been backed up and reversibly deactivated in production; the remaining gap to a production-ready 100 is confirmation of the remaining business facts, production environment/runtime verification for the distributed limiter and media store, and a complete post-deploy crawl.
 
 The most serious baseline issues were:
 
@@ -117,6 +117,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 
 - Removed geo variants from homepage, service archive, sitemap, and `llms.txt`.
 - Legacy inferred geo variants redirect directly to the canonical base service.
+- Exported and reversibly deactivated 40 legacy city/service records in production; the four approved base services remain active and the backup is retained outside version control.
 - Removed utility/status/claim and empty collection pages from sitemap.
 - Empty promo, portfolio, testimonial, product, and sparepart collections are noindex until populated.
 - Draft/future articles, expired promos, inactive products, and geo variants cannot become index candidates.
@@ -179,7 +180,7 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 1. **Rotate historical exposed credentials.** The current GitHub token was used only through in-memory environment authentication and was not committed; revoke/rotate any token that was previously exposed and refresh the local secret afterward.
 2. **Configure `BLOB_READ_WRITE_TOKEN`** in preview/production before testing admin upload.
 3. **Maintain Google Business Profile consistency.** The owner confirms Pytafix ownership, pin, address, hours, and service options; keep categories and external NAP citations synchronized before expanding local SEO.
-4. **Deactivate/delete the 40 legacy geo rows** in the production database after exporting a backup; keep their direct redirects.
+4. **Keep the 40 deactivated legacy geo rows under review.** Their production backup is retained outside version control; restore only if a verified business need emerges, while keeping the direct redirects.
 5. **Configure and verify `JWT_SECRET` and Upstash Redis in preview/production.** The current Vercel environment inventory contains database credentials and `ADMIN_PASSWORD`, but no `JWT_SECRET`, `UPSTASH_REDIS_REST_URL`, or `UPSTASH_REDIS_REST_TOKEN`; the live `GET /api/status` probe correctly fails closed with HTTP 503 until the distributed limiter is configured.
 6. **Adopt individual admin accounts, slow password hashing, MFA, and audit logs.** The current shared password is hardened but remains a single identity.
 7. **Decide retention periods and public/internal note fields** before a schema migration.
