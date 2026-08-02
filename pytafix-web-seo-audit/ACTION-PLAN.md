@@ -41,7 +41,7 @@ The seed is now non-destructive and idempotent, but still verify the target data
 ## P2 — Search and content growth
 
 1. Submit only the curated sitemap after production validation.
-2. Request Google indexing through URL Inspection for the homepage, service archive, four base services, article archive, and five reviewed articles.
+2. Monitor URL Inspection for the homepage, service archive, four base services, article archive, and five reviewed articles. Do not use the Indexing API for ordinary service/article URLs; it is restricted to eligible JobPosting and broadcast/video content.
 3. Monitor GSC weekly:
    - indexed pages;
    - impressions/clicks;

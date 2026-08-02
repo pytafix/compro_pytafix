@@ -1,6 +1,6 @@
 # Technical SEO Findings
 
-Audit state: 28 July 2026. Findings below reflect the current local source and build, not the deployed production site.
+Audit state: 2 August 2026. Findings below combine the current source/build with the latest deployed production and GSC checks.
 
 ## Resolved locally
 
@@ -14,9 +14,9 @@ Audit state: 28 July 2026. Findings below reflect the current local source and b
 
 ## Remaining before release
 
-1. **Full post-deploy crawl and runtime verification** — the pushed commit is live and homepage/robots smoke checks pass. Complete the full sitemap crawl, API header checks, and environment-backed form/status tests before declaring production fully verified.
+1. **Ongoing post-deploy verification** — the pushed commit is live; the 18-URL crawl, schema/copy checks, API headers, and environment-backed form/status probes pass. Continue monitoring after data/content changes.
 2. **Google Maps business-profile completeness** — the exact pin/address is now owner-confirmed and published; independently verify GBP categories, hours, ownership, and external NAP consistency before expanding local SEO.
-3. **Field performance evidence** — run PageSpeed/CrUX after deployment; local build checks cannot establish real-user CWV.
-4. **Indexing evidence** — verify sitemap processing and representative URLs in Search Console; a 200 response is not proof of indexing.
+3. **Field performance evidence** — CrUX currently has no eligible origin data; the bundled PageSpeed helper also failed on an `audit_details` parsing bug. Use direct PSI or wait for sufficient traffic; local build checks cannot establish real-user CWV.
+4. **Indexing evidence** — the sitemap is resubmitted with 0 errors/0 warnings and still processing; homepage, Kontak, and archives are indexed, while two canonical service details are discovered but not yet indexed. A 200 response is not proof of indexing.
 5. **URL architecture** — commerce detail routes still use database IDs. A slug migration would improve keyword context but requires a redirect/data migration plan and is not safe to do implicitly.
 6. **Content depth and original evidence** — reviewed service and article pages remain short and need first-hand repair evidence, named reviewer credentials, and unique media before aggressive SEO expansion.

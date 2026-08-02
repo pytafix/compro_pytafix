@@ -39,8 +39,8 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
 | Production crawl | 65 sitemap URLs | All 200 with title, description, canonical, H1, and valid JSON-LD syntax |
 | Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Post-deploy smoke shows the new title, robots policy, schema, and reviewed copy; full crawl still pending |
-| Google Search Console | Historical 25 Apr–23 Jul 2026 baseline plus post-deploy API checks | Sitemap submitted with 0 errors/0 warnings; processing pending; homepage inspection PASS |
-| Deployment | GitHub commit `1565654`; Vercel deployment `dpl_CgAgUveoiPWCvwN5PPu5aQJfHFaS` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the new build |
+| Google Search Console | 2 Aug 2026 service-account recheck for `sc-domain:pytafix.web.id` | Sitemap resubmitted and pending with 0 errors/0 warnings; 18 URLs submitted; homepage, Kontak, layanan archive, and artikel archive are `Submitted and indexed`; two base service detail URLs are discovered but not yet indexed |
+| Deployment | GitHub commit `81cc503`; Vercel deployment `dpl_Gdz9saxUw9hfnh9YZF7t7wEVf1iA` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the owner-confirmed location build |
 
 ## Local scorecard
 
@@ -186,7 +186,8 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
 9. **Run a post-deploy fetch of generated favicon/Apple icons and remote image hosts.** Source assets and local metadata are correct; this remains a runtime verification item.
 10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
-11. **Complete the full post-deploy crawl, API/runtime smoke, GSC sitemap processing, and CrUX/field checks.** The linked production deployment is ready, all 18 sitemap URLs pass the lightweight HTTP/title/canonical crawl, the sitemap is submitted with 0 errors/0 warnings, and the homepage inspection passes; deeper API/runtime, Google processing, and field checks remain pending.
+11. **Complete remaining production evidence.** The linked deployment, 18-URL crawl, schema checks, form/runtime probes, and homepage/Kontak inspections pass; the resubmitted sitemap is still processing, and CrUX/field data plus broader GBP/citation checks remain open.
+12. **Allow Google to recrawl the canonical service details.** `/layanan/service-hp` and `/layanan/service-laptop` are live, sitemap-listed, and discovered but not yet indexed; the historical `/layanan/service-hp-batu` URL returns a correct 308 redirect, while its GSC record is stale.
 13. **Configure GitHub branch protection and required checks.** The public `main` branch currently has no visible protection or required CI checks; enforce review/CI gates before broader team changes.
 12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.
 
