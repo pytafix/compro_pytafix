@@ -12,7 +12,7 @@ Audit state: 28 July 2026. Current local source/build is the reference; producti
 
 ## Remaining evidence gaps
 
-1. **Business entity proof** — pin, NAP, and hours are owner-confirmed; independently verify legal entity, GBP ownership, categories, and external citation consistency.
+1. **Business entity proof** — pin, NAP, hours, service options, and GBP ownership are owner-confirmed; keep legal-entity references, categories, and external citation consistency synchronized.
 2. **Author authority** — generic editorial attribution is not the same as a named expert. Add verifiable reviewer/author details only when the owner can substantiate them.
 3. **Ratings and reviews** — do not add AggregateRating or Review schema until the underlying consented, representative dataset is real and maintained.
 4. **Production validation** — rerun Schema Markup Validator/Rich Results checks on deployed HTML; local build validity is not Google eligibility or indexing.

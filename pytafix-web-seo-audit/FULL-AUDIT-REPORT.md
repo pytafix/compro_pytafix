@@ -50,7 +50,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Technical SEO | 86 | Canonicals, metadata, admin noindex, one-hop legacy redirects, stable sitemap dates |
 | Structured data | 91 | Valid types, safe serializer, honest organization/service facts, article references |
 | Content and E-E-A-T | 82 | Unsupported claims removed and five articles replaced by reviewed editorial overrides; raw evidence depth is still limited (content-evidence subscore 62, E-E-A-T evidence subscore 48) |
-| AEO/GEO readiness | 82 | Useful `llms.txt`, SSR FAQ/passages, and sources; the Maps text/pin conflict and broader local proof still require owner verification (citation-readiness subscore 65) |
+| AEO/GEO readiness | 82 | Useful `llms.txt`, SSR FAQ/passages, and owner-confirmed location facts; broader first-party proof and external citation consistency still need work (citation-readiness subscore 65) |
 | Security and privacy | 84 | Handler-level auth, strict JWT, safer public DTOs, distributed limiter, and temporary Blob cleanup; production credentials/MFA pending |
 | UX, accessibility, responsive | 92 | No overflow; booking repaired; Lighthouse accessibility 99 |
 | Performance | 78 | Homepage payload/height reduced; local lab variance remains |
@@ -178,7 +178,7 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 
 1. **Rotate historical exposed credentials.** The current GitHub token was used only through in-memory environment authentication and was not committed; revoke/rotate any token that was previously exposed and refresh the local secret afterward.
 2. **Configure `BLOB_READ_WRITE_TOKEN`** in preview/production before testing admin upload.
-3. **Complete Google Business Profile verification.** The exact pin and address are now owner-confirmed; independently verify profile ownership, categories, hours, and external NAP consistency before expanding local SEO.
+3. **Maintain Google Business Profile consistency.** The owner confirms Pytafix ownership, pin, address, hours, and service options; keep categories and external NAP citations synchronized before expanding local SEO.
 4. **Deactivate/delete the 40 legacy geo rows** in the production database after exporting a backup; keep their direct redirects.
 5. **Configure and verify `JWT_SECRET` and Upstash Redis in preview/production.** The current Vercel environment inventory contains database credentials and `ADMIN_PASSWORD`, but no `JWT_SECRET`, `UPSTASH_REDIS_REST_URL`, or `UPSTASH_REDIS_REST_TOKEN`; the live `GET /api/status` probe correctly fails closed with HTTP 503 until the distributed limiter is configured.
 6. **Adopt individual admin accounts, slow password hashing, MFA, and audit logs.** The current shared password is hardened but remains a single identity.
@@ -186,7 +186,7 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
 9. **Run a post-deploy fetch of generated favicon/Apple icons and remote image hosts.** Source assets and local metadata are correct; this remains a runtime verification item.
 10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
-11. **Complete remaining production evidence.** The linked deployment, 18-URL crawl, schema checks, form/runtime probes, and homepage/Kontak inspections pass; the resubmitted sitemap is still processing, and CrUX/field data plus broader GBP/citation checks remain open.
+11. **Complete remaining production evidence.** The linked deployment, 18-URL crawl, schema checks, form/runtime probes, and homepage/Kontak inspections pass; the resubmitted sitemap is still processing, and CrUX/field data plus broader citation checks remain open.
 12. **Allow Google to recrawl the canonical service details.** `/layanan/service-hp` and `/layanan/service-laptop` are live, sitemap-listed, and discovered but not yet indexed; the historical `/layanan/service-hp-batu` URL returns a correct 308 redirect, while its GSC record is stale.
 13. **Configure GitHub branch protection and required checks.** The public `main` branch currently has no visible protection or required CI checks; enforce review/CI gates before broader team changes.
 12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.

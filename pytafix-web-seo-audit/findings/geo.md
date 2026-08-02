@@ -12,11 +12,11 @@ Audit state: 28 July 2026. Current source is locally repaired; production and Go
 
 ## Remaining evidence gaps
 
-1. **Google Maps evidence** — the owner supplied a direct Pytafix place URL and screenshot showing the Polehan, Blimbing, Kota Malang address and pin. The exact address and coordinates are now published in verified business schema; categories, hours, and ownership still need independent GBP verification.
-2. **Local proof** — there is no current verified GBP ownership export, review evidence, local citations, or post-deploy Maps/GBP consistency check.
+1. **Google Maps evidence** — the owner supplied a direct Pytafix place URL and screenshots showing the Polehan, Blimbing, Kota Malang address, pin, hours, ownership, and service options. The exact address and coordinates are now published in verified business schema.
+2. **Local proof** — ownership, address, hours, and service options are owner-confirmed; independent review evidence, external local citations, and a formal GBP export remain optional strengthening signals.
 3. **Citation depth** — `llms.txt` intentionally caps long passages; raise citation readiness with deeper, reviewer-attributed, first-hand content rather than fabricated claims.
 4. **External truth** — GSC, CrUX, AI Overview/Perplexity visibility, and production crawl results must be rechecked after an authorized deployment.
 
 ## Release check
 
-The pin and address are now owner-confirmed. Keep the public address, coordinates, service area, and customer-safe visit guidance synchronized with the profile, then verify GBP categories, hours, ownership, and external citations before expanding the local cluster.
+The pin, address, hours, service options, and ownership are now owner-confirmed. Keep the public facts synchronized with the profile and build external citations before expanding the local cluster.
