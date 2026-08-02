@@ -90,6 +90,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 - Added a public service-copy guardrail so legacy database descriptions cannot expose unsupported credentials, “official warranty,” or “original” claims before a database seed/update is run.
 - Public FAQ rendering now uses the reviewed fallback set, holds unreviewed database answers out of public pages, and renders answers in server HTML for AEO/GEO.
 - Public services and articles use reviewed-slug allowlists so legacy active records cannot become indexable without editorial review.
+- Replaced internal-sounding public workflow copy on About, Testimonial, and Article surfaces with direct customer language; reviewed articles now expose only the organization byline instead of arbitrary admin author text.
 - Public service detail copy now has reviewed semantic sections and sanitized Markdown rendering; article details include reviewed-author/update context and related service/FAQ/contact links.
 - Public booking, contact, warranty, status, login, and logout handlers now require trusted request controls where applicable, reject oversized or malformed JSON with 4xx responses, and keep all success/error responses no-store.
 - The proxy adds an early request-size ceiling for admin JSON (512 KB) and media uploads (6 MB envelope; the file itself remains capped at 5 MB), with oversized requests rejected before the handler runs.

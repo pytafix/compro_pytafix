@@ -4,11 +4,11 @@ import { serializeJsonLd } from "@/lib/json-ld";
 
 const testimonialMetadata: Metadata = {
   title: "Testimoni & Ulasan Pelanggan",
-  description: "Ulasan pelanggan yang telah disetujui untuk dipublikasikan oleh Pytafix Malang.",
+  description: "Pengalaman pelanggan Pytafix di Malang yang bersedia dibagikan.",
   alternates: { canonical: "/testimoni" },
   openGraph: {
   title: "Testimoni & Ulasan Pelanggan",
-    description: "Ulasan pelanggan yang telah disetujui untuk dipublikasikan oleh Pytafix Malang.",
+    description: "Pengalaman pelanggan Pytafix di Malang yang bersedia dibagikan.",
     url: "https://www.pytafix.web.id/testimoni",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Testimoni" }],
     locale: "id_ID",
@@ -23,8 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       ...testimonialMetadata.openGraph,
       description: count > 0
-        ? "Ulasan pelanggan yang telah disetujui untuk dipublikasikan oleh Pytafix Malang."
-        : "Halaman ulasan akan menampilkan catatan pelanggan setelah tersedia dan disetujui.",
+        ? "Pengalaman pelanggan Pytafix di Malang yang bersedia dibagikan."
+        : "Halaman pengalaman pelanggan Pytafix; ulasan akan ditampilkan setelah tersedia.",
     },
     robots: count > 0 ? { index: true, follow: true } : { index: false, follow: true },
   };
@@ -76,8 +76,8 @@ export default async function TestimoniPage() {
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
             {testimonials.length > 0
-              ? "Berikut catatan pelanggan yang telah disetujui untuk dipublikasikan."
-              : "Belum ada catatan pelanggan yang disetujui untuk dipublikasikan."}
+              ? "Berikut pengalaman pelanggan yang bersedia dibagikan."
+              : "Belum ada pengalaman pelanggan yang dapat kami tampilkan."}
           </p>
         </div>
       </section>

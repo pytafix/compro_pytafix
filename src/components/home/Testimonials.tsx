@@ -22,7 +22,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
             Apa Kata Pelanggan Kami?
           </h2>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Ulasan yang tampil berasal dari catatan pelanggan yang dipublikasikan melalui panel Pytafix.
+            Ulasan yang tampil berasal dari pengalaman pelanggan yang bersedia membagikannya.
           </p>
         </motion.div>
 
@@ -32,10 +32,11 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
               rate_review
             </span>
             <h3 className="font-headline-sm text-headline-sm text-on-surface mb-3">
-              Belum ada ulasan yang dipublikasikan
+              Belum ada ulasan pelanggan
             </h3>
             <p className="font-body-md text-body-md text-on-surface-variant mb-6">
-              Kami tidak menampilkan nama atau pengalaman pelanggan contoh. Ulasan akan muncul setelah ada catatan nyata yang disetujui untuk dipublikasikan.
+              Kami tidak menampilkan ulasan contoh. Ulasan akan ditambahkan setelah pelanggan
+              memberi izin untuk membagikan pengalamannya.
             </p>
             <Link href="/testimoni" className="font-label-bold text-primary hover:underline">
               Lihat halaman ulasan

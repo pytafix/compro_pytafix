@@ -60,9 +60,9 @@ export default function TentangKami() {
               dibuka dengan persetujuan pelanggan.
             </p>
             <p className="mt-4 text-on-surface-variant">
-              Pytafix tidak memublikasikan angka keberhasilan, lama pengalaman, sertifikasi,
-              ulasan, atau jaminan komponen yang belum dapat dibuktikan. Ketentuan garansi yang
-              berlaku adalah yang tercantum pada nota servis.
+              Setiap pekerjaan mengikuti hasil pemeriksaan dan persetujuan Anda. Rincian biaya,
+              komponen, dan ketentuan garansi dicantumkan pada nota servis agar mudah diperiksa
+              kembali.
             </p>
           </div>
           <div className="relative min-h-[320px] overflow-hidden rounded-2xl border border-outline-variant md:col-span-5">

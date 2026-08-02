@@ -197,6 +197,10 @@ export type ArticleEditorialOverride = {
   content: string;
 };
 
+// Keep the public byline organization-level until a named, credentialed author
+// and reviewer are provided. Never expose arbitrary legacy admin author text.
+export const PUBLIC_ARTICLE_AUTHOR = "Pytafix";
+
 export const ARTICLE_EDITORIAL_OVERRIDES: Record<string, ArticleEditorialOverride> = {
   "cara-mengatasi-laptop-mati-total": {
     title: "Laptop Mati Total: Pemeriksaan Aman Sebelum Servis",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
-import { ARTICLE_EDITORIAL_OVERRIDES, isPublicReviewedArticleSlug } from "@/lib/site-content";
+import { ARTICLE_EDITORIAL_OVERRIDES, isPublicReviewedArticleSlug, PUBLIC_ARTICLE_AUTHOR } from "@/lib/site-content";
 import { Metadata } from "next";
 
 const articleMetadata: Metadata = {
@@ -41,7 +41,7 @@ export default async function ArtikelPage() {
   const articles = storedArticles.filter((article) => isPublicReviewedArticleSlug(article.slug)).map((article) => ({
     ...article,
     ...ARTICLE_EDITORIAL_OVERRIDES[article.slug],
-    author: "Tim Editorial Pytafix",
+    author: PUBLIC_ARTICLE_AUTHOR,
   }));
 
   const featured = articles[0];

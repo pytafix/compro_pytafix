@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { CONTACT, SITE_DESCRIPTION, SITE_URL } from "@/lib/config";
 import { isLocationServiceSlug } from "@/lib/locations";
-import { ARTICLE_EDITORIAL_OVERRIDES, ARTICLE_REFERENCES, PUBLIC_SERVICE_COPY, getPublicFaqs, getPublicServiceCopy, isPublicReviewedArticleSlug, isPublicReviewedServiceSlug } from "@/lib/site-content";
+import { ARTICLE_EDITORIAL_OVERRIDES, ARTICLE_REFERENCES, PUBLIC_ARTICLE_AUTHOR, PUBLIC_SERVICE_COPY, getPublicFaqs, getPublicServiceCopy, isPublicReviewedArticleSlug, isPublicReviewedServiceSlug } from "@/lib/site-content";
 
 export const runtime = "nodejs";
 export const revalidate = 3600;
@@ -68,14 +68,14 @@ export async function GET() {
   const liveEditorialArticles = articles.filter((article) => isPublicReviewedArticleSlug(article.slug)).map((article) => ({
     ...article,
     ...ARTICLE_EDITORIAL_OVERRIDES[article.slug],
-    author: "Tim Editorial Pytafix",
+    author: PUBLIC_ARTICLE_AUTHOR,
   }));
   const editorialArticles: ArticleSummary[] = liveEditorialArticles.length > 0
     ? liveEditorialArticles
     : Object.entries(ARTICLE_EDITORIAL_OVERRIDES).map(([slug, article]) => ({
         slug,
         ...article,
-        author: "Tim Editorial Pytafix",
+        author: PUBLIC_ARTICLE_AUTHOR,
         publishedAt: null,
         updatedAt: null,
       }));
@@ -144,7 +144,7 @@ export async function GET() {
           day: "numeric",
         }).format(article.publishedAt)
       : "tanggal publikasi belum tersedia";
-    lines.push(`Penulis: ${article.author || "Tim Editorial Pytafix"} | ${publicationDate}`);
+    lines.push(`Penulis: ${article.author || PUBLIC_ARTICLE_AUTHOR} | ${publicationDate}`);
     lines.push(article.excerpt);
     const preview = stripMarkup(article.content).slice(0, 500);
     lines.push(preview + (stripMarkup(article.content).length > 500 ? "…" : ""));

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { renderStoredContent } from "@/lib/content";
 import { serializeJsonLd } from "@/lib/json-ld";
-import { ARTICLE_EDITORIAL_OVERRIDES, ARTICLE_REFERENCES, isPublicReviewedArticleSlug } from "@/lib/site-content";
+import { ARTICLE_EDITORIAL_OVERRIDES, ARTICLE_REFERENCES, isPublicReviewedArticleSlug, PUBLIC_ARTICLE_AUTHOR } from "@/lib/site-content";
 
 export const revalidate = 3600;
 
@@ -30,7 +30,7 @@ export async function generateMetadata({
       robots: { index: false, follow: false },
     };
   }
-  const article = { ...storedArticle, ...ARTICLE_EDITORIAL_OVERRIDES[slug], author: "Tim Editorial Pytafix" };
+  const article = { ...storedArticle, ...ARTICLE_EDITORIAL_OVERRIDES[slug], author: PUBLIC_ARTICLE_AUTHOR };
 
   return {
     title: article.title,
@@ -65,7 +65,7 @@ export default async function ArticleDetailPage({
   const storedArticle = await getPublishedArticle(slug);
 
   if (!storedArticle) notFound();
-  const article = { ...storedArticle, ...ARTICLE_EDITORIAL_OVERRIDES[slug] };
+  const article = { ...storedArticle, ...ARTICLE_EDITORIAL_OVERRIDES[slug], author: PUBLIC_ARTICLE_AUTHOR };
 
   const publishedDate = article.publishedAt;
   if (!publishedDate) notFound();
@@ -116,11 +116,11 @@ export default async function ArticleDetailPage({
       <header className="mb-8 text-center">
         <h1 className="mb-6 text-4xl font-bold text-on-surface md:text-5xl">{article.title}</h1>
         <div className="flex items-center justify-center gap-4 text-on-surface-variant">
-          <span className="font-semibold text-on-surface">{article.author || "Tim Editorial Pytafix"}</span>
+          <span className="font-semibold text-on-surface">{article.author}</span>
           <span aria-hidden="true">•</span>
           <time dateTime={publishedDate.toISOString()}>{formattedDate}</time>
         </div>
-        <p className="mt-3 text-sm text-on-surface-variant">Ditinjau oleh Tim Editorial Pytafix berdasarkan rujukan resmi yang tercantum. Diperbarui {formattedUpdatedDate}.</p>
+        <p className="mt-3 text-sm text-on-surface-variant">Artikel ini menggunakan rujukan resmi yang tercantum. Diperbarui {formattedUpdatedDate}.</p>
       </header>
 
       <div className="relative mb-12 h-[400px] w-full overflow-hidden rounded-3xl md:h-[500px]">
@@ -139,7 +139,7 @@ export default async function ArticleDetailPage({
       />
 
       <aside className="mt-12 rounded-2xl border border-outline-variant bg-surface-container-low p-6">
-        <h2 className="font-headline-md text-headline-md text-on-surface">Catatan editorial</h2>
+        <h2 className="font-headline-md text-headline-md text-on-surface">Catatan penting</h2>
         <p className="mt-3 text-on-surface-variant">
           Artikel ini merupakan panduan umum, bukan diagnosis perangkat. Kondisi, data, biaya,
           dan kelayakan perbaikan baru dapat dipastikan setelah pemeriksaan.
