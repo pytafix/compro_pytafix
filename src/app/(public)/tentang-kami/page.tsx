@@ -114,7 +114,7 @@ export default function TentangKami() {
           <p className="mt-2 text-sm text-on-surface-variant">{CONTACT.visitNote}</p>
           <p className="mt-3 text-on-surface-variant">
             Jam operasional: {CONTACT.hours.days}, {CONTACT.hours.opens}–{CONTACT.hours.closes};
-            Minggu {CONTACT.hours.sunday.toLowerCase()}.
+            Sabtu {CONTACT.hours.saturday}; Minggu {CONTACT.hours.sunday}.
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
             <Link href="/layanan" className="rounded-full bg-primary px-6 py-3 font-label-bold text-on-primary">

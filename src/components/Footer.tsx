@@ -78,7 +78,7 @@ export function Footer() {
             </li>
             <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
               <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">schedule</span>
-              <span>{CONTACT.hours.days}, {CONTACT.hours.opens} - {CONTACT.hours.closes}</span>
+              <span>{CONTACT.hours.days}, {CONTACT.hours.opens} - {CONTACT.hours.closes}; Sabtu {CONTACT.hours.saturday}; Minggu {CONTACT.hours.sunday}</span>
             </li>
           </ul>
         </div>

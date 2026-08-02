@@ -362,12 +362,16 @@ Terima kasih.`;
             <h3 className="font-headline-md text-headline-md text-on-background mb-4">Jam Operasional</h3>
             <ul className="space-y-2 font-body-md text-body-md text-on-surface-variant">
               <li className="flex justify-between border-b border-outline-variant pb-2">
-                <span>Senin - Sabtu</span>
-                <span className="font-label-bold text-on-background">09:00 - 18:00</span>
+                <span>Senin - Jumat</span>
+                <span className="font-label-bold text-on-background">09:00 - 16:00</span>
+              </li>
+              <li className="flex justify-between border-b border-outline-variant pb-2">
+                <span>Sabtu</span>
+                <span className="font-label-bold text-on-background">09:00 - 14:00</span>
               </li>
               <li className="flex justify-between border-b border-outline-variant pb-2">
                 <span>Minggu</span>
-                <span className="font-label-bold text-error">Tutup</span>
+                <span className="font-label-bold text-on-background">09:00 - 16:00</span>
               </li>
             </ul>
           </div>

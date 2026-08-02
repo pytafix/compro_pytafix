@@ -95,7 +95,7 @@ export async function GET() {
     `Area layanan: ${CONTACT.serviceArea}`,
     `Telepon/WhatsApp: ${CONTACT.whatsappDisplay}`,
     `Email: ${CONTACT.email}`,
-    `Jam operasional: ${CONTACT.hours.days}, ${CONTACT.hours.opens}–${CONTACT.hours.closes}; Minggu ${CONTACT.hours.sunday.toLowerCase()}.`,
+    `Jam operasional: ${CONTACT.hours.days}, ${CONTACT.hours.opens}–${CONTACT.hours.closes}; Sabtu ${CONTACT.hours.saturday}; Minggu ${CONTACT.hours.sunday}.`,
     `Catatan: ${CONTACT.hours.note}`,
     "",
     "## Layanan",

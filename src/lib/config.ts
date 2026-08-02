@@ -23,10 +23,11 @@ export const CONTACT = {
   geo: { latitude: -7.9854846, longitude: 112.6422118 } as ContactGeo,
   serviceArea: 'Malang Raya, Jawa Timur',
   hours: {
-    days: 'Senin - Sabtu',
+    days: 'Senin - Jumat',
     opens: '09:00',
-    closes: '18:00',
-    sunday: 'Tutup',
+    closes: '16:00',
+    saturday: '09:00 - 14:00',
+    sunday: '09:00 - 16:00',
     note: 'Konfirmasi jadwal melalui WhatsApp sebelum datang atau mengatur penjemputan.',
   },
 };

@@ -12,4 +12,14 @@ describe("public contact copy", () => {
     expect(CONTACT.geo).toEqual({ latitude: -7.9854846, longitude: 112.6422118 });
     expect(CONTACT.mapsUrl).toContain("g%2F11zd08yrsk");
   });
+
+  it("matches the owner-confirmed Google Maps hours", () => {
+    expect(CONTACT.hours).toMatchObject({
+      days: "Senin - Jumat",
+      opens: "09:00",
+      closes: "16:00",
+      saturday: "09:00 - 14:00",
+      sunday: "09:00 - 16:00",
+    });
+  });
 });

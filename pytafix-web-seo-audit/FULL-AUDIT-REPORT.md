@@ -124,7 +124,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 - Removed duplicate brand suffixes in page titles.
 - Added an admin metadata boundary and `X-Robots-Tag`.
 - Replaced invalid promotion schema with `Offer`.
-- Removed false product brands, fake ratings, fake NAP/geo, fake logo dimensions, and Sunday pseudo-hours.
+- Removed false product brands, fake ratings, fake NAP/geo, fake logo dimensions, and incorrect operating-hour claims; the schedule now matches the owner-provided Google Maps screenshots.
 - Added `hasMap`, owner-confirmed `PostalAddress`, `GeoCoordinates`, and service-area data to the local-business schema.
 - Promoted the reviewed Organization and ProfessionalService entities to the root layout so article, service, product, and commerce schemas resolve their `#organization`/`#localbusiness` references on every public route without duplicating the homepage graph.
 - Replaced duplicate inline publisher/author and contact-service payloads with stable entity references to the root graph.

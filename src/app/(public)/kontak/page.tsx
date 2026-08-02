@@ -82,6 +82,8 @@ export default function KontakPage() {
               <ContactCard icon="schedule" title="Jam operasional">
                 {CONTACT.hours.days}: {CONTACT.hours.opens}–{CONTACT.hours.closes}
                 <br />
+                Sabtu: {CONTACT.hours.saturday}
+                <br />
                 Minggu: {CONTACT.hours.sunday}
                 <br />
                 <span className="text-sm">{CONTACT.hours.note}</span>

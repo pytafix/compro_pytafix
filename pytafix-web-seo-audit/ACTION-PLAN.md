@@ -8,7 +8,7 @@ Updated: 28 July 2026
 |---|---|---|
 | Repository owner | Revoke and replace the exposed GitHub token | Old token disabled; remote remains credential-free |
 | Platform owner | Set `JWT_SECRET` (32+ chars), strong `ADMIN_PASSWORD`, `BLOB_READ_WRITE_TOKEN`, and Upstash Redis REST credentials | Preview login/upload/form/status smoke tests pass |
-| Business owner | Confirm legal entity, WhatsApp, email, service area, operating hours, and ownership/completeness of the provided Google Maps listing | One signed source-of-truth sheet and verified Google Business Profile access |
+| Business owner | Verify legal entity, WhatsApp, email, service area, and Google Business Profile ownership/completeness; address and hours are now owner-confirmed from Maps screenshots | One signed source-of-truth sheet and verified Google Business Profile access |
 | Database owner | Back up production; deactivate/delete 40 legacy geo service rows | Only four approved base services active |
 | Platform/security | Verify the implemented Upstash limiter across preview instances; keep local fallback disabled | Cross-instance 429 test, fail-closed test, and Upstash dashboard evidence |
 | QA | Deploy a preview, test public and admin critical paths, then crawl preview | No P0/P1 regression |

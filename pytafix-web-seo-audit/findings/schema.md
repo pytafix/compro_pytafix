@@ -8,11 +8,11 @@ Audit state: 28 July 2026. Current local source/build is the reference; producti
 - `PostalAddress` and `GeoCoordinates` now use the owner-confirmed Maps place evidence; `hasMap` points to the direct Pytafix place URL.
 - Homepage WebSite and FAQ graphs, article author/publisher references, service graphs, Product/Offer graphs, promo Offer graphs, and detail BreadcrumbList graphs are emitted for the relevant page types.
 - JSON-LD passes through a shared serializer that escapes `<` and prevents script breakout.
-- Fake brands, ratings, logo dimensions, Sunday pseudo-hours, and unsupported business claims were removed.
+- Fake brands, ratings, logo dimensions, and unsupported business claims were removed; the opening-hours schema now matches the owner-provided Google Maps schedule, including Sunday hours.
 
 ## Remaining evidence gaps
 
-1. **Business entity proof** — verify legal entity, GBP ownership, pin, NAP, categories, and hours before adding a verified address or coordinates.
+1. **Business entity proof** — pin, NAP, and hours are owner-confirmed; independently verify legal entity, GBP ownership, categories, and external citation consistency.
 2. **Author authority** — generic editorial attribution is not the same as a named expert. Add verifiable reviewer/author details only when the owner can substantiate them.
 3. **Ratings and reviews** — do not add AggregateRating or Review schema until the underlying consented, representative dataset is real and maintained.
 4. **Production validation** — rerun Schema Markup Validator/Rich Results checks on deployed HTML; local build validity is not Google eligibility or indexing.
