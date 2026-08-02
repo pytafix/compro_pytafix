@@ -39,7 +39,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
 | Production crawl | 18 current sitemap URLs (2 Aug 2026) | All 200 with title, description, canonical, H1, and valid JSON-LD syntax; no duplicate titles/descriptions or legacy geo URLs |
 | Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Current crawl confirms the curated 18-URL boundary; image dimension review remains a low-priority performance follow-up |
-| Google Search Console | 2 Aug 2026 service-account recheck for `sc-domain:pytafix.web.id` | Sitemap resubmitted and pending with 0 errors/0 warnings; 18 URLs submitted; homepage, Kontak, layanan archive, and artikel archive are `Submitted and indexed`; two base service detail URLs are discovered but not yet indexed |
+| Google Search Console | 2 Aug 2026 read-only service-account recheck for `sc-domain:pytafix.web.id` | Sitemap processing completed with 0 errors/0 warnings; 18 URLs submitted and 0 indexed in the sitemap aggregate; homepage, Kontak, and layanan archive are `Submitted and indexed`; two base service detail URLs remain discovered but not indexed; the old Batu URL remains a stale indexed redirect record |
 | Deployment | GitHub commit `81cc503`; Vercel deployment `dpl_Gdz9saxUw9hfnh9YZF7t7wEVf1iA` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the owner-confirmed location build |
 
 ## Local scorecard
@@ -187,7 +187,7 @@ Lighthouse performance is lab evidence and showed cold/warm variance. It is not 
 8. **Add external contact notifications and retention rules.** The new admin inbox closes the operational read/reply gap, but email/Slack alerts and an approved retention period remain external decisions.
 9. **Run a post-deploy fetch of generated favicon/Apple icons and remote image hosts.** Source assets and local metadata are correct; this remains a runtime verification item.
 10. **Resolve ESLint-chain development advisories** when compatible releases are available; forced upgrades currently break the Next lint stack.
-11. **Complete remaining production evidence.** The latest production deployment is Ready, the 18-URL crawl and schema checks pass, and the valid status probe reaches the database; the sitemap/URL recrawl, CrUX/field data, Blob upload, and broader citation checks remain open.
+11. **Complete remaining production evidence.** The latest production deployment is Ready, the 18-URL crawl and schema checks pass, and the valid status probe reaches the database; canonical service URL recrawl, CrUX/field data, Blob upload, and broader citation checks remain open.
 12. **Allow Google to recrawl the canonical service details.** `/layanan/service-hp` and `/layanan/service-laptop` are live, sitemap-listed, and discovered but not yet indexed; the historical `/layanan/service-hp-batu` URL returns a correct 308 redirect, while its GSC record is stale.
 13. **Configure GitHub branch protection and required checks.** The public `main` branch currently has no visible protection or required CI checks; enforce review/CI gates before broader team changes.
 12. **Expand the evidence-led content set before growth.** Reviewed service bodies are about 110–118 words and reviewed articles about 167–197 words; add named human review, first-hand repair evidence, consented original media, and topic-specific depth before pursuing broader keyword or city-page expansion.
