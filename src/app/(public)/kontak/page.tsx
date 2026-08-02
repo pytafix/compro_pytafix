@@ -7,7 +7,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Lokasi & Kontak Pytafix Malang",
   description:
-    "Lihat listing Google Maps Pytafix dan konfirmasi pin, area layanan, jadwal, atau kebutuhan servis perangkat.",
+    "Lihat alamat layanan Pytafix, jam operasional, area layanan, dan cara menghubungi tim untuk kebutuhan servis perangkat.",
   alternates: { canonical: "/kontak" },
   openGraph: {
     title: "Hubungi Pytafix",
@@ -53,12 +53,12 @@ export default function KontakPage() {
           <div>
             <h2 className="mb-6 font-headline-md text-primary">Informasi kontak resmi</h2>
             <p className="mb-8 font-body-lg text-on-surface-variant">
-            Teks listing Google Maps yang dibagikan mencantumkan Polehan, Blimbing, Kota Malang.
-            Konfirmasi pin dan jadwal melalui WhatsApp sebelum datang atau mengatur penjemputan perangkat.
+            Kunjungi alamat layanan kami atau hubungi tim untuk memastikan jadwal, area layanan,
+            dan opsi penjemputan perangkat sebelum datang.
             </p>
 
             <div className="space-y-6">
-              <ContactCard icon="location_on" title="Alamat pada listing Google Maps">
+              <ContactCard icon="location_on" title="Alamat layanan">
                 <a
                   className="text-primary underline underline-offset-4"
                   href={CONTACT.mapsUrl}
@@ -67,7 +67,7 @@ export default function KontakPage() {
                 >
                   {CONTACT.address}
                 </a>
-                <span className="mt-1 block text-sm">{CONTACT.locationNote}</span>
+                <span className="mt-1 block text-sm">{CONTACT.visitNote}</span>
               </ContactCard>
               <ContactCard icon="call" title="Telepon dan WhatsApp">
                 <a className="text-primary underline underline-offset-4" href={waLink} target="_blank" rel="noopener noreferrer">
@@ -117,7 +117,7 @@ export default function KontakPage() {
             <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-sm">
               <iframe
                 src={CONTACT.mapEmbedUrl}
-                title="Peta berdasarkan alamat pada listing Google Maps Pytafix"
+                title="Peta menuju alamat layanan Pytafix"
                 className="h-[360px] w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

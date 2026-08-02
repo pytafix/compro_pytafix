@@ -23,7 +23,7 @@ export const CONTACT = {
   // coordinates or treat the pin as verified until the owner confirms it.
   mapEmbedUrl: 'https://www.google.com/maps?q=Pytafix%2C+Jl.+Werkudoro+No.2%2C+Polehan%2C+Kota+Malang&output=embed',
   locationVerified: false,
-  locationNote: 'Teks listing menyebut alamat di Malang, tetapi pin pada preview perlu dikonfirmasi sebelum kunjungan.',
+  visitNote: 'Sebelum berkunjung, konfirmasi jam layanan dan petunjuk lokasi melalui WhatsApp.',
   geo: null as ContactGeo,
   serviceArea: 'Malang Raya, Jawa Timur',
   hours: {

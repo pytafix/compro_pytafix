@@ -34,5 +34,7 @@ describe("public service copy guardrails", () => {
 
   it("uses the reviewed FAQ baseline instead of mutable admin rows", () => {
     expect(getPublicFaqs()).toEqual(DEFAULT_FAQS);
+    expect(getPublicFaqs().map((faq) => `${faq.question} ${faq.answer}`).join(" "))
+      .not.toMatch(/catatan internal|listing Google Maps|pin pada preview/i);
   });
 });

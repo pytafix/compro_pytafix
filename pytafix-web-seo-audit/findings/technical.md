@@ -7,7 +7,7 @@ Audit state: 28 July 2026. Findings below reflect the current local source and b
 - Sitemap no longer emits the old hard-coded 2024 fallback date. Dynamic records use their `updatedAt` value, and database failure serves a reviewed static URL fallback.
 - Location/service permutations are filtered from public service routes and the sitemap unless the slug is explicitly reviewed. This removes the previous doorway-page expansion risk.
 - Public location data no longer publishes unverified hard-coded coordinates. The supplied Google Maps short link is retained for navigation, but its text names Malang while the current preview exposes a conflicting Sidoarjo-area center; the exact pin and NAP remain pending owner verification.
-- The root `ProfessionalService` schema emits `hasMap` and service-area facts but withholds `PostalAddress` and `GeoCoordinates` while that conflict is unresolved; the visible contact page labels the address as listing text and asks visitors to confirm the pin.
+- The root `ProfessionalService` schema emits `hasMap` and service-area facts but withholds `PostalAddress` and `GeoCoordinates` while that conflict is unresolved; public contact copy now uses a customer-facing address label and visit guidance without exposing internal map-review language.
 - AI-search access is explicit in `robots.txt`; `/admin/` and `/api/` remain disallowed while `/llms.txt` is allowed.
 - FAQ answers are server-rendered in semantic `<details>` elements, and reviewed service pages render sanitized semantic content rather than raw stored markup.
 - Missing dynamic commerce/article/service records return `noindex` metadata instead of creating indexable error URLs.

@@ -102,6 +102,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 - Added WhatsApp verification to status lookup and states for waiting/cancelled service.
 - Replaced the fake contact map and placeholder coordinates with the user-supplied Pytafix Google Maps listing and address query at Jl. Werkudoro No. 2, Polehan, Blimbing, Kota Malang. The listing text says Malang but the current Maps preview exposes a conflicting Sidoarjo-area center, so coordinates and exact NAP are intentionally omitted from verified facts until the owner confirms the pin.
 - Added a linked address, accessible embedded map, and route action while retaining Malang Raya as the service area.
+- Removed internal map-review wording from all public contact surfaces, including the footer, Kontak page, Tentang page, and `llms.txt`; visitors now see a clear address label and a concise WhatsApp visit-confirmation instruction.
 - Added accessible labels to product/sparepart search and sort controls.
 - Improved mobile menu semantics, Escape handling, desktop dropdown state, social-list semantics, heading order, and inline-link affordance.
 - Verified no horizontal overflow at mobile, tablet, or desktop widths.
@@ -162,7 +163,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Nested geo variant | Direct 308 to canonical base service |
 | Local sitemap | 18 reviewed URLs; no utilities/empty collections/geo clones |
 | Local article | Semantic H2s, no literal Markdown, valid Article JSON-LD, official reference |
-| Local contact location | Google Maps address-query iframe loaded; route links correct; listing text retained for navigation; business-schema address/coordinates withheld pending owner pin verification; no overflow at 375 or 1440 px |
+| Local contact location | Google Maps address-query iframe loaded; route links correct; customer-facing address/visit guidance rendered; business-schema address/coordinates withheld pending owner pin verification; no overflow at 375 or 1440 px |
 | Local commerce freshness | Product and sparepart detail pages expose `dateModified` in Product JSON-LD and a visible last-updated/price-stock confirmation note |
 | Lighthouse local | Mobile performance 89, desktop 72, best practices 96, SEO 100 |
 | Lighthouse accessibility rerun | 99 |

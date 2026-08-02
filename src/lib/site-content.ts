@@ -33,7 +33,7 @@ export const DEFAULT_FAQS: PublicFaq[] = [
     id: "cek-status",
     question: "Bagaimana cara memantau proses perbaikan?",
     answer:
-      "Gunakan ID servis dan nomor WhatsApp yang dipakai saat booking pada halaman Cek Status Servis. Halaman tersebut menampilkan status terbaru yang tercatat tanpa membuka nama, alamat, atau catatan internal pelanggan.",
+      "Gunakan ID servis dan nomor WhatsApp yang dipakai saat booking pada halaman Cek Status Servis. Halaman tersebut menampilkan status terbaru tanpa menampilkan nama, alamat, atau catatan pribadi Anda.",
   },
 ];
 

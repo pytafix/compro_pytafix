@@ -73,7 +73,7 @@ export function Footer() {
                 >
                   {CONTACT.address}
                 </a>
-                <span className="mt-1 block text-xs">{CONTACT.locationNote}</span>
+                <span className="mt-1 block text-xs">{CONTACT.visitNote}</span>
               </span>
             </li>
             <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">

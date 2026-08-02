@@ -111,7 +111,7 @@ export default function TentangKami() {
             </a>
             .
           </p>
-          <p className="mt-2 text-sm text-on-surface-variant">{CONTACT.locationNote}</p>
+          <p className="mt-2 text-sm text-on-surface-variant">{CONTACT.visitNote}</p>
           <p className="mt-3 text-on-surface-variant">
             Jam operasional: {CONTACT.hours.days}, {CONTACT.hours.opens}–{CONTACT.hours.closes};
             Minggu {CONTACT.hours.sunday.toLowerCase()}.

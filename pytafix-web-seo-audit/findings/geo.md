@@ -19,4 +19,4 @@ Audit state: 28 July 2026. Current source is locally repaired; production and Go
 
 ## Release check
 
-Confirm the listing pin and NAP first. Then publish only facts that match the verified profile and rerun production/GSC checks.
+Confirm the listing pin and NAP first. Until then, keep public wording limited to the supplied address, service area, and customer-safe visit guidance; publish only facts that match the verified profile and rerun production/GSC checks.
