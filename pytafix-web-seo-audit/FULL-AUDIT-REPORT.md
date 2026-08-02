@@ -1,9 +1,9 @@
 # Pytafix Full-System, SEO, AEO/GEO, and Content Audit
 
-Audit date: 28 July 2026
+Audit date: 2 August 2026
 Repository baseline: `3c37fb1`
 Production audited: `https://www.pytafix.web.id`
-Local implementation: committed as `1565654` and deployed to the linked Vercel production project
+Local implementation: committed as `879506a` and deployed to the linked Vercel production project
 
 ## Executive summary
 
@@ -33,14 +33,14 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Layer | Evidence | Current truth |
 |---|---|---|
 | Source | Full repository and 56 application routes inspected | Local fixes present |
-| Local validation | ESLint, 43 tests, Prisma validation, TypeScript, Next production build | Pass |
+| Local validation | ESLint, 49 tests, Prisma validation, TypeScript, Next production build | Pass |
 | Local rendering | Playwright at 375, 768, and 1440 px; representative public/admin routes | No horizontal overflow |
 | Local crawl | 18 sitemap URLs fetched from the built server | All returned HTTP 200 with no redirect chain |
 | Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
 | Production crawl | 18 current sitemap URLs (2 Aug 2026) | All 200 with title, description, canonical, H1, and valid JSON-LD syntax; no duplicate titles/descriptions or legacy geo URLs |
 | Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Current crawl confirms the curated 18-URL boundary; image dimension review remains a low-priority performance follow-up |
 | Google Search Console | 2 Aug 2026 read-only service-account recheck for `sc-domain:pytafix.web.id` | Sitemap processing completed with 0 errors/0 warnings; 18 URLs submitted and 0 indexed in the sitemap aggregate; homepage, Kontak, and layanan archive are `Submitted and indexed`; two base service detail URLs remain discovered but not indexed; the old Batu URL remains a stale indexed redirect record |
-| Deployment | GitHub commit `81cc503`; Vercel deployment `dpl_Gdz9saxUw9hfnh9YZF7t7wEVf1iA` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the owner-confirmed location build |
+| Deployment | GitHub commit `879506a`; Vercel deployment `dpl_GXVdis5DvajQ24GxWqvKCbaeyQHb` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the cleaned public copy and owner-confirmed location build |
 
 ## Local scorecard
 

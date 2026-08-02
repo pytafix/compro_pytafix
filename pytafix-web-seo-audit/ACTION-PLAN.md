@@ -1,6 +1,6 @@
 # Pytafix Action Plan
 
-Updated: 28 July 2026
+Updated: 2 August 2026
 
 ## P0 — Required before preview/production
 
