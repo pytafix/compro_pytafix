@@ -8,23 +8,19 @@ export const CONTACT = {
   whatsapp: '628814081894',
   whatsappDisplay: '+62 881-4081-894',
   email: 'info@pytafix.web.id',
-  address: 'Jl. Werkudoro No. 2, RT. 2/RW. 2, Polehan, Kec. Blimbing, Kota Malang, Jawa Timur 65121',
+  address: 'Jl. Werkudoro No.2, RT.2/RW.2, Polehan, Kec. Blimbing, Kota Malang, Jawa Timur 65121',
   postalAddress: {
-    streetAddress: 'Jl. Werkudoro No. 2, RT. 2/RW. 2, Polehan, Kec. Blimbing',
+    streetAddress: 'Jl. Werkudoro No.2, RT.2/RW.2, Polehan, Kec. Blimbing',
     addressLocality: 'Kota Malang',
     addressRegion: 'Jawa Timur',
     postalCode: '65121',
     addressCountry: 'ID',
   },
-  mapsUrl: 'https://maps.app.goo.gl/29VWrXBac3oXkKHA8',
-  // The supplied Google Maps short link resolves to a listing whose textual
-  // NAP says Malang, but its current preview also exposes a conflicting map
-  // center. Keep the listing link and user-supplied address; do not publish
-  // coordinates or treat the pin as verified until the owner confirms it.
-  mapEmbedUrl: 'https://www.google.com/maps?q=Pytafix%2C+Jl.+Werkudoro+No.2%2C+Polehan%2C+Kota+Malang&output=embed',
-  locationVerified: false,
-  visitNote: 'Sebelum berkunjung, konfirmasi jam layanan dan petunjuk lokasi melalui WhatsApp.',
-  geo: null as ContactGeo,
+  mapsUrl: 'https://www.google.com/maps/place/Pytafix/@-7.9854793,112.6396369,17z/data=!3m1!4b1!4m6!3m5!1s0x2dd629d3bfa0403f:0x60352246da444542!8m2!3d-7.9854846!4d112.6422118!16s%2Fg%2F11zd08yrsk',
+  mapEmbedUrl: 'https://www.google.com/maps?q=-7.9854846%2C112.6422118&z=17&output=embed',
+  locationVerified: true,
+  visitNote: 'Jam layanan dapat berubah; konfirmasi melalui WhatsApp sebelum berkunjung.',
+  geo: { latitude: -7.9854846, longitude: 112.6422118 } as ContactGeo,
   serviceArea: 'Malang Raya, Jawa Timur',
   hours: {
     days: 'Senin - Sabtu',

@@ -13,6 +13,6 @@ Audit state: 28 July 2026. Findings describe the current local source/build.
 ## Remaining architecture decisions
 
 1. **Commerce IDs** — `/jual-beli/[id]` and `/sparepart/[id]` still expose database IDs. A slug migration needs a data/redirect plan and must not be introduced implicitly.
-2. **Location facts** — public contact copy uses a customer-facing address label and visit guidance; verified local-business address data remains withheld until the pin/NAP conflict is resolved.
+2. **Location facts** — public contact copy uses the owner-confirmed address, direct Google Maps place URL, and concise visit guidance; local-business address and coordinates now match the supplied place evidence.
 3. **Dynamic inventory freshness** — product/sparepart pages show `dateModified` and a price/stock confirmation note; production data still needs operational review.
 4. **Post-deploy validation** — fetch representative pages, inspect rendered JSON-LD, validate OG images, and verify canonical/sitemap behavior in the deployed environment.

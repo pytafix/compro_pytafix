@@ -12,11 +12,11 @@ Audit state: 28 July 2026. Current source is locally repaired; production and Go
 
 ## Remaining evidence gaps
 
-1. **Google Maps conflict** — the provided short link text names a Malang listing, while the current preview exposes a conflicting Sidoarjo-area center. The link remains available for navigation, but the exact pin/NAP, categories, hours, and ownership require owner verification. Address and coordinates are withheld from verified business schema until then.
+1. **Google Maps evidence** — the owner supplied a direct Pytafix place URL and screenshot showing the Polehan, Blimbing, Kota Malang address and pin. The exact address and coordinates are now published in verified business schema; categories, hours, and ownership still need independent GBP verification.
 2. **Local proof** — there is no current verified GBP ownership export, review evidence, local citations, or post-deploy Maps/GBP consistency check.
 3. **Citation depth** — `llms.txt` intentionally caps long passages; raise citation readiness with deeper, reviewer-attributed, first-hand content rather than fabricated claims.
 4. **External truth** — GSC, CrUX, AI Overview/Perplexity visibility, and production crawl results must be rechecked after an authorized deployment.
 
 ## Release check
 
-Confirm the listing pin and NAP first. Until then, keep public wording limited to the supplied address, service area, and customer-safe visit guidance; publish only facts that match the verified profile and rerun production/GSC checks.
+The pin and address are now owner-confirmed. Keep the public address, coordinates, service area, and customer-safe visit guidance synchronized with the profile, then verify GBP categories, hours, ownership, and external citations before expanding the local cluster.

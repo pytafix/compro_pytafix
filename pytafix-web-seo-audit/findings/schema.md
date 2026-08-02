@@ -5,7 +5,7 @@ Audit state: 28 July 2026. Current local source/build is the reference; producti
 ## Resolved locally
 
 - Root `Organization` and `ProfessionalService` entities use stable `@id` references; the professional service links to the legal organization and service area.
-- `PostalAddress` and `GeoCoordinates` are conditionally withheld while the supplied Maps text/pin conflict is unresolved; `hasMap` remains the navigation link.
+- `PostalAddress` and `GeoCoordinates` now use the owner-confirmed Maps place evidence; `hasMap` points to the direct Pytafix place URL.
 - Homepage WebSite and FAQ graphs, article author/publisher references, service graphs, Product/Offer graphs, promo Offer graphs, and detail BreadcrumbList graphs are emitted for the relevant page types.
 - JSON-LD passes through a shared serializer that escapes `<` and prevents script breakout.
 - Fake brands, ratings, logo dimensions, Sunday pseudo-hours, and unsupported business claims were removed.
