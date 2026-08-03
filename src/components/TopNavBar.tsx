@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
     name: "Layanan", 
     children: [
       { name: "Semua Layanan", href: "/layanan" },
+      { name: "Area Layanan", href: "/area-layanan" },
       { name: "Booking Servis", href: "/booking-servis" },
       { name: "Cek Status Servis", href: "/cek-status-servis" },
       { name: "Klaim Garansi", href: "/klaim-garansi" },

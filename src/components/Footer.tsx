@@ -28,6 +28,7 @@ export function Footer() {
           </h4>
           <ul className="flex flex-col gap-3">
             <li><Link href="/layanan" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Semua Layanan</Link></li>
+            <li><Link href="/area-layanan" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Area Layanan</Link></li>
             <li><Link href="/booking-servis" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Booking Servis</Link></li>
             <li><Link href="/klaim-garansi" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Klaim Garansi</Link></li>
             <li><Link href="/sparepart" className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Sparepart</Link></li>

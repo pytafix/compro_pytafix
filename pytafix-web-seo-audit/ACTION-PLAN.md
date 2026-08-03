@@ -1,6 +1,6 @@
 # Pytafix Action Plan
 
-Updated: 2 August 2026
+Updated: 3 August 2026
 
 ## P0 — Required before preview/production
 
@@ -40,6 +40,8 @@ The seed is now non-destructive and idempotent, but still verify the target data
 
 ## P2 — Search and content growth
 
+Riset wilayah dan keputusan rollout terbaru: [`findings/programmatic-geo-2026-08-03.md`](findings/programmatic-geo-2026-08-03.md).
+
 1. Submit only the curated sitemap after production validation.
 2. Monitor URL Inspection for the homepage, service archive, four base services, article archive, and five reviewed articles. Do not use the Indexing API for ordinary service/article URLs; it is restricted to eligible JobPosting and broadcast/video content.
 3. Monitor GSC weekly:
@@ -47,7 +49,7 @@ The seed is now non-destructive and idempotent, but still verify the target data
    - impressions/clicks;
    - query/page mismatches;
    - duplicate/canonical exclusions.
-4. Keep city/service expansion frozen until each page has verified availability, local proof, distinct pricing/SLA information, real work evidence, and human-reviewed copy.
+4. Keep new city/service expansion frozen until each page has verified availability, local proof, distinct pricing/SLA information, real work evidence, and human-reviewed copy. The current safe rollout is one Malang Raya hub plus the Batu detail page; do not turn the remaining 40 directory areas into indexable clones.
 5. Add first-party proof gradually:
    - consented portfolio cases;
    - verified testimonials;

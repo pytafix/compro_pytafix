@@ -1,13 +1,13 @@
 # Pytafix Full-System, SEO, AEO/GEO, and Content Audit
 
-Audit date: 2 August 2026
+Audit date: 3 August 2026
 Repository baseline: `3c37fb1`
 Production audited: `https://www.pytafix.web.id`
-Local implementation: committed as `879506a` and deployed to the linked Vercel production project
+Local implementation: previous public-copy fix `879506a` is deployed; the Malang Raya area-hub change is local and not yet deployed
 
 ## Executive summary
 
-### Location evidence update — 2 August 2026
+### Location evidence update — 3 August 2026
 
 The owner supplied a direct Google Maps place URL and screenshot for Pytafix at Jl. Werkudoro No.2, RT.2/RW.2, Polehan, Kec. Blimbing, Kota Malang, Jawa Timur 65121. The confirmed place coordinates are `-7.9854846, 112.6422118`; the source now publishes the matching address, `GeoCoordinates`, direct place URL, and coordinate-based map embed.
 
@@ -32,15 +32,19 @@ The remediation removes or mitigates each of these issues. Production delivery i
 
 | Layer | Evidence | Current truth |
 |---|---|---|
-| Source | Full repository and 56 application routes inspected | Local fixes present |
-| Local validation | ESLint, 49 tests, Prisma validation, TypeScript, Next production build | Pass |
+| Source | Full repository and 58 application routes inspected | Local fixes present; area-hub change is not deployed |
+| Local validation | ESLint, 53 tests, Prisma validation, TypeScript, Next production build | Pass |
 | Local rendering | Playwright at 375, 768, and 1440 px; representative public/admin routes | No horizontal overflow |
-| Local crawl | 18 sitemap URLs fetched from the built server | All returned HTTP 200 with no redirect chain |
+| Local crawl | 20 sitemap URLs fetched from the built server | All returned HTTP 200 with no redirect chain, unique metadata/canonicals, one H1, valid JSON-LD, and no thin pages |
 | Local Lighthouse | Mobile/desktop comparison and accessibility rerun | SEO 100; accessibility 99 after fixes |
 | Production crawl | 18 current sitemap URLs (2 Aug 2026) | All 200 with title, description, canonical, H1, and valid JSON-LD syntax; no duplicate titles/descriptions or legacy geo URLs |
 | Production quality | Pre-deploy baseline: 40 geo clones, fake NAP/claims, raw Markdown, empty collections | Current crawl confirms the curated 18-URL boundary; image dimension review remains a low-priority performance follow-up |
 | Google Search Console | 2 Aug 2026 read-only service-account recheck for `sc-domain:pytafix.web.id` | Sitemap processing completed with 0 errors/0 warnings; 18 URLs submitted and 0 indexed in the sitemap aggregate; homepage, Kontak, and layanan archive are `Submitted and indexed`; two base service detail URLs remain discovered but not indexed; the old Batu URL remains a stale indexed redirect record |
 | Deployment | GitHub commit `879506a`; Vercel deployment `dpl_GXVdis5DvajQ24GxWqvKCbaeyQHb` | `READY` on `pytafix-web`; `www.pytafix.web.id` serves the cleaned public copy and owner-confirmed location build |
+
+### Programmatic geo research and rollout decision — 3 August 2026
+
+The research is recorded in [`findings/programmatic-geo-2026-08-03.md`](findings/programmatic-geo-2026-08-03.md). The source contains four reviewed active services and 40 inactive legacy geo rows. The official Malang Raya administrative inventory is 41 kecamatan (5 Kota Malang, 3 Kota Batu, 33 Kabupaten Malang), but GSC currently shows only one geo query (`service hp batu`, 9 impressions, average position 5, 0 clicks) in the measured period. The local build therefore adds one indexable `/area-layanan` hub covering all 41 areas and one `/area-layanan/batu` detail page. Other areas remain directory entries until demand and first-hand operational proof justify a distinct page. Old `*-batu` service URLs now redirect to the Batu hub; other legacy variants keep their canonical-service redirect.
 
 ## Local scorecard
 
@@ -132,7 +136,8 @@ The remediation removes or mitigates each of these issues. Production delivery i
 - Replaced duplicate inline publisher/author and contact-service payloads with stable entity references to the root graph.
 - Escaped `<` in every updated JSON-LD payload to prevent script breakout.
 - Rebuilt `llms.txt` with canonical URLs, reviewed service/article content, FAQ answers, references, update dates when available, an honest service-area description, and a reviewed static article fallback when the database is unavailable.
-- Reduced the local sitemap from 65 baseline URLs to 18 reviewed candidates.
+- Reduced the local sitemap from 65 baseline URLs to 20 local reviewed candidates; production remains at the previously deployed 18-URL boundary until this change is released.
+- Added an indexable Malang Raya area hub covering all 41 official kecamatan and a single Batu detail page; other areas remain directory entries until first-party demand and local proof support distinct pages.
 
 ### Copywriting, E-E-A-T, and content connections
 
@@ -149,9 +154,9 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Check | Result |
 |---|---|
 | `npm run lint` | Pass |
-| `npm run test:run` | 43/43 pass |
+| `npm run test:run` | 53/53 pass |
 | `prisma validate` | Pass with `prisma.config.ts` |
-| `npm run build` | Pass, Next.js 16.2.12, 56 routes |
+| `npm run build` | Pass, Next.js 16.2.12, 58 routes |
 | `npm audit --omit=dev` | 0 vulnerabilities |
 | Full `npm audit` | 9 high advisories in ESLint-only development dependency chain |
 | Unauthorized `/api/admin/articles` | 401 |
@@ -167,7 +172,7 @@ The remediation removes or mitigates each of these issues. Production delivery i
 | Browser console | 0 errors after Vercel telemetry gating on local production server |
 | Status request without WhatsApp | 400 |
 | Nested geo variant | Direct 308 to canonical base service |
-| Local sitemap | 18 reviewed URLs; no utilities/empty collections/geo clones |
+| Local sitemap | 20 reviewed URLs including the Malang Raya hub and Batu detail; no utilities/empty collections/geo clones |
 | Local article | Semantic H2s, no literal Markdown, valid Article JSON-LD, official reference |
 | Local contact location | Direct Google Maps place URL and coordinate-based iframe loaded; customer-facing address/visit guidance rendered; business-schema address/coordinates match owner-provided evidence; no overflow at 375 or 1440 px |
 | Local commerce freshness | Product and sparepart detail pages expose `dateModified` in Product JSON-LD and a visible last-updated/price-stock confirmation note |

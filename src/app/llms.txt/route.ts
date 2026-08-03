@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { CONTACT, SITE_DESCRIPTION, SITE_URL } from "@/lib/config";
 import { isLocationServiceSlug } from "@/lib/locations";
+import { INDEXABLE_SERVICE_AREAS, MALANG_RAYA_AREAS } from "@/lib/service-areas";
 import { ARTICLE_EDITORIAL_OVERRIDES, ARTICLE_REFERENCES, PUBLIC_ARTICLE_AUTHOR, PUBLIC_SERVICE_COPY, getPublicFaqs, getPublicServiceCopy, isPublicReviewedArticleSlug, isPublicReviewedServiceSlug } from "@/lib/site-content";
 
 export const runtime = "nodejs";
@@ -108,6 +109,19 @@ export async function GET() {
     lines.push(`URL: ${SITE_URL}/layanan/${service.slug}`);
     lines.push("");
   }
+
+  lines.push("## Area layanan");
+  lines.push("Malang Raya mencakup Kota Malang, Kota Batu, dan Kabupaten Malang. Alamat layanan Pytafix berada di Polehan, Blimbing, Kota Malang.");
+  lines.push("Kirim kecamatan atau pin lokasi melalui WhatsApp untuk mengonfirmasi jadwal, opsi penjemputan, dan cara serah-terima sebelum datang.");
+  for (const region of ["Kota Malang", "Kota Batu", "Kabupaten Malang"] as const) {
+    const names = MALANG_RAYA_AREAS.filter((serviceArea) => serviceArea.region === region).map((serviceArea) => serviceArea.name);
+    lines.push(`${region}: ${names.join(", ")}`);
+  }
+  for (const serviceArea of INDEXABLE_SERVICE_AREAS) {
+    lines.push(`URL area: ${SITE_URL}/area-layanan/${serviceArea.slug}`);
+  }
+  lines.push(`URL daftar area: ${SITE_URL}/area-layanan`);
+  lines.push("");
 
   lines.push("## Pertanyaan umum");
   for (const faq of getPublicFaqs()) {

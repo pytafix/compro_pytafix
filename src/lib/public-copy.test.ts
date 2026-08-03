@@ -25,4 +25,13 @@ describe("public copy guardrails", () => {
 
     expect(`${articleSource}\n${listSource}\n${llmsSource}`).not.toMatch(/Tim Editorial Pytafix/);
   });
+
+  it("does not expose SEO research language in area pages", () => {
+    const areaSource = [
+      "src/app/(public)/area-layanan/page.tsx",
+      "src/app/(public)/area-layanan/[slug]/page.tsx",
+    ].map((file) => readFileSync(resolve(process.cwd(), file), "utf8")).join("\n");
+
+    expect(areaSource).not.toMatch(/\bpilot\b|first-party|Google Search Console|\bGSC\b|doorway|scaled content/i);
+  });
 });

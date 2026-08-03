@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Metadata } from "next";
 import { getCanonicalServiceSlug, splitLocationServiceSlug } from "@/lib/locations";
+import { getLegacyAreaRedirect } from "@/lib/service-areas";
 import Image from "next/image";
 import { CONTACT } from '@/lib/config';
 import { serializeJsonLd } from "@/lib/json-ld";
@@ -27,20 +28,21 @@ const resolveServiceData = cache(async (slug: string) => {
         service: baseService,
         location: locationVariant.location,
         redirectSlug: baseService.slug,
+        areaRedirect: getLegacyAreaRedirect(slug),
       };
     }
   }
 
   const service = await prisma.serviceContent.findUnique({ where: { slug } });
   if (service && !isPublicReviewedServiceSlug(service.slug)) {
-    return { service: null, location: null, redirectSlug: null };
+    return { service: null, location: null, redirectSlug: null, areaRedirect: null };
   }
-  return { service, location: null, redirectSlug: null };
+  return { service, location: null, redirectSlug: null, areaRedirect: null };
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const { service, location, redirectSlug } = await resolveServiceData(slug);
+  const { service, location, redirectSlug, areaRedirect } = await resolveServiceData(slug);
 
   if (!service) {
     return {
@@ -53,15 +55,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const publicService = getPublicServiceCopy(service);
 
   if (location && redirectSlug) {
+    const canonicalUrl = areaRedirect || `/layanan/${redirectSlug}`;
     return {
       title: `${publicService.title} di ${location}`,
       description: publicService.description,
       robots: { index: false, follow: true },
-      alternates: { canonical: `/layanan/${redirectSlug}` },
+      alternates: { canonical: canonicalUrl },
       openGraph: {
         title: `${publicService.title} di ${location}`,
         description: publicService.description,
-        url: `https://www.pytafix.web.id/layanan/${redirectSlug}`,
+        url: `https://www.pytafix.web.id${canonicalUrl}`,
         images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: publicService.title }],
         locale: "id_ID",
         type: "website",
@@ -86,14 +89,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServiceDetailPage({ params }: Props) {
   const { slug } = await params;
-  const { service, location, redirectSlug } = await resolveServiceData(slug);
+  const { service, location, redirectSlug, areaRedirect } = await resolveServiceData(slug);
 
   if (!service || !service.isActive) {
     notFound();
   }
 
   if (location && redirectSlug) {
-    permanentRedirect(`/layanan/${redirectSlug}`);
+    permanentRedirect(areaRedirect || `/layanan/${redirectSlug}`);
   }
 
   const publicService = getPublicServiceCopy(service);

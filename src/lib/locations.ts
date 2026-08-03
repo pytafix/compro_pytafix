@@ -1,18 +1,8 @@
+import { MALANG_RAYA_AREAS } from "./service-areas";
+
 export const LOCATIONS = [
   "Malang",
-  "Batu",
-  "Kepanjen",
-  "Singosari",
-  "Blimbing",
-  "Lowokwaru",
-  "Klojen",
-  "Sukun",
-  "Kedungkandang",
-  "Lawang",
-  "Turen",
-  "Dau",
-  "Pakis",
-  "Wagir"
+  ...MALANG_RAYA_AREAS.map((serviceArea) => serviceArea.name),
 ];
 
 // Normalize location to lowercase slug format

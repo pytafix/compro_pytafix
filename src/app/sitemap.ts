@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import prisma from "@/lib/prisma"
 import { isLocationServiceSlug } from "@/lib/locations"
 import { SITE_URL } from "@/lib/config"
+import { INDEXABLE_SERVICE_AREAS } from "@/lib/service-areas"
 import { isPublicReviewedArticleSlug, isPublicReviewedServiceSlug, PUBLIC_REVIEWED_ARTICLE_SLUGS, PUBLIC_REVIEWED_SERVICE_SLUGS } from "@/lib/site-content"
 
 export const revalidate = 3600;
@@ -19,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/kebijakan-privasi` },
     { url: `${baseUrl}/kontak` },
     { url: `${baseUrl}/faq` },
+    { url: `${baseUrl}/area-layanan` },
   ];
 
   try {
@@ -53,6 +55,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (products.length > 0) staticPages.push({ url: `${baseUrl}/jual-beli` });
 
   const dynamicPages: MetadataRoute.Sitemap = [];
+
+  for (const serviceArea of INDEXABLE_SERVICE_AREAS) {
+    dynamicPages.push({
+      url: `${baseUrl}/area-layanan/${serviceArea.slug}`,
+    });
+  }
 
   for (const service of services) {
     if (isLocationServiceSlug(service.slug) || !isPublicReviewedServiceSlug(service.slug)) continue;
@@ -95,6 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (error) {
     console.error("Sitemap dynamic data unavailable; serving reviewed static URLs", error);
     const reviewedFallbackPages: MetadataRoute.Sitemap = [
+      ...INDEXABLE_SERVICE_AREAS.map((serviceArea) => ({ url: `${baseUrl}/area-layanan/${serviceArea.slug}` })),
       ...Array.from(PUBLIC_REVIEWED_SERVICE_SLUGS, (slug) => ({ url: `${baseUrl}/layanan/${slug}` })),
       ...Array.from(PUBLIC_REVIEWED_ARTICLE_SLUGS, (slug) => ({ url: `${baseUrl}/artikel/${slug}` })),
     ];
