@@ -5,8 +5,8 @@ export const LEGAL_ENTITY_NAME = 'CV. Pyta Cipta Karya';
 type ContactGeo = { latitude: number; longitude: number } | null;
 
 export const CONTACT = {
-  whatsapp: '628814081894',
-  whatsappDisplay: '+62 881-4081-894',
+  whatsapp: '6287748568836',
+  whatsappDisplay: '+62 877-48568-836',
   email: 'info@pytafix.web.id',
   address: 'Jl. Werkudoro No.2, RT.2/RW.2, Polehan, Kec. Blimbing, Kota Malang, Jawa Timur 65121',
   postalAddress: {
