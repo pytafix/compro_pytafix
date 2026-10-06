@@ -47,6 +47,8 @@ export async function PUT(
     ]);
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/portofolio');
     return NextResponse.json(portfolio);
   } catch (error) {
@@ -75,6 +77,8 @@ export async function DELETE(
     await cleanupManagedBlobs([existing.beforeImage, existing.afterImage]);
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/portofolio');
     return NextResponse.json({ message: 'Portfolio deleted successfully' });
   } catch (error) {

@@ -48,6 +48,8 @@ export async function POST(request: Request) {
     });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/jual-beli');
     return NextResponse.json(product, { status: 201 });
   } catch (error) {

@@ -57,6 +57,8 @@ export async function PUT(
     }
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/jual-beli');
     revalidatePath(`/jual-beli/${id}`);
     return NextResponse.json(product);
@@ -86,6 +88,8 @@ export async function DELETE(
     await cleanupManagedBlobs([existing.imageUrl]);
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/jual-beli');
     revalidatePath(`/jual-beli/${id}`);
     return NextResponse.json({ message: 'Product deleted successfully' });

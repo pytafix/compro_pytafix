@@ -51,6 +51,8 @@ export async function POST(request: Request) {
     );
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/syarat-ketentuan');
     revalidatePath('/kebijakan-privasi');
     return NextResponse.json({ success: true });

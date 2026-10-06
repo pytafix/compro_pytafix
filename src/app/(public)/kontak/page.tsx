@@ -5,7 +5,7 @@ import { CONTACT, SITE_URL } from "@/lib/config";
 import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Lokasi & Kontak Pytafix Malang",
+  title: "Lokasi & Kontak Servis di Malang",
   description:
     "Lihat alamat layanan Pytafix, jam operasional, area layanan, dan cara menghubungi tim untuk kebutuhan servis perangkat.",
   alternates: { canonical: "/kontak" },

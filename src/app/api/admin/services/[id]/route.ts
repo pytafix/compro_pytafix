@@ -42,6 +42,8 @@ export async function PUT(
     }
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/layanan');
     revalidatePath(`/layanan/${existing.slug}`);
     revalidatePath(`/layanan/${service.slug}`);
@@ -72,6 +74,8 @@ export async function DELETE(
     await cleanupManagedBlobs([existing.imageUrl]);
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/layanan');
     revalidatePath(`/layanan/${existing.slug}`);
     return NextResponse.json({ message: 'Service deleted successfully' });

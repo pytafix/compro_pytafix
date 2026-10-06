@@ -3,7 +3,7 @@ import BookingClient from "./BookingClient";
 
 export const metadata: Metadata = {
   title: "Booking Servis",
-  description: "Jadwalkan perbaikan Anda. Isi formulir untuk memulai proses servis.",
+  description: "Ajukan pemeriksaan laptop, HP, atau komputer di Pytafix Malang. Isi formulir, terima ID servis, dan pantau status perbaikan.",
   alternates: { canonical: "/booking-servis" },
   openGraph: {
     title: "Booking Servis Laptop, HP & Komputer",

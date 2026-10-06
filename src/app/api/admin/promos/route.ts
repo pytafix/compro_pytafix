@@ -43,6 +43,8 @@ export async function POST(request: Request) {
 
     revalidatePath('/');
     revalidatePath('/promo');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     return NextResponse.json(promo, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {

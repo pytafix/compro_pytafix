@@ -34,6 +34,8 @@ export async function POST(request: Request) {
       },
     });
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/testimoni');
     return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {

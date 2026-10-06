@@ -47,6 +47,8 @@ export async function POST(request: Request) {
     });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/sparepart');
     return NextResponse.json(sparepart, { status: 201 });
   } catch (error) {

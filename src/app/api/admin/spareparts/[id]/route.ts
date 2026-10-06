@@ -56,6 +56,8 @@ export async function PUT(
     }
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/sparepart');
     revalidatePath(`/sparepart/${id}`);
     return NextResponse.json(sparepart);
@@ -95,6 +97,8 @@ export async function DELETE(
     await cleanupManagedBlobs([existing.imageUrl]);
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/sparepart');
     revalidatePath(`/sparepart/${id}`);
     return NextResponse.json({ message: 'Sparepart deleted successfully' });

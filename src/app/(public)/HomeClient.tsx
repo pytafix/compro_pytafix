@@ -27,7 +27,12 @@ export default function HomeClient({
   faqs: PublicFaq[],
   services: ServiceContent[]
 }) {
-  const publicFaqs = faqs;
+  // Homepage shows a subset; keep visible accordions and FAQPage schema in sync.
+  const publicFaqs = faqs.slice(0, 5);
+  const avgRating =
+    testimonials.length > 0
+      ? (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1)
+      : null;
 
   return (
     <main className="relative overflow-hidden">
@@ -45,6 +50,13 @@ export default function HomeClient({
                 "inLanguage": "id-ID",
                 "publisher": { "@id": `${SITE_URL}/#organization` }
               },
+              ...(avgRating ? [{
+                "@type": "AggregateRating",
+                "itemReviewed": { "@id": `${SITE_URL}/#localbusiness` },
+                "ratingValue": avgRating,
+                "reviewCount": testimonials.length,
+                "bestRating": "5",
+              }] : []),
               ...(publicFaqs.length > 0 ? [{
                 "@type": "FAQPage",
                 "mainEntity": publicFaqs.map(faq => ({

@@ -24,6 +24,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/testimoni');
     return NextResponse.json(testimonial);
   } catch (error) {
@@ -51,6 +53,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/testimoni');
     return NextResponse.json({ success: true });
   } catch (error) {

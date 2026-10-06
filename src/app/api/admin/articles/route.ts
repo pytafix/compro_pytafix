@@ -38,6 +38,8 @@ export async function POST(request: Request) {
     });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/artikel');
     return NextResponse.json(article, { status: 201 });
   } catch (error) {

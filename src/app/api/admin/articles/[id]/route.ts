@@ -42,6 +42,8 @@ export async function PUT(
     }
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/artikel');
     revalidatePath(`/artikel/${existing.slug}`);
     revalidatePath(`/artikel/${article.slug}`);
@@ -72,6 +74,8 @@ export async function DELETE(
     await cleanupManagedBlobs([existing.imageUrl]);
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/artikel');
     revalidatePath(`/artikel/${existing.slug}`);
     return NextResponse.json({ success: true });

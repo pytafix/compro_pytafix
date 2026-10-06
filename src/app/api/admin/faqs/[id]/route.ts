@@ -26,6 +26,8 @@ export async function PUT(
     });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/faq');
     return NextResponse.json(faq);
   } catch (error) {
@@ -53,6 +55,8 @@ export async function DELETE(
     await prisma.faq.delete({ where: { id } });
 
     revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     revalidatePath('/faq');
     return NextResponse.json({ message: 'FAQ deleted successfully' });
   } catch (error) {

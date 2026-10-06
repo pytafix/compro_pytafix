@@ -35,6 +35,48 @@ export const DEFAULT_FAQS: PublicFaq[] = [
     answer:
       "Gunakan ID servis dan nomor WhatsApp yang dipakai saat booking pada halaman Cek Status Servis. Halaman tersebut menampilkan status terbaru tanpa menampilkan nama, alamat, atau catatan pribadi Anda.",
   },
+  {
+    id: "cara-booking",
+    question: "Bagaimana cara mengajukan pemeriksaan perangkat?",
+    answer:
+      "Isi formulir pada halaman Booking Servis atau hubungi WhatsApp resmi. Setelah pengajuan tercatat, Anda menerima ID servis yang dipakai untuk memantau status perbaikan.",
+  },
+  {
+    id: "yang-dibawa",
+    question: "Apa yang perlu disiapkan sebelum datang?",
+    answer:
+      "Bawa perangkat beserta adaptor atau pengisi daya yang biasa dipakai. Catat gejala, kapan muncul, dan kejadian sebelumnya. Jangan menyerahkan kata sandi akun; cukup siapkan perangkat dalam kondisi dapat diperiksa.",
+  },
+  {
+    id: "lama-pemeriksaan",
+    question: "Berapa lama pemeriksaan awal dilakukan?",
+    answer:
+      "Waktu pemeriksaan awal bergantung pada jenis perangkat, gejala, dan antrean. Tanyakan perkiraan waktu saat booking agar kunjungan dapat direncanakan; hasil pemeriksaan dijelaskan sebelum ada pengerjaan.",
+  },
+  {
+    id: "pantau-tanpa-datang",
+    question: "Bisakah memantau servis tanpa datang ke bengkel?",
+    answer:
+      "Bisa. Halaman Cek Status Servis menampilkan tahap perbaikan terbaru berdasarkan ID servis dan nomor WhatsApp saat booking. Datang kembali hanya diperlukan saat perangkat sudah dapat diambil atau bila ada hal yang perlu dikonfirmasi.",
+  },
+  {
+    id: "klaim-langkah",
+    question: "Bagaimana langkah mengajukan klaim garansi?",
+    answer:
+      "Ajukan melalui halaman Klaim Garansi dengan menyertakan ID servis dan uraian kendala. Perangkat diperiksa terlebih dahulu untuk memastikan kendala termasuk cakupan pada nota servis sebelum dinyatakan masuk garansi.",
+  },
+  {
+    id: "luar-malang",
+    question: "Apakah melayani pelanggan di luar Kota Malang?",
+    answer:
+      "Layanan mencakup Malang Raya, yaitu Kota Malang, Kota Batu, dan Kabupaten Malang. Kirim kecamatan atau pin lokasi melalui WhatsApp untuk mengonfirmasi jangkauan, jadwal, dan opsi serah-terima.",
+  },
+  {
+    id: "komponen-info",
+    question: "Bagaimana memastikan komponen pengganti sesuai?",
+    answer:
+      "Mintalah informasi tertulis tentang identitas komponen, kondisi, harga, pekerjaan pemasangan, pengujian, dan ketentuan garansi sebelum menyetujui pengerjaan. Komponen lama dapat diminta kembali bila tidak diperlukan untuk klaim pemasok.",
+  },
 ];
 
 export const SERVICE_PRINCIPLES = [

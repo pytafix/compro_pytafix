@@ -35,6 +35,9 @@ export async function PUT(
 
     revalidatePath('/');
     revalidatePath('/promo');
+    revalidatePath(`/promo/${promo.slug}`);
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     return NextResponse.json(promo);
   } catch (error) {
     if (error instanceof ZodError) {
@@ -62,6 +65,9 @@ export async function DELETE(
 
     revalidatePath('/');
     revalidatePath('/promo');
+    revalidatePath(`/promo/${existing.slug}`);
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/llms.txt');
     return NextResponse.json({ message: 'Promo deleted successfully' });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete promo' }, { status: 500 });

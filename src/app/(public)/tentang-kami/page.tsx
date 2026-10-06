@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "Kenali Pytafix, proses pemeriksaan perangkat, prinsip layanan, dan area operasional di Malang Raya.",
   alternates: { canonical: "/tentang-kami" },
   openGraph: {
-    title: "Tentang Pytafix",
+  title: "Tentang Kami",
     description: SITE_DESCRIPTION,
     url: `${SITE_URL}/tentang-kami`,
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Tentang Pytafix" }],
