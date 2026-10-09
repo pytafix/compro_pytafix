@@ -1,0 +1,7 @@
+# Never upload local env files to Vercel builds.
+# Production env must come from the Vercel dashboard only.
+.env*
+!.env.example
+*.db
+*.db-journal
+google-service-account.json
