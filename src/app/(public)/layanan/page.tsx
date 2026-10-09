@@ -7,7 +7,7 @@ import { getPublicServiceCopy, isPublicReviewedServiceSlug, PUBLIC_SERVICE_COPY 
 
 const serviceMetadata: Metadata = {
   title: "Jasa Servis Laptop, HP, dan Komputer di Malang",
-  description: "Pemeriksaan dan perbaikan laptop, HP, serta komputer di Malang dengan estimasi sebelum pengerjaan.",
+  description: "Pemeriksaan dan perbaikan laptop, HP, serta komputer di Malang. Empat layanan inti dengan estimasi tertulis sebelum pengerjaan dan status terpantau.",
   alternates: { canonical: "/layanan" },
   openGraph: {
     title: "Layanan Servis Laptop, HP & Komputer",

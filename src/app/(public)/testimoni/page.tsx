@@ -8,7 +8,7 @@ const testimonialMetadata: Metadata = {
   alternates: { canonical: "/testimoni" },
   openGraph: {
   title: "Testimoni & Ulasan Pelanggan",
-    description: "Pengalaman pelanggan Pytafix di Malang yang bersedia dibagikan.",
+  description: "Ulasan pelanggan servis laptop, HP, dan komputer di Pytafix Malang yang bersedia dibagikan, lengkap dengan rating dan tanggal.",
     url: "https://www.pytafix.web.id/testimoni",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Testimoni" }],
     locale: "id_ID",

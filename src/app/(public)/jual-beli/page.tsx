@@ -4,7 +4,7 @@ import JualBeliClient from "./JualBeliClient";
 
 const productMetadata: Metadata = {
     title: "Jual Beli Laptop, HP, dan Tablet di Malang",
-  description: "Lihat perangkat aktif yang ditawarkan Pytafix beserta kondisi, stok, harga, dan tautan pembelian.",
+  description: "Lihat perangkat aktif yang ditawarkan Pytafix: kondisi, stok, harga, dan tautan pembelian. Konfirmasi unit sebelum transaksi.",
   alternates: { canonical: "/jual-beli" },
   openGraph: {
   title: "Jual Beli Laptop, HP, dan Tablet di Malang",

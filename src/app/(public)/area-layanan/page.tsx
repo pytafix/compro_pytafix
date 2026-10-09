@@ -6,12 +6,12 @@ import { PUBLIC_SERVICE_COPY } from "@/lib/site-content";
 import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Area Layanan Pytafix di Malang Raya",
+  title: "Area Layanan Servis di Malang Raya",
   description:
     "Cek area layanan Pytafix di Kota Malang, Kota Batu, dan Kabupaten Malang. Konfirmasi jadwal, penjemputan, serta jenis servis melalui WhatsApp.",
   alternates: { canonical: "/area-layanan" },
   openGraph: {
-    title: "Area Layanan Pytafix di Malang Raya",
+  title: "Area Layanan Servis di Malang Raya",
     description:
       "Daftar wilayah Malang Raya dan cara mengonfirmasi layanan servis HP, laptop, komputer, sparepart, serta jual laptop.",
     url: `${SITE_URL}/area-layanan`,

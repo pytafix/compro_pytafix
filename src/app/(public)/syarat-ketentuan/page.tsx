@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/syarat-ketentuan" },
   openGraph: {
   title: "Syarat & Ketentuan",
-    description: "Syarat dan ketentuan layanan perbaikan perangkat elektronik di Pytafix Malang.",
+  description: "Baca syarat dan ketentuan layanan perbaikan perangkat di Pytafix Malang: tanggung jawab data, garansi, dan persetujuan layanan.",
     url: "https://www.pytafix.web.id/syarat-ketentuan",
     images: [{ url: "/images/og-banner.png", width: 1200, height: 630, alt: "Pytafix Syarat Ketentuan" }],
     locale: "id_ID",

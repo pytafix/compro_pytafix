@@ -4,7 +4,7 @@ import { SparepartClient } from "@/components/SparepartClient";
 
 const sparepartMetadata: Metadata = {
   title: "Jual Sparepart & Aksesoris Laptop di Malang",
-  description: "Lihat katalog suku cadang perangkat, kondisi, stok, harga, dan pilihan pemasangan di Pytafix Malang.",
+  description: "Lihat katalog suku cadang perangkat: kondisi, stok, harga, dan pilihan pemasangan di Pytafix Malang. Konfirmasi kompatibilitas sebelum membeli.",
   alternates: { canonical: "/sparepart" },
   openGraph: {
     title: "Sparepart & Aksesoris Perangkat",

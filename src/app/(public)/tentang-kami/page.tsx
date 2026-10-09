@@ -6,7 +6,7 @@ import { SERVICE_PRINCIPLES } from "@/lib/site-content";
 import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Tentang Pytafix",
+  title: "Tentang Kami",
   description:
     "Kenali Pytafix, proses pemeriksaan perangkat, prinsip layanan, dan area operasional di Malang Raya.",
   alternates: { canonical: "/tentang-kami" },
