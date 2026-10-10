@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     locale: "id_ID",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hubungi Pytafix",
+    description: "Konfirmasi kebutuhan servis, area layanan, dan jadwal melalui kontak resmi Pytafix.",
+  },
 };
 
 export default function KontakPage() {

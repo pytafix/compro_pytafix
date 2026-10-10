@@ -17,6 +17,11 @@ const serviceMetadata: Metadata = {
     locale: "id_ID",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Layanan Servis Laptop, HP & Komputer",
+    description: "Lihat layanan pemeriksaan dan perbaikan perangkat Pytafix di Malang.",
+  },
 };
 
 export async function generateMetadata(): Promise<Metadata> {

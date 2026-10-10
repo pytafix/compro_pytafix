@@ -16,6 +16,11 @@ const articleMetadata: Metadata = {
     locale: "id_ID",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Artikel & Edukasi Servis",
+    description: "Kumpulan artikel, tips, dan edukasi seputar perawatan serta perbaikan laptop, komputer, dan HP dari Pytafix Malang.",
+  },
 };
 
 export async function generateMetadata(): Promise<Metadata> {

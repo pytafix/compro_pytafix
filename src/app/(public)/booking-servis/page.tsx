@@ -13,6 +13,11 @@ export const metadata: Metadata = {
     locale: "id_ID",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Booking Servis Laptop, HP & Komputer",
+    description: "Ajukan pemeriksaan laptop, HP, atau komputer di Pytafix Malang dan terima ID untuk memantau status servis.",
+  },
 };
 
 export default function BookingServis() {

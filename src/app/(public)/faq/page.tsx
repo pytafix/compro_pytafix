@@ -15,6 +15,11 @@ export const metadata = {
     locale: "id_ID",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "FAQ - Pertanyaan Seputar Servis Elektronik",
+    description: "Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan perbaikan, garansi, dan proses servis di Pytafix Malang.",
+  },
 };
 
 export default async function FaqPage() {

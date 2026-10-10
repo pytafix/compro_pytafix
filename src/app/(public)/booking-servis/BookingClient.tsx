@@ -124,8 +124,9 @@ Terima kasih.`;
           {/* Form Area (Bento Grid Style) */}
           <div className="lg:col-span-8">
             <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-10 shadow-sm relative overflow-hidden h-full">
+            <h2 className="sr-only">Formulir booking servis</h2>
             {!confirmation ? (
-              <form className="space-y-6" id="service-form" onSubmit={handleSubmit}>
+              <form className="space-y-6" id="service-form" onSubmit={handleSubmit} aria-label="Formulir booking servis">
                 {/* Personal Info Group */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -336,7 +337,7 @@ Terima kasih.`;
                 </span>
               </div>
               <div>
-                <h3 className="font-label-bold text-label-bold text-on-background">Diagnosis sebelum pengerjaan</h3>
+                <h2 className="font-label-bold text-label-bold text-on-background">Diagnosis sebelum pengerjaan</h2>
                 <p className="font-label-sm text-label-sm text-on-surface-variant">Ruang lingkup dan estimasi dikonfirmasi terlebih dahulu.</p>
               </div>
             </div>
@@ -351,7 +352,7 @@ Terima kasih.`;
                 </span>
               </div>
               <div>
-                <h3 className="font-label-bold text-label-bold text-on-background">Ketentuan tertulis</h3>
+                <h2 className="font-label-bold text-label-bold text-on-background">Ketentuan tertulis</h2>
                 <p className="font-label-sm text-label-sm text-on-surface-variant">Cakupan garansi mengikuti pekerjaan dan nota servis.</p>
               </div>
             </div>
@@ -359,7 +360,7 @@ Terima kasih.`;
 
           {/* Operational Hours */}
           <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 shadow-sm">
-            <h3 className="font-headline-md text-headline-md text-on-background mb-4">Jam Operasional</h3>
+            <h2 className="font-headline-md text-headline-md text-on-background mb-4">Jam Operasional</h2>
             <ul className="space-y-2 font-body-md text-body-md text-on-surface-variant">
               <li className="flex justify-between border-b border-outline-variant pb-2">
                 <span>Senin - Jumat</span>

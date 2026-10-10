@@ -78,6 +78,18 @@ export function Footer() {
               </span>
             </li>
             <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+              <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">call</span>
+              <a href={`tel:+${CONTACT.whatsapp}`} className="hover:text-primary hover:underline">
+                {CONTACT.whatsappDisplay}
+              </a>
+            </li>
+            <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+              <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">mail</span>
+              <a href={`mailto:${CONTACT.email}`} className="hover:text-primary hover:underline">
+                {CONTACT.email}
+              </a>
+            </li>
+            <li className="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
               <span className="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">schedule</span>
               <span>{CONTACT.hours.days}, {CONTACT.hours.opens} - {CONTACT.hours.closes}; Sabtu {CONTACT.hours.saturday}; Minggu {CONTACT.hours.sunday}</span>
             </li>
