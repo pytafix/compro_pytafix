@@ -247,7 +247,7 @@ export const ARTICLE_EDITORIAL_OVERRIDES: Record<string, ArticleEditorialOverrid
   "cara-mengatasi-laptop-mati-total": {
     title: "Laptop Mati Total: Pemeriksaan Aman Sebelum Servis",
     excerpt:
-      "Langkah aman untuk membedakan masalah daya, layar, dan proses boot tanpa membongkar laptop secara berisiko.",
+      "Langkah aman membedakan masalah daya, layar, dan proses boot tanpa bongkar berisiko, plus cara mencatat gejala untuk diagnosis.",
     content: `## Mulai dari gejala yang terlihat
 
 Istilah “mati total” sering dipakai untuk beberapa kondisi berbeda: tidak ada lampu sama sekali, lampu menyala tetapi layar gelap, atau perangkat menyala lalu berhenti saat proses boot. Catat lampu indikator, suara kipas, bunyi peringatan, panas yang tidak biasa, dan kejadian sebelum masalah muncul.
@@ -271,7 +271,7 @@ Gejala yang sama dapat memiliki penyebab berbeda, sehingga artikel ini tidak dap
   "tips-memilih-service-hp-terpercaya": {
     title: "Cara Memilih Tempat Servis HP dengan Lebih Aman",
     excerpt:
-      "Gunakan bukti proses, estimasi tertulis, perlindungan data, dan ketentuan garansi—bukan klaim pemasaran semata.",
+      "Nilai tempat servis dari bukti proses: estimasi tertulis, perlindungan data, dan garansi jelas. Lihat daftar pertanyaannya.",
     content: `## Nilai prosesnya, bukan hanya janji
 
 Tempat servis yang layak dipertimbangkan mampu menjelaskan alur penerimaan perangkat, pemeriksaan, persetujuan biaya, pencatatan komponen, pengujian, dan pengembalian. Mintalah estimasi tertulis dan tanyakan apa yang terjadi bila ditemukan kerusakan tambahan.
@@ -296,7 +296,7 @@ Pytafix menggunakan alur pemeriksaan dan persetujuan estimasi; kemampuan, keters
   "kapan-ganti-baterai-laptop": {
     title: "Kapan Baterai Laptop Perlu Diperiksa atau Diganti?",
     excerpt:
-      "Kenali penurunan kapasitas, mati mendadak, kegagalan pengisian, dan tanda baterai mengembang beserta langkah amannya.",
+      "Kenali penurunan kapasitas, mati mendadak, gagal mengisi, dan baterai mengembang yang berbahaya — plus kapan harus berhenti memakai laptop.",
     content: `## Penurunan daya belum selalu berarti baterai rusak
 
 Waktu pakai dapat berkurang karena usia baterai, beban aplikasi, pengaturan daya, suhu, adaptor, port pengisian, atau masalah sistem. Bandingkan pemakaian pada kondisi serupa dan gunakan laporan kesehatan baterai yang disediakan sistem operasi bila tersedia.
@@ -320,7 +320,7 @@ Mintalah informasi tertulis tentang identitas komponen, kondisi, harga, pekerjaa
   "upgrade-ssd-ram-laptop-untuk-performa-maksimal": {
     title: "Panduan Memeriksa Kelayakan Upgrade SSD dan RAM",
     excerpt:
-      "Tentukan sumber perlambatan, kompatibilitas perangkat, rencana cadangan, dan manfaat upgrade sebelum membeli komponen.",
+      "Tentukan sumber perlambatan, kompatibilitas perangkat, rencana cadangan, dan manfaat upgrade agar tidak salah beli komponen.",
     content: `## Diagnosis kebutuhan lebih dulu
 
 SSD dapat membantu waktu boot dan akses berkas ketika penyimpanan menjadi hambatan. RAM membantu ketika aplikasi kehabisan memori dan sistem sering memindahkan data ke penyimpanan. Upgrade tidak otomatis memperbaiki panas berlebih, prosesor yang terlalu lambat, perangkat lunak bermasalah, atau kerusakan komponen.
@@ -346,7 +346,7 @@ Biaya dan manfaat bergantung pada model laptop, komponen, kapasitas, merek, kond
   "cara-mencegah-laptop-overheating": {
     title: "Laptop Terlalu Panas: Pencegahan dan Tanda Bahaya",
     excerpt:
-      "Pelajari cara menjaga ventilasi, mengurangi beban, memantau gejala, dan menentukan kapan laptop perlu diperiksa.",
+      "Cara menjaga ventilasi dan beban kerja, memantau gejala panas, mengenali tanda bahaya, dan menentukan kapan perlu pemeriksaan.",
     content: `## Panas adalah gejala, bukan diagnosis
 
 Laptop dapat terasa hangat saat bekerja berat. Masalah perlu dicurigai bila performa turun tajam, kipas terus bekerja keras, perangkat mati sendiri, muncul bau tidak biasa, atau area tertentu terlalu panas. Batas suhu berbeda menurut model dan komponen, jadi gunakan dokumentasi pabrikan sebagai acuan.

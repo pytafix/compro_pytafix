@@ -4,7 +4,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 
 const testimonialMetadata: Metadata = {
   title: "Testimoni & Ulasan Pelanggan",
-  description: "Pengalaman pelanggan Pytafix di Malang yang bersedia dibagikan.",
+  description: "Ulasan pelanggan servis laptop, HP, dan komputer di Pytafix Malang yang bersedia dibagikan, lengkap dengan rating dan tanggal.",
   alternates: { canonical: "/testimoni" },
   openGraph: {
   title: "Testimoni & Ulasan Pelanggan",

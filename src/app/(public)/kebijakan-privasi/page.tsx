@@ -5,7 +5,7 @@ import { sanitizeContent } from '@/lib/sanitize';
 
 export const metadata: Metadata = {
   title: "Kebijakan Privasi",
-  description: "Kebijakan privasi Pytafix terkait pengelolaan data pengguna dan perangkat yang diservis.",
+  description: "Baca kebijakan privasi Pytafix: data yang dikumpulkan saat booking, keamanannya, dan komitmen tidak membagikannya ke pihak ketiga.",
   alternates: { canonical: "/kebijakan-privasi" },
   openGraph: {
   title: "Kebijakan Privasi",

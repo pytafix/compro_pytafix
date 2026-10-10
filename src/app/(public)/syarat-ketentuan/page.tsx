@@ -5,7 +5,7 @@ import { sanitizeContent } from '@/lib/sanitize';
 
 export const metadata: Metadata = {
   title: "Syarat & Ketentuan",
-  description: "Syarat dan ketentuan layanan perbaikan perangkat elektronik di Pytafix Malang.",
+  description: "Baca syarat dan ketentuan layanan perbaikan perangkat di Pytafix Malang: tanggung jawab data, garansi, dan persetujuan layanan.",
   alternates: { canonical: "/syarat-ketentuan" },
   openGraph: {
   title: "Syarat & Ketentuan",

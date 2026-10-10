@@ -8,7 +8,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Tentang Kami",
   description:
-    "Kenali Pytafix, proses pemeriksaan perangkat, prinsip layanan, dan area operasional di Malang Raya.",
+    "Kenali Pytafix di Malang: proses pemeriksaan perangkat, prinsip layanan transparan, standar garansi tertulis, dan area operasional Malang Raya.",
   alternates: { canonical: "/tentang-kami" },
   openGraph: {
   title: "Tentang Kami",
