@@ -45,16 +45,18 @@ function createRateLimiter(config: RateLimitConfig) {
       try {
         const result = await distributedLimiter.limit(key);
         if (result.reason === "timeout") {
-          return rateLimitUnavailable();
+          console.error(`Distributed rate limit timeout for ${config.name}; falling back`);
+          if (!allowLocalFallback) return rateLimitUnavailable();
+        } else {
+          if (!result.success) {
+            return rateLimitExceeded(result.reset - now, {
+              limit: result.limit,
+              remaining: result.remaining,
+              reset: result.reset,
+            });
+          }
+          return null;
         }
-        if (!result.success) {
-          return rateLimitExceeded(result.reset - now, {
-            limit: result.limit,
-            remaining: result.remaining,
-            reset: result.reset,
-          });
-        }
-        return null;
       } catch (error) {
         console.error(`Distributed rate limit failed for ${config.name}:`, error);
         if (!allowLocalFallback) return rateLimitUnavailable();
