@@ -11,6 +11,12 @@ export function FloatingWA() {
     return null;
   }
 
+  // Hide where a dedicated WhatsApp CTA already exists, so the floating
+  // button never covers form inputs on small screens.
+  if (pathname === "/booking-servis" || pathname === "/kontak") {
+    return null;
+  }
+
   const waUrl = `https://wa.me/${CONTACT.whatsapp}?text=Halo%20Pytafix,%20saya%20butuh%20bantuan.`;
 
   return (
