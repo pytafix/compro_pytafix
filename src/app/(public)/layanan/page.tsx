@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { isLocationServiceSlug } from "@/lib/locations";
 import { getPublicServiceCopy, isPublicReviewedServiceSlug, PUBLIC_SERVICE_COPY } from "@/lib/site-content";
+import { SITE_URL } from "@/lib/config";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const serviceMetadata: Metadata = {
   title: "Jasa Servis Laptop, HP, dan Komputer di Malang",
@@ -46,8 +48,28 @@ export default async function Layanan() {
     .filter((service) => !isLocationServiceSlug(service.slug) && isPublicReviewedServiceSlug(service.slug))
     .map(getPublicServiceCopy);
 
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": services.map((service, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Service",
+        "name": service.title,
+        "url": `${SITE_URL}/layanan/${service.slug}`,
+      },
+    })),
+  };
+
   return (
     <main>
+      {services.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(itemListJsonLd) }}
+        />
+      )}
       {/* Hero Section */}
       <section className="bg-surface-container-low py-16 md:py-20 px-4 md:px-8 lg:px-margin-desktop text-center border-b border-outline-variant">
         <div className="max-w-container-max mx-auto">

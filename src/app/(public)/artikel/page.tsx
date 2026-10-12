@@ -3,6 +3,7 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { ARTICLE_EDITORIAL_OVERRIDES, isPublicReviewedArticleSlug, PUBLIC_ARTICLE_AUTHOR } from "@/lib/site-content";
 import { Metadata } from "next";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const articleMetadata: Metadata = {
   title: "Artikel & Edukasi Servis",
@@ -52,8 +53,26 @@ export default async function ArtikelPage() {
   const featured = articles[0];
   const regularArticles = articles.slice(1);
 
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Artikel & Edukasi Servis",
+    "url": "https://www.pytafix.web.id/artikel",
+    "blogPost": articles.map((article) => ({
+      "@type": "BlogPosting",
+      "headline": article.title,
+      "url": `https://www.pytafix.web.id/artikel/${article.slug}`,
+    })),
+  };
+
   return (
     <main className="container mx-auto px-4 py-16">
+      {articles.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(blogJsonLd) }}
+        />
+      )}
       <h1 className="text-4xl md:text-5xl font-bold text-center text-on-surface mb-16">Artikel &amp; Edukasi</h1>
 
       {articles.length === 0 && (
