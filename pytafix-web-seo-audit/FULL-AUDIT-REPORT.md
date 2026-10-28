@@ -1,11 +1,19 @@
 # Pytafix Full-System, SEO, AEO/GEO, and Content Audit
 
-Audit date: 3 August 2026
+Baseline audit date: 3 August 2026; current checkpoint: 28 October 2026
 Repository baseline: `3c37fb1`
 Production audited: `https://www.pytafix.web.id`
-Local implementation: previous public-copy fix `879506a` is deployed; the Malang Raya area-hub change is local and not yet deployed
+Current checkpoint: see [`findings/gsc-indexation-2026-10-28.md`](findings/gsc-indexation-2026-10-28.md) for fresh production and Google evidence. The Malang Raya area hub and Batu page are live; the historical audit below describes the August remediation baseline.
 
-## Executive summary
+## Current checkpoint — 28 October 2026
+
+The live sitemap contains 20 URLs. A production crawl found all 20 returning HTTP 200 with titles, descriptions, self-canonicals, indexable robots directives, one H1, valid JSON-LD, and no duplicate metadata or thin-page flags. A copy scan found no internal SEO or research vocabulary on those pages.
+
+Google URL Inspection reports 13 submitted and indexed, six discovered but not indexed, and one unknown URL (`/booking-servis`). The six discovered URLs are three core service pages (`/layanan/service-laptop`, `/layanan/jual-laptop`, `/layanan/jual-sparepart`) and three articles. The homepage, service archive, service HP, area hub, Batu page, contact page, and several other URLs are indexed. The sitemap aggregate still reports 20 submitted and 0 indexed even though individual URL Inspection results confirm 13 indexed; use URL-level inspection for page decisions. Search Analytics recorded 45 impressions and 0 clicks for 28 September–25 October, versus 51 impressions and 3 clicks in the preceding 28 days. The sample is too small to infer a ranking trend.
+
+No live robots, canonical, status, metadata, or sitemap defect was found for the six discovered pages. Prioritize original, verifiable service evidence and human review before adding more geographic or service clones. Recheck URL Inspection after Google crawls the current content.
+
+## Historical executive summary — August 2026
 
 ### Location evidence update — 3 August 2026
 
@@ -28,9 +36,9 @@ The most serious baseline issues were:
 
 The remediation removes or mitigates each of these issues. Production delivery is now confirmed for the pushed commit, while operational and business verification remains explicit below.
 
-## Evidence boundaries
+## Historical evidence boundaries — August 2026
 
-| Layer | Evidence | Current truth |
+| Layer | Evidence | State at August audit |
 |---|---|---|
 | Source | Full repository and 58 application routes inspected | Local fixes present; area-hub change is not deployed |
 | Local validation | ESLint, 53 tests, Prisma validation, TypeScript, Next production build | Pass |

@@ -1,6 +1,6 @@
 # Pytafix Action Plan
 
-Updated: 3 August 2026
+Updated: 28 October 2026 (search checkpoint; operational checklist retains its historical scope)
 
 ## P0 — Required before preview/production
 
@@ -40,9 +40,9 @@ The seed is now non-destructive and idempotent, but still verify the target data
 
 ## P2 — Search and content growth
 
-Riset wilayah dan keputusan rollout terbaru: [`findings/programmatic-geo-2026-08-03.md`](findings/programmatic-geo-2026-08-03.md).
+Riset wilayah: [`findings/programmatic-geo-2026-08-03.md`](findings/programmatic-geo-2026-08-03.md). Status produksi dan GSC terbaru: [`findings/gsc-indexation-2026-10-28.md`](findings/gsc-indexation-2026-10-28.md).
 
-1. Submit only the curated sitemap after production validation.
+1. Keep the curated 20-URL sitemap stable; it was submitted and downloaded without errors or warnings. The sitemap aggregate's 0 indexed count conflicts with 13 individually indexed URLs in URL Inspection.
 2. Monitor URL Inspection for the homepage, service archive, four base services, article archive, and five reviewed articles. Do not use the Indexing API for ordinary service/article URLs; it is restricted to eligible JobPosting and broadcast/video content.
 3. Monitor GSC weekly:
    - indexed pages;
